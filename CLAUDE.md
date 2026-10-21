@@ -81,5 +81,8 @@ Se algo aqui parecer incompleto, pergunte ao desenvolvedor em vez de inventar re
 - i18n pronto: i18next + react-i18next, textos em `src/i18n/locales/pt-BR.json`; chave inexistente é erro de TypeScript. Só existe uma tela provisória (`src/app/index.tsx`).
 - Checagens antes de concluir uma tarefa: `npx tsc --noEmit`, `npx expo lint`, `npx expo-doctor`. Pacotes sempre com `npx expo install` (nunca `npm audit fix --force`).
 - No PowerShell do desenvolvedor foi preciso `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` para o `npx` funcionar.
-- **Próximo passo:** configurar o Supabase (projeto, Supabase CLI, `.env` com URL e chave `anon`) e criar as migrations das 12 tabelas com RLS e testes de isolamento.
+- **Supabase configurado:** CLI como devDependency (`npx supabase ...`). Desenvolvimento no **Supabase local** (Docker Desktop + WSL 2; o Docker precisa estar aberto): `npx supabase start | status | stop`, Studio em http://127.0.0.1:54323, e-mails de teste no Mailpit em http://127.0.0.1:54324.
+- Projeto na nuvem: `meu-dizimo`, ref `jcwogclevhpvrdsohzuf`, região `sa-east-1` (São Paulo), já ligado com `supabase link`. Ainda vazio: migrations só vão para lá com `npx supabase db push` depois de testadas no local.
+- `.env` (fora do Git) aponta para o Supabase local pelo IP da rede (`http://192.168.100.30:54321`) para o celular alcançar; variáveis `EXPO_PUBLIC_SUPABASE_URL` e `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (a antiga "anon"). Modelo em `.env.example`.
+- **Próximo passo:** criar as migrations das 12 tabelas com RLS, auditoria por triggers e testes de isolamento. Depende dos documentos "Fluxos, Telas e Modelo de Dados" e "Requisitos v0.3" (pedidos ao desenvolvedor) para não inventar colunas ou regras.
 - Atualize esta seção ao fim de cada etapa importante.
