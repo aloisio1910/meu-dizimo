@@ -3,6 +3,11 @@
     "nome": "Meu Dízimo"
   },
   "inicio": {
-    "emConstrucao": "Em construção. Em breve, seu Cartão de Dízimo digital."
+    "emConstrucao": "Em construção. Em breve, seu Cartão de Dízimo digital.",
+    "conexao": {
+      "verificando": "Verificando a conexão com o servidor…",
+      "ok": "Servidor conectado.",
+      "falhou": "Não foi possível falar com o servidor."
+    }
   }
 }

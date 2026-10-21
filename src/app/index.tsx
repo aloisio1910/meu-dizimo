@@ -1,15 +1,26 @@
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { servidorRespondendo } from '@/services/supabase/conexao';
+
+type EstadoConexao = 'verificando' | 'ok' | 'falhou';
+
 // Tela provisória: será substituída pelo redirecionamento para login ou cartão.
 export default function Inicio() {
   const { t } = useTranslation();
+  const [conexao, setConexao] = useState<EstadoConexao>('verificando');
+
+  useEffect(() => {
+    servidorRespondendo().then((ok) => setConexao(ok ? 'ok' : 'falhou'));
+  }, []);
 
   return (
     <SafeAreaView style={styles.tela}>
       <Text style={styles.titulo}>{t('app.nome')}</Text>
       <Text style={styles.texto}>{t('inicio.emConstrucao')}</Text>
+      <Text style={styles.texto}>{t(`inicio.conexao.${conexao}`)}</Text>
     </SafeAreaView>
   );
 }

@@ -3,8 +3,9 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
-    "@expo/ui": "~57.0.25",
-    "expo": "~57.0.30",
+    "@expo/ui": "~57.0.26",
+    "@supabase/supabase-js": "^2.118.0",
+    "expo": "~57.0.31",
     "expo-constants": "~57.0.22",
     "expo-device": "~57.0.2",
     "expo-font": "~57.0.4",
@@ -12,8 +13,9 @@
     "expo-image": "~57.0.5",
     "expo-linking": "~57.0.13",
     "expo-localization": "~57.0.2",
-    "expo-router": "~57.0.28",
+    "expo-router": "~57.0.29",
     "expo-splash-screen": "~57.0.10",
+    "expo-sqlite": "~57.0.4",
     "expo-status-bar": "~57.0.1",
     "expo-symbols": "~57.0.3",
     "expo-system-ui": "~57.0.4",
@@ -42,7 +44,9 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "banco:tipos": "supabase gen types typescript --local --schema public > src/types/banco.ts",
+    "banco:testes": "supabase test db"
   },
   "private": true
 }
