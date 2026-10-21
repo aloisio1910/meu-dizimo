@@ -1,47 +1,26 @@
-import { useEffect, useState } from 'react';
+import { Redirect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { servidorRespondendo } from '@/services/supabase/conexao';
+import { Botao } from '@/components/ui/botao';
+import { Tela } from '@/components/ui/tela';
+import { Texto } from '@/components/ui/texto';
+import { useSessao } from '@/hooks/use-sessao';
+import { sair } from '@/services/supabase/auth';
 
-type EstadoConexao = 'verificando' | 'ok' | 'falhou';
-
-// Tela provisória: será substituída pelo redirecionamento para login ou cartão.
+// Tela provisória de quem já entrou; dará lugar ao Cartão de Dízimo (M-03)
+// ou ao Primeiro acesso (M-02).
 export default function Inicio() {
   const { t } = useTranslation();
-  const [conexao, setConexao] = useState<EstadoConexao>('verificando');
+  const { sessao } = useSessao();
 
-  useEffect(() => {
-    servidorRespondendo().then((ok) => setConexao(ok ? 'ok' : 'falhou'));
-  }, []);
+  if (!sessao) return <Redirect href="/entrar" />;
 
   return (
-    <SafeAreaView style={styles.tela}>
-      <Text style={styles.titulo}>{t('app.nome')}</Text>
-      <Text style={styles.texto}>{t('inicio.emConstrucao')}</Text>
-      <Text style={styles.texto}>{t(`inicio.conexao.${conexao}`)}</Text>
-    </SafeAreaView>
+    <Tela>
+      <Texto variante="titulo">{t('app.nome')}</Texto>
+      <Texto>{t('inicio.bemVindo', { email: sessao.user.email })}</Texto>
+      <Texto variante="apoio">{t('inicio.emBreve')}</Texto>
+      <Botao titulo={t('inicio.sair')} variante="secundario" onPress={() => sair()} />
+    </Tela>
   );
 }
-
-const styles = StyleSheet.create({
-  tela: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-    gap: 16,
-    backgroundColor: '#FFFFFF',
-  },
-  titulo: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: '#111111',
-  },
-  texto: {
-    fontSize: 20,
-    textAlign: 'center',
-    color: '#111111',
-  },
-});

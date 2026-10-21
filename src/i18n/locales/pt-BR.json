@@ -2,12 +2,35 @@
   "app": {
     "nome": "Meu Dízimo"
   },
-  "inicio": {
-    "emConstrucao": "Em construção. Em breve, seu Cartão de Dízimo digital.",
-    "conexao": {
-      "verificando": "Verificando a conexão com o servidor…",
-      "ok": "Servidor conectado.",
-      "falhou": "Não foi possível falar com o servidor."
+  "comum": {
+    "erros": {
+      "sem_conexao": "Sem conexão com a internet. Verifique e tente de novo.",
+      "erro_inesperado": "Algo deu errado. Tente de novo em instantes."
     }
+  },
+  "entrar": {
+    "titulo": "Entrar",
+    "explicacao": "Digite o e-mail em que você recebeu o convite da sua igreja. Vamos enviar um código de 6 números.",
+    "rotuloEmail": "Seu e-mail",
+    "enviarCodigo": "Enviar código",
+    "tituloCodigo": "Digite o código",
+    "explicacaoCodigo": "Enviamos um código de 6 números para {{email}}. Ele vale por 1 hora.",
+    "rotuloCodigo": "Código de 6 números",
+    "confirmar": "Entrar",
+    "reenviar": "Enviar novo código",
+    "codigoReenviado": "Pronto! Enviamos um novo código.",
+    "trocarEmail": "Usar outro e-mail",
+    "erros": {
+      "emailInvalido": "Confira o e-mail. Ele precisa ter @, como nome@email.com.",
+      "codigoIncompleto": "O código tem 6 números.",
+      "convite_nao_encontrado": "Não encontramos um convite para este e-mail. Confira se digitou certo ou peça um convite à tesouraria da sua igreja.",
+      "codigo_invalido": "Código incorreto ou vencido. Confira os números ou peça um novo código.",
+      "muitas_tentativas": "Muitas tentativas seguidas. Aguarde um minuto e tente de novo."
+    }
+  },
+  "inicio": {
+    "bemVindo": "Você entrou como {{email}}.",
+    "emBreve": "Em breve, aqui estará o seu Cartão de Dízimo.",
+    "sair": "Sair"
   }
 }

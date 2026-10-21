@@ -292,8 +292,12 @@ reset role;
 select pg_temp.entrar('f0000000-0000-0000-0000-000000000001', true);
 set local role authenticated;
 
-select is((select count(*) from public.igrejas), 2::bigint,
-  'Admin Master vê todas as igrejas');
+select is(
+  (select count(*) from public.igrejas
+   where id in ('1a000000-0000-0000-0000-000000000000', '1b000000-0000-0000-0000-000000000000')),
+  2::bigint,
+  'Admin Master vê todas as igrejas'
+);
 
 reset role;
 
