@@ -74,5 +74,12 @@ Se algo aqui parecer incompleto, pergunte ao desenvolvedor em vez de inventar re
 
 ## Estado atual
 
-- Ambiente sendo preparado. Nenhum código escrito ainda.
+- **Etapa 1 concluída (ambiente e estrutura):** Node 24, npm 11, Git 2.56. Projeto Expo criado com o modelo padrão, rodando no Expo Go do celular via `npx expo start`.
+- **SDK 57, não 58:** o `create-expo-app` gerou SDK 58, mas o Expo Go da Play Store ainda é 57, então o projeto foi recriado no 57. Atualizar com `npx expo install expo@^58 --fix` quando o Expo Go da loja chegar ao 58.
+- Repositório privado no GitHub: `aloisio1910/meu-dizimo` (branch `main`). `.env` protegido no `.gitignore`; `.gitattributes` fixa fim de linha LF.
+- Estrutura em `src/` (cada pasta tem um README): `app/` com grupos de rotas `(auth)`, `(membro)`, `(tesouraria)` (inclui telas do Pastor de Governo) e `(admin)`; `components/ui`, `theme`, `services/supabase`, `lib`, `hooks`, `types`, `i18n`.
+- i18n pronto: i18next + react-i18next, textos em `src/i18n/locales/pt-BR.json`; chave inexistente é erro de TypeScript. Só existe uma tela provisória (`src/app/index.tsx`).
+- Checagens antes de concluir uma tarefa: `npx tsc --noEmit`, `npx expo lint`, `npx expo-doctor`. Pacotes sempre com `npx expo install` (nunca `npm audit fix --force`).
+- No PowerShell do desenvolvedor foi preciso `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` para o `npx` funcionar.
+- **Próximo passo:** configurar o Supabase (projeto, Supabase CLI, `.env` com URL e chave `anon`) e criar as migrations das 12 tabelas com RLS e testes de isolamento.
 - Atualize esta seção ao fim de cada etapa importante.
