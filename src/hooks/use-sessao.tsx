@@ -17,17 +17,9 @@ export function ProvedorDeSessao({ children }: { children: ReactNode }) {
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setEstado({ sessao: data.session, carregando: false }));
 
-    const { data } = supabase.auth.onAuthStateChange((evento, sessao) => {
+    // O vínculo com os convites é feito ao carregar as fichas (use-minhas-fichas).
+    const { data } = supabase.auth.onAuthStateChange((_evento, sessao) => {
       setEstado({ sessao, carregando: false });
-
-      // A cada login, liga as fichas convidadas com este e-mail (passo 3 do
-      // fluxo). É seguro repetir. Fica fora do callback, como pede o Supabase.
-      if (evento === 'SIGNED_IN') {
-        // O .then() é o que dispara a chamada; o resultado é lido pelas telas.
-        setTimeout(() => {
-          supabase.rpc('aceitar_convites').then(() => undefined);
-        }, 0);
-      }
     });
 
     return () => data.subscription.unsubscribe();

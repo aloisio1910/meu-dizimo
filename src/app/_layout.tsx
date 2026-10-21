@@ -9,6 +9,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
+import { ProvedorDeFichas } from '@/hooks/use-minhas-fichas';
 import { ProvedorDeSessao, useSessao } from '@/hooks/use-sessao';
 
 // A tela de abertura fica até a fonte e a sessão estarem prontas, para o
@@ -35,7 +36,9 @@ function Navegacao() {
 export default function RootLayout() {
   return (
     <ProvedorDeSessao>
-      <Navegacao />
+      <ProvedorDeFichas>
+        <Navegacao />
+      </ProvedorDeFichas>
     </ProvedorDeSessao>
   );
 }

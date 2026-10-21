@@ -8,11 +8,12 @@ import { Texto } from './texto';
 
 type Props = Omit<TextInputProps, 'style'> & {
   rotulo: string;
+  dica?: string;
   erro?: string;
 };
 
-// Campo com rótulo sempre visível (não some ao digitar) e erro logo abaixo.
-export function CampoTexto({ rotulo, erro, onFocus, onBlur, ...props }: Props) {
+// Campo com rótulo sempre visível (não some ao digitar), dica opcional e erro logo abaixo.
+export function CampoTexto({ rotulo, dica, erro, onFocus, onBlur, ...props }: Props) {
   const tema = useTema();
   const [focado, setFocado] = useState(false);
 
@@ -21,9 +22,10 @@ export function CampoTexto({ rotulo, erro, onFocus, onBlur, ...props }: Props) {
       <Texto variante="destaque" style={estilos.rotulo}>
         {rotulo}
       </Texto>
+      {!!dica && <Texto variante="apoio">{dica}</Texto>}
       <TextInput
         accessibilityLabel={rotulo}
-        accessibilityHint={erro}
+        accessibilityHint={erro ?? dica}
         placeholderTextColor={cores.textoApoio}
         onFocus={(e) => {
           setFocado(true);

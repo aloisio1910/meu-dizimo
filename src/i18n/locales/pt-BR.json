@@ -3,6 +3,11 @@
     "nome": "Meu Dízimo"
   },
   "comum": {
+    "voltar": "Voltar",
+    "carregando": "Carregando…",
+    "tentarDeNovo": "Tentar de novo",
+    "obrigatorio": "{{rotulo}} (obrigatório)",
+    "opcional": "{{rotulo}} (opcional)",
     "erros": {
       "sem_conexao": "Sem conexão com a internet. Verifique e tente de novo.",
       "erro_inesperado": "Algo deu errado. Tente de novo em instantes."
@@ -31,6 +36,45 @@
   "inicio": {
     "bemVindo": "Você entrou como {{email}}.",
     "emBreve": "Em breve, aqui estará o seu Cartão de Dízimo.",
-    "sair": "Sair"
+    "sair": "Sair",
+    "falhaAoCarregar": "Não conseguimos carregar os seus dados.",
+    "semIgreja": "Não encontramos um convite ativo para este e-mail. O convite vale por 7 dias: peça à tesouraria da sua igreja para reenviá-lo."
+  },
+  "primeiroAcesso": {
+    "titulo": "Boas-vindas!",
+    "explicacao": "Falta pouco para usar o seu Cartão de Dízimo. Confira os seus dados e complete o cadastro.",
+    "secaoDados": "Seus dados",
+    "rotuloNome": "Nome completo",
+    "rotuloCelular": "Celular com DDD",
+    "dicaData": "Use dia, mês e ano: 17/05/1990",
+    "rotuloTipoDizimo": "Como você devolve o dízimo?",
+    "individual": "Individual (só eu)",
+    "familiar": "Familiar (eu e minha família)",
+    "rotuloFamiliar": "Nome de um familiar",
+    "adicionarFamiliar": "Adicionar familiar",
+    "familiaresAdicionados": "Familiares incluídos no dízimo:",
+    "remover": "Remover {{nome}}",
+    "secaoTermos": "Termos e privacidade",
+    "explicacaoTermos": "Seus dados são da sua igreja e ficam protegidos. Outros membros e outras igrejas nunca têm acesso a eles.",
+    "lerTermos": "Ler os termos completos",
+    "aceiteTermos": "Li e aceito os Termos de Uso e a Política de Privacidade.",
+    "aceiteSensivel": "Autorizo o tratamento do meu vínculo com a {{igreja}}, que revela minha religião, para usar o Cartão de Dízimo.",
+    "concluir": "Concluir cadastro",
+    "erros": {
+      "nomeObrigatorio": "Informe o seu nome.",
+      "celularObrigatorio": "Informe o seu celular.",
+      "campoObrigatorio": "Este campo é obrigatório.",
+      "campoInvalido": "Confira este campo.",
+      "dataInvalida": "Confira a data. Use dia, mês e ano, como 17/05/1990.",
+      "numeroInvalido": "Use apenas números.",
+      "escolhaUmaOpcao": "Escolha uma opção.",
+      "familiaresObrigatorios": "Inclua pelo menos um familiar ou escolha Individual.",
+      "aceiteObrigatorio": "É preciso marcar esta opção para continuar.",
+      "cadastro_indisponivel": "Este cadastro já foi concluído ou não está mais disponível.",
+      "revise": "Confira os campos marcados em vermelho."
+    }
+  },
+  "termos": {
+    "suaIgreja": "sua igreja"
   }
 }

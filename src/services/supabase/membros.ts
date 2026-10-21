@@ -1,0 +1,95 @@
+import type { PostgrestError } from '@supabase/supabase-js';
+
+import type { Database, Json } from '@/types/banco';
+
+import { supabase } from './cliente';
+
+type Enums = Database['public']['Enums'];
+
+export type MinhaFicha = {
+  id: string;
+  igreja_id: string;
+  nome: string;
+  celular: string;
+  email: string;
+  numero: number;
+  perfil: Enums['perfil_membro'];
+  status: Enums['status_membro'];
+  tipo_dizimo: Enums['tipo_dizimo'];
+  familiares: Json;
+  campos_extras: Json;
+  igrejas: { nome: string; titulo_administrador: string } | null;
+};
+
+export type CampoDoCadastro = Database['public']['Tables']['campos_cadastro']['Row'];
+
+// Liga as fichas convidadas com o e-mail do login (passo 3 do fluxo) e
+// devolve as fichas da pessoa em todas as igrejas. A RLS só devolve as
+// fichas do próprio usuário.
+export async function buscarMinhasFichas(): Promise<MinhaFicha[]> {
+  const { error: erroAoAceitar } = await supabase.rpc('aceitar_convites');
+  if (erroAoAceitar) throw erroAoAceitar;
+
+  const { data, error } = await supabase
+    .from('membros')
+    .select(
+      'id, igreja_id, nome, celular, email, numero, perfil, status, tipo_dizimo, familiares, campos_extras, igrejas(nome, titulo_administrador)',
+    )
+    .order('criado_em');
+  if (error) throw error;
+  return data;
+}
+
+export async function buscarCamposDoCadastro(igrejaId: string): Promise<CampoDoCadastro[]> {
+  const { data, error } = await supabase
+    .from('campos_cadastro')
+    .select('*')
+    .eq('igreja_id', igrejaId)
+    .eq('ativo', true)
+    .order('ordem');
+  if (error) throw error;
+  return data;
+}
+
+export type DadosDoCadastro = {
+  membroId: string;
+  nome: string;
+  celular: string;
+  tipoDizimo: Enums['tipo_dizimo'];
+  familiares: { nome: string }[];
+  camposExtras: Record<string, string | number>;
+  versaoDosTermos: string;
+};
+
+export type ErroDoCadastro =
+  | { codigo: 'campo_obrigatorio' | 'campo_invalido'; campo: string }
+  | { codigo: 'familiares_obrigatorios' | 'cadastro_indisponivel' | 'sem_conexao' | 'erro_inesperado' };
+
+function traduzirErro(erro: PostgrestError | Error): ErroDoCadastro {
+  const mensagem = erro.message;
+  const detalhe = 'details' in erro ? erro.details : '';
+  if ((mensagem === 'campo_obrigatorio' || mensagem === 'campo_invalido') && detalhe) {
+    return { codigo: mensagem, campo: detalhe };
+  }
+  if (mensagem === 'familiares_obrigatorios' || mensagem === 'cadastro_indisponivel') return { codigo: mensagem };
+  if (erro instanceof TypeError) return { codigo: 'sem_conexao' };
+  return { codigo: 'erro_inesperado' };
+}
+
+// Passo 4: valida os campos no banco, registra o aceite dos termos e ativa a ficha.
+export async function concluirCadastro(dados: DadosDoCadastro): Promise<ErroDoCadastro | null> {
+  try {
+    const { error } = await supabase.rpc('concluir_cadastro', {
+      p_membro_id: dados.membroId,
+      p_nome: dados.nome,
+      p_celular: dados.celular,
+      p_tipo_dizimo: dados.tipoDizimo,
+      p_familiares: dados.familiares,
+      p_campos_extras: dados.camposExtras,
+      p_versao_termos: dados.versaoDosTermos,
+    });
+    return error ? traduzirErro(error) : null;
+  } catch (erro) {
+    return traduzirErro(erro as Error);
+  }
+}
