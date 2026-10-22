@@ -22,7 +22,9 @@ export function razaoDeContraste(cor1: string, cor2: string): number {
   return (clara + 0.05) / (escura + 0.05);
 }
 
-// Texto que mais contrasta com a cor de fundo: branco ou quase preto.
-export function corDoTextoSobre(fundo: string): '#FFFFFF' | '#111111' {
-  return razaoDeContraste(fundo, '#FFFFFF') >= razaoDeContraste(fundo, '#111111') ? '#FFFFFF' : '#111111';
+// Texto que mais contrasta com a cor de fundo: branco ou preto. Com preto
+// puro, uma das duas opções sempre passa de 4,5:1 (mínimo da WCAG AA), seja
+// qual for a cor; com um quase preto, tons médios ficariam abaixo.
+export function corDoTextoSobre(fundo: string): '#FFFFFF' | '#000000' {
+  return razaoDeContraste(fundo, '#FFFFFF') >= razaoDeContraste(fundo, '#000000') ? '#FFFFFF' : '#000000';
 }

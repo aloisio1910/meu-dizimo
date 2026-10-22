@@ -34,11 +34,17 @@
     "react-native-worklets": "0.10.1"
   },
   "devDependencies": {
+    "@types/jest": "29.5.14",
     "@types/react": "~19.2.2",
     "eslint": "^9.0.0",
     "eslint-config-expo": "~57.0.2",
+    "jest": "~29.7.0",
+    "jest-expo": "~57.0.6",
     "supabase": "^2.121.0",
     "typescript": "~6.0.3"
+  },
+  "jest": {
+    "preset": "jest-expo"
   },
   "scripts": {
     "start": "expo start",
@@ -46,6 +52,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
+    "test": "jest",
+    "test:observar": "jest --watch",
     "banco:tipos": "supabase gen types typescript --local --schema public > src/types/banco.ts",
     "banco:testes": "supabase test db"
   },
