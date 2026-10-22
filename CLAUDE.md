@@ -12,10 +12,11 @@ Plataforma multi-igreja que substitui o envelope físico de dízimo por um Cart�
 
 ## Documentos de referência (o desenvolvedor tem acesso)
 
-- Documento de Requisitos v0.3: regras de negócio RN-001 a RN-041, decisões D-001 a D-066, escopo por fases, preços, LGPD.
+- Documento de Requisitos v0.4: regras de negócio RN-001 a RN-041, decisões D-001 a D-082, escopo por fases, preços, LGPD.
 - Fluxos, Telas e Modelo de Dados: fluxo principal em 9 passos, fluxos secundários, mapa de 22 telas (M-01 a M-10, T-01 a T-06, P-01 a P-04, A-01 a A-02), 12 tabelas.
 - Protótipo clicável: app do membro (celular) e painel da tesouraria (web).
 Se algo aqui parecer incompleto, pergunte ao desenvolvedor em vez de inventar regra de negócio.
+Os originais ficam no Claude Docs (links em `docs/README.md`); `docs/requisitos.md` e `docs/fluxos-telas-modelo-de-dados.md` são exportações em Markdown, legíveis direto. Ao tomar uma decisão nova, registre-a no original (seção 13 do Requisitos, a partir de D-083) e exporte de novo.
 
 ## Tecnologia
 
@@ -86,7 +87,7 @@ Se algo aqui parecer incompleto, pergunte ao desenvolvedor em vez de inventar re
 - **Supabase configurado:** CLI como devDependency (`npx supabase ...`). Desenvolvimento no **Supabase local** (Docker Desktop + WSL 2; o Docker precisa estar aberto): `npx supabase start | status | stop`, Studio em http://127.0.0.1:54323, e-mails de teste no Mailpit em http://127.0.0.1:54324.
 - Projeto na nuvem: `meu-dizimo`, ref `jcwogclevhpvrdsohzuf`, região `sa-east-1` (São Paulo), já ligado com `supabase link`. Ainda vazio: migrations só vão para lá com `npx supabase db push` depois de testadas no local.
 - `.env` (fora do Git) aponta para o Supabase local pelo IP da rede (`http://192.168.100.30:54321`) para o celular alcançar; variáveis `EXPO_PUBLIC_SUPABASE_URL` e `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (a antiga "anon"). Modelo em `.env.example`.
-- Documentos de referência em `docs/` (PDFs dos Requisitos v0.3 e de Fluxos, Telas e Modelo de Dados).
+- Documentos de referência atualizados em 22/10/2026 (Requisitos v0.4, com D-067 a D-082) e exportados para `docs/` em Markdown.
 - **Banco de dados concluído (só no local):** 4 migrations em `supabase/migrations` com as 12 tabelas, RLS, auditoria e regras de negócio; **176 testes pgTAP** em `supabase/tests/database` (`npx supabase test db`). Ao mudar RLS, faça a prova de sabotagem: quebre a política no banco local, confirme que os testes falham e restaure com `npx supabase db reset`.
   - Padrões: o perfil técnico do Pastor de Governo é `administrador`; Admin Master = `app_metadata.admin_master` no Auth. Triggers de permissão só agem quando `current_user = 'authenticated'`; funções internas `security definer` passam direto e checam as regras elas mesmas. DELETE revogado em tudo. Erros mostrados ao usuário usam códigos curtos (ex.: `email_ja_cadastrado`) para o app traduzir pelo i18n.
   - Primeiro acesso: `convidar_membro` → login por código (o hook `hook_antes_de_criar_usuario` recusa e-mail sem convite) → `aceitar_convites` → `concluir_cadastro`. Lançamentos: o membro insere direto na tabela (o banco define status, moeda e conta); cancela com `cancelar_lancamento`; duplicado com `existe_lancamento_igual`. Conferência só por funções: `abrir_proximo_da_fila`, `abrir_conferencia`, `manter_conferencia`, `liberar_conferencia`, `confirmar_lancamento`, `registrar_divergencia`, `responder_divergencia`, `reabrir_lancamento`. Visão `lancamentos_detalhados` para a fila e o Cartão. pg_cron libera bloqueios parados a cada minuto.
