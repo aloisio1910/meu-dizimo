@@ -20,6 +20,17 @@ export const cores = {
   desabilitado: '#767676', // 4,5:1: mesmo desabilitado, o texto continua legível
 } as const;
 
+// Selo de status do lançamento: cor clara de fundo e texto escuro, sempre
+// com o nome do status escrito (a cor sozinha não basta para quem não
+// distingue cores). Contraste conferido nos testes.
+export const coresDeStatus = {
+  aguardando: { fundo: '#FFF4D6', texto: '#6B4E00' },
+  em_conferencia: { fundo: '#E3EEFF', texto: '#1E4FA3' },
+  confirmado: { fundo: '#E3F4E4', texto: '#1B5E20' },
+  divergencia: { fundo: '#FDE7E4', texto: '#9A1B12' },
+  cancelado: { fundo: '#EEEEEE', texto: '#4A4A4A' },
+} as const;
+
 export const tamanhos = {
   apoio: 16,
   corpo: 18,

@@ -18,7 +18,15 @@ export type MinhaFicha = {
   tipo_dizimo: Enums['tipo_dizimo'];
   familiares: Json;
   campos_extras: Json;
-  igrejas: { nome: string; titulo_administrador: string } | null;
+  igrejas: {
+    nome: string;
+    titulo_administrador: string;
+    moeda: string;
+    idioma: string;
+    formas_devolucao: string[];
+    versiculo_referencia: string;
+    versiculo_texto: string | null;
+  } | null;
 };
 
 export type CampoDoCadastro = Database['public']['Tables']['campos_cadastro']['Row'];
@@ -33,7 +41,7 @@ export async function buscarMinhasFichas(): Promise<MinhaFicha[]> {
   const { data, error } = await supabase
     .from('membros')
     .select(
-      'id, igreja_id, nome, celular, email, numero, perfil, status, tipo_dizimo, familiares, campos_extras, igrejas(nome, titulo_administrador)',
+      'id, igreja_id, nome, celular, email, numero, perfil, status, tipo_dizimo, familiares, campos_extras, igrejas(nome, titulo_administrador, moeda, idioma, formas_devolucao, versiculo_referencia, versiculo_texto)',
     )
     .order('criado_em');
   if (error) throw error;

@@ -40,6 +40,7 @@ export default function Inicio() {
   if (fichas.some((f) => f.status === 'convidado')) return <Redirect href="/primeiro-acesso" />;
   // Depois do cadastro, oferece a digital uma vez neste aparelho (D-058).
   if (fichas.length > 0 && temDigital && !escolhaDaDigital) return <Redirect href="/ativar-digital" />;
+  if (fichas.some((f) => f.status === 'ativo')) return <Redirect href="/cartao" />;
 
   return (
     <Tela>

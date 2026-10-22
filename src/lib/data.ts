@@ -7,6 +7,20 @@ export function mascararData(texto: string): string {
   return partes.join('/');
 }
 
+// Data de hoje no relógio do aparelho, em AAAA-MM-DD (não em UTC: às 22h no
+// Brasil, o UTC já está no dia seguinte).
+export function hojeIso(agora: Date = new Date()): string {
+  const mes = String(agora.getMonth() + 1).padStart(2, '0');
+  const dia = String(agora.getDate()).padStart(2, '0');
+  return `${agora.getFullYear()}-${mes}-${dia}`;
+}
+
+// "1990-05-17" -> "17/05/1990" (para mostrar e para preencher o campo).
+export function isoParaData(iso: string): string {
+  const [ano, mes, dia] = iso.split('-');
+  return `${dia}/${mes}/${ano}`;
+}
+
 // "17/05/1990" -> "1990-05-17"; devolve null se a data não existir.
 export function dataParaIso(texto: string): string | null {
   const encontrado = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(texto);

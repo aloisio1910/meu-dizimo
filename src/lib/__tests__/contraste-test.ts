@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { cores, corPrincipalPadrao } from '@/theme';
+import { cores, coresDeStatus, corPrincipalPadrao } from '@/theme';
 
 import { corDoTextoSobre, razaoDeContraste } from '../contraste';
 
@@ -71,5 +71,9 @@ describe('cores do tema', () => {
     ['corPrincipalPadrao', corPrincipalPadrao],
   ])('%s tem contraste mínimo sobre o fundo branco', (_nome, cor) => {
     expect(razaoDeContraste(cor, cores.fundo)).toBeGreaterThanOrEqual(MINIMO_WCAG_AA);
+  });
+
+  it.each(Object.entries(coresDeStatus))('selo de status "%s" tem texto legível', (_status, { fundo, texto }) => {
+    expect(razaoDeContraste(texto, fundo)).toBeGreaterThanOrEqual(MINIMO_WCAG_AA);
   });
 });

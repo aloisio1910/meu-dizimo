@@ -1,6 +1,27 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { dataParaIso, mascararData } from '../data';
+import { dataParaIso, hojeIso, isoParaData, mascararData } from '../data';
+
+describe('hojeIso', () => {
+  it('usa o dia do relógio local, não o do UTC', () => {
+    // 21/10/2026 às 22h30 no horário local
+    expect(hojeIso(new Date(2026, 9, 21, 22, 30))).toBe('2026-10-21');
+  });
+
+  it('completa mês e dia com zero', () => {
+    expect(hojeIso(new Date(2026, 0, 5))).toBe('2026-01-05');
+  });
+});
+
+describe('isoParaData', () => {
+  it('mostra no formato brasileiro', () => {
+    expect(isoParaData('2026-10-12')).toBe('12/10/2026');
+  });
+
+  it('volta ao mesmo valor ao converter de novo', () => {
+    expect(dataParaIso(isoParaData('2024-02-29'))).toBe('2024-02-29');
+  });
+});
 
 describe('mascararData', () => {
   it.each([
