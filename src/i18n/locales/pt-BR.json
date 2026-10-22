@@ -76,5 +76,21 @@
   },
   "termos": {
     "suaIgreja": "sua igreja"
+  },
+  "biometria": {
+    "tituloOferta": "Entrar com a digital",
+    "explicacaoOferta": "Nas próximas vezes, é só abrir o app e encostar o dedo, sem esperar o código no e-mail. Se o seu celular reconhecer o rosto, também funciona.",
+    "privacidade": "A sua digital fica só no seu celular. O Meu Dízimo não tem acesso a ela.",
+    "ativar": "Ativar a digital",
+    "agoraNao": "Agora não",
+    "motivoAtivar": "Confirme para ativar a entrada pela digital",
+    "motivoEntrar": "Entrar no Meu Dízimo",
+    "cancelar": "Cancelar",
+    "naoFoiPossivelAtivar": "Não foi possível confirmar a digital. Tente de novo ou toque em Agora não.",
+    "explicacaoBloqueio": "Use a sua digital para entrar.",
+    "naoReconhecida": "A digital não foi reconhecida. Tente de novo ou entre com o código por e-mail.",
+    "entrarComDigital": "Entrar com a digital",
+    "entrarComCodigo": "Entrar com código por e-mail",
+    "indisponivel": "A digital não está disponível neste celular. Entre com o código por e-mail."
   }
 }

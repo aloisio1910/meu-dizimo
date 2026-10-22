@@ -9,11 +9,13 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
+import { Desbloqueio } from '@/components/desbloqueio';
+import { ProvedorDeBloqueio, useBloqueio } from '@/hooks/use-bloqueio';
 import { ProvedorDeFichas } from '@/hooks/use-minhas-fichas';
 import { ProvedorDeSessao, useSessao } from '@/hooks/use-sessao';
 
-// A tela de abertura fica até a fonte e a sessão estarem prontas, para o
-// usuário não ver a letra trocar nem a tela de login piscar.
+// A tela de abertura fica até a fonte, a sessão e o bloqueio estarem
+// prontos, para o usuário não ver a letra trocar nem uma tela piscar.
 SplashScreen.preventAutoHideAsync();
 
 function Navegacao() {
@@ -22,7 +24,8 @@ function Navegacao() {
     AtkinsonHyperlegible_700Bold,
   });
   const { carregando } = useSessao();
-  const pronto = (fontesCarregadas || !!erroNasFontes) && !carregando;
+  const { estado: bloqueio } = useBloqueio();
+  const pronto = (fontesCarregadas || !!erroNasFontes) && !carregando && bloqueio !== 'verificando';
 
   useEffect(() => {
     if (pronto) SplashScreen.hideAsync();
@@ -30,15 +33,20 @@ function Navegacao() {
 
   if (!pronto) return null;
 
+  // Com a digital ativada, nada do app aparece antes de ela ser confirmada.
+  if (bloqueio === 'bloqueado') return <Desbloqueio />;
+
   return <Stack screenOptions={{ headerShown: false }} />;
 }
 
 export default function RootLayout() {
   return (
     <ProvedorDeSessao>
-      <ProvedorDeFichas>
-        <Navegacao />
-      </ProvedorDeFichas>
+      <ProvedorDeBloqueio>
+        <ProvedorDeFichas>
+          <Navegacao />
+        </ProvedorDeFichas>
+      </ProvedorDeBloqueio>
     </ProvedorDeSessao>
   );
 }

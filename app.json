@@ -34,7 +34,19 @@
         }
       ],
       "expo-localization",
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": "O Meu Dízimo usa o Face ID para proteger o acesso ao seu Cartão de Dízimo."
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "O Meu Dízimo usa o Face ID para proteger o acesso ao seu Cartão de Dízimo."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

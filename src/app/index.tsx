@@ -5,6 +5,7 @@ import { ActivityIndicator } from 'react-native';
 import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
+import { useBloqueio } from '@/hooks/use-bloqueio';
 import { useMinhasFichas } from '@/hooks/use-minhas-fichas';
 import { useSessao } from '@/hooks/use-sessao';
 import { sair } from '@/services/supabase/auth';
@@ -15,6 +16,7 @@ export default function Inicio() {
   const { t } = useTranslation();
   const { sessao } = useSessao();
   const { fichas, carregando, falhou, recarregar } = useMinhasFichas();
+  const { disponivel: temDigital, preferencia: escolhaDaDigital } = useBloqueio();
 
   if (!sessao) return <Redirect href="/entrar" />;
 
@@ -36,6 +38,8 @@ export default function Inicio() {
   }
 
   if (fichas.some((f) => f.status === 'convidado')) return <Redirect href="/primeiro-acesso" />;
+  // Depois do cadastro, oferece a digital uma vez neste aparelho (D-058).
+  if (fichas.length > 0 && temDigital && !escolhaDaDigital) return <Redirect href="/ativar-digital" />;
 
   return (
     <Tela>
