@@ -13,10 +13,14 @@ import { Desbloqueio } from '@/components/desbloqueio';
 import { ProvedorDeBloqueio, useBloqueio } from '@/hooks/use-bloqueio';
 import { ProvedorDeFichas } from '@/hooks/use-minhas-fichas';
 import { ProvedorDeSessao, useSessao } from '@/hooks/use-sessao';
+import { autotesteDoArmazenamento } from '@/services/supabase/armazenamento';
 
 // A tela de abertura fica até a fonte, a sessão e o bloqueio estarem
 // prontos, para o usuário não ver a letra trocar nem uma tela piscar.
 SplashScreen.preventAutoHideAsync();
+
+// Só em desenvolvimento: confere a criptografia da sessão neste aparelho.
+autotesteDoArmazenamento();
 
 function Navegacao() {
   const [fontesCarregadas, erroNasFontes] = useFonts({
