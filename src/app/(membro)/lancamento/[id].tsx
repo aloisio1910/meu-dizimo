@@ -298,7 +298,7 @@ export default function DetalheDoDizimo() {
             igrejaId={ficha.igreja_id}
             lancamentoId={lancamento.id}
             idioma={idioma}
-            podeAnexar={lancamento.status !== 'cancelado'}
+            status={lancamento.status}
           />
           <Botao titulo={t('lancamento.voltarAoCartao')} variante="secundario" onPress={() => router.back()} />
         </>

@@ -1,28 +1,30 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { caminhoDoComprovante, formatoDoArquivo } from '../comprovante';
+import { caminhoDoComprovante, formatoPeloConteudo } from '../comprovante';
 
-describe('formatoDoArquivo', () => {
-  it.each([
-    ['application/pdf', null, 'pdf'],
-    ['image/jpeg', null, 'jpg'],
-    ['IMAGE/PNG', null, 'png'],
-    [null, 'comprovante.PDF', 'pdf'],
-    [null, 'foto.jpeg', 'jpg'],
-    [undefined, 'print.png', 'png'],
-  ] as [string | null | undefined, string | null, string][])('tipo %p e nome %p viram %s', (tipo, nome, esperado) => {
-    expect(formatoDoArquivo(tipo, nome)).toBe(esperado);
+const bytes = (texto: string, ...prefixo: number[]) =>
+  Uint8Array.from([...prefixo, ...Array.from(texto, (c) => c.charCodeAt(0))]);
+
+describe('formatoPeloConteudo', () => {
+  it('reconhece PDF pelo início %PDF', () => {
+    expect(formatoPeloConteudo(bytes('%PDF-1.7\n...'))).toBe('pdf');
+  });
+
+  it('reconhece PNG pela assinatura de 8 bytes', () => {
+    expect(formatoPeloConteudo(bytes('IHDR', 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a))).toBe('png');
+  });
+
+  it('reconhece JPEG pelo início FF D8 FF', () => {
+    expect(formatoPeloConteudo(bytes('JFIF', 0xff, 0xd8, 0xff, 0xe0))).toBe('jpg');
   });
 
   it.each([
-    ['image/heic', 'foto.heic'],
-    ['application/msword', 'recibo.doc'],
-    [null, 'sem-extensao'],
-    [null, null],
-    // O tipo informado vale mais que o nome: um HEIC renomeado para .jpg não passa.
-    ['image/heic', 'foto.jpg'],
-  ])('recusa tipo %p com nome %p', (tipo, nome) => {
-    expect(formatoDoArquivo(tipo, nome)).toBeNull();
+    ['Word', bytes('rest', 0xd0, 0xcf, 0x11, 0xe0)],
+    ['HEIC', bytes('ftypheic', 0x00, 0x00, 0x00, 0x18)],
+    ['texto', bytes('Comprovante')],
+    ['vazio', new Uint8Array()],
+  ])('recusa %s', (_nome, conteudo) => {
+    expect(formatoPeloConteudo(conteudo)).toBeNull();
   });
 });
 

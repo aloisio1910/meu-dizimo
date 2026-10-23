@@ -5,27 +5,21 @@ export type FormatoDoComprovante = 'pdf' | 'jpg' | 'png';
 
 export const TAMANHO_MAXIMO_BYTES = 10 * 1024 * 1024;
 
-const POR_TIPO: Record<string, FormatoDoComprovante> = {
-  'application/pdf': 'pdf',
-  'image/jpeg': 'jpg',
-  'image/jpg': 'jpg',
-  'image/png': 'png',
-};
-
-const POR_EXTENSAO: Record<string, FormatoDoComprovante> = { pdf: 'pdf', jpg: 'jpg', jpeg: 'jpg', png: 'png' };
-
 export const TIPO_DO_FORMATO: Record<FormatoDoComprovante, string> = {
   pdf: 'application/pdf',
   jpg: 'image/jpeg',
   png: 'image/png',
 };
 
-// Descobre o formato pelo tipo informado pelo celular ou, se faltar, pela
-// extensão do nome. Null = formato não aceito (ex.: HEIC do iPhone, Word).
-export function formatoDoArquivo(tipo?: string | null, nome?: string | null): FormatoDoComprovante | null {
-  if (tipo && POR_TIPO[tipo.toLowerCase()]) return POR_TIPO[tipo.toLowerCase()];
-  const extensao = nome?.split('.').pop()?.toLowerCase();
-  if (!tipo && extensao && POR_EXTENSAO[extensao]) return POR_EXTENSAO[extensao];
+// Formato pela "assinatura" no início do arquivo, que não depende do nome nem
+// do tipo informado pelo celular (alguns Androids informam PDF como arquivo
+// genérico). Um arquivo disfarçado com outra extensão, ou um HEIC do iPhone,
+// não passa. Null = formato não aceito.
+export function formatoPeloConteudo(bytes: Uint8Array): FormatoDoComprovante | null {
+  const comeca = (...assinatura: number[]) => assinatura.every((byte, i) => bytes[i] === byte);
+  if (comeca(0x25, 0x50, 0x44, 0x46)) return 'pdf'; // %PDF
+  if (comeca(0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a)) return 'png';
+  if (comeca(0xff, 0xd8, 0xff)) return 'jpg';
   return null;
 }
 

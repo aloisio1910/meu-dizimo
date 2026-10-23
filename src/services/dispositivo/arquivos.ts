@@ -1,7 +1,10 @@
 // Escolher o comprovante no celular: foto pela câmera, imagem da galeria ou PDF.
 import * as DocumentPicker from 'expo-document-picker';
 import { File } from 'expo-file-system';
+import { readAsStringAsync } from 'expo-file-system/legacy';
 import * as ImagePicker from 'expo-image-picker';
+
+import { base64ParaBytes } from '@/lib/base64';
 
 export type ArquivoEscolhido = {
   tipo: string | null;
@@ -23,8 +26,18 @@ const OPCOES_DE_FOTO: ImagePicker.ImagePickerOptions = {
   preferredAssetRepresentationMode: ImagePicker.UIImagePickerPreferredAssetRepresentationMode.Compatible,
 };
 
+// Lê o arquivo pela API atual (File); se falhar, pelo caminho antigo em base64.
+async function lerBytes(uri: string): Promise<Uint8Array> {
+  try {
+    return await new File(uri).bytes();
+  } catch (erro) {
+    if (__DEV__) console.warn('[comprovante] File.bytes falhou, tentando leitura em base64:', uri, erro);
+    return base64ParaBytes(await readAsStringAsync(uri, { encoding: 'base64' }));
+  }
+}
+
 function deArquivoLocal(uri: string, tipo: string | null, nome: string | null, tamanho: number | null): ArquivoEscolhido {
-  return { tipo, nome, tamanho, ler: () => new File(uri).bytes() };
+  return { tipo, nome, tamanho, ler: () => lerBytes(uri) };
 }
 
 export async function escolherFoto(origem: 'camera' | 'galeria'): Promise<ResultadoDaEscolha> {

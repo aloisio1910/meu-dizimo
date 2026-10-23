@@ -158,12 +158,19 @@
     "abrir": "Abrir comprovante {{numero}}",
     "linkIndisponivel": "Não foi possível abrir este comprovante agora. Tente de novo.",
     "fechadoParaCancelado": "Lançamentos cancelados não recebem comprovantes.",
+    "retirar": "Retirar comprovante {{numero}}",
+    "confirmarRetirada": "Retirar este comprovante? Ele deixa de aparecer para você, mas fica guardado para a tesouraria.",
+    "simRetirar": "Sim, retirar",
+    "naoRetirar": "Não, manter",
+    "retirado": "Comprovante retirado.",
     "falhaAoCarregar": "Não conseguimos carregar os comprovantes.",
     "erros": {
       "permissao_negada": "O app não tem permissão para usar a câmera ou as fotos. Libere nas configurações do celular.",
       "formato_nao_aceito": "Este arquivo não é aceito. Use foto JPG ou PNG, ou um PDF.",
       "arquivo_grande": "O arquivo passa de 10 MB. Tire outra foto ou escolha um arquivo menor.",
       "envio_falhou": "Não foi possível anexar o comprovante. Tente de novo.",
+      "comprovante_travado": "A tesouraria já está conferindo ou já confirmou este lançamento, por isso o comprovante não pode mais ser retirado.",
+      "erro_inesperado": "Algo deu errado. Tente de novo em instantes.",
       "sem_conexao": "Sem conexão com a internet. Verifique e tente de novo."
     }
   },

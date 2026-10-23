@@ -8,24 +8,37 @@ import { Botao } from '@/components/ui/botao';
 import { Texto } from '@/components/ui/texto';
 import { partesDaDataHora } from '@/lib/data';
 import { escolherFoto, escolherPdf, type ResultadoDaEscolha } from '@/services/dispositivo/arquivos';
-import { enviarComprovante, listarComprovantes, type Comprovante } from '@/services/supabase/comprovantes';
+import {
+  enviarComprovante,
+  listarComprovantes,
+  retirarComprovante,
+  type Comprovante,
+} from '@/services/supabase/comprovantes';
+import type { StatusDoLancamento } from '@/services/supabase/lancamentos';
 import { cores, espacos, raio } from '@/theme';
 
 type Props = {
   igrejaId: string;
   lancamentoId: string;
   idioma: string;
-  podeAnexar: boolean; // lançamento cancelado não recebe comprovante
+  status: StatusDoLancamento;
 };
 
-// Comprovantes de um lançamento: ver (por link temporário) e anexar (foto ou PDF).
-export function SecaoDeComprovantes({ igrejaId, lancamentoId, idioma, podeAnexar }: Props) {
+// Comprovantes de um lançamento: ver (por link temporário), anexar (foto ou
+// PDF) e retirar um errado (D-083).
+export function SecaoDeComprovantes({ igrejaId, lancamentoId, idioma, status }: Props) {
   const { t } = useTranslation();
   const [comprovantes, setComprovantes] = useState<Comprovante[] | null>(null);
   const [falhou, setFalhou] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string>();
   const [aviso, setAviso] = useState<string>();
+  const [aRetirar, setARetirar] = useState<string>();
+
+  // Lançamento cancelado não recebe comprovante; retirar só antes da conferência
+  // ou numa divergência, enquanto o comprovante ainda não virou prova conferida.
+  const podeAnexar = status !== 'cancelado';
+  const podeRetirar = status === 'aguardando' || status === 'divergencia';
 
   const carregar = useCallback(async () => {
     try {
@@ -65,6 +78,21 @@ export function SecaoDeComprovantes({ igrejaId, lancamentoId, idioma, podeAnexar
     await carregar();
   }
 
+  async function retirar(comprovanteId: string) {
+    setErro(undefined);
+    setAviso(undefined);
+    setEnviando(true);
+    const falha = await retirarComprovante(comprovanteId);
+    setEnviando(false);
+    setARetirar(undefined);
+    if (falha) {
+      setErro(t(`comprovantes.erros.${falha}`));
+      return;
+    }
+    setAviso(t('comprovantes.retirado'));
+    await carregar();
+  }
+
   async function abrir(comprovante: Comprovante) {
     // O link vale 5 minutos: se a tela ficou aberta muito tempo, busca de novo.
     const atual = (await listarComprovantes(lancamentoId).catch(() => [])).find((c) => c.id === comprovante.id);
@@ -91,20 +119,42 @@ export function SecaoDeComprovantes({ igrejaId, lancamentoId, idioma, podeAnexar
         const numero = indice + 1;
         const quando = t('lancamento.dataHora', partesDaDataHora(comprovante.enviado_em, idioma));
         return (
-          <Pressable
-            key={comprovante.id}
-            accessibilityRole="button"
-            accessibilityLabel={t('comprovantes.abrir', { numero })}
-            onPress={() => abrir(comprovante)}
-            style={estilos.item}
-          >
-            {comprovante.formato !== 'pdf' && !!comprovante.link && (
-              <Image source={{ uri: comprovante.link }} style={estilos.miniatura} contentFit="cover" />
+          <View key={comprovante.id} style={estilos.bloco}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('comprovantes.abrir', { numero })}
+              onPress={() => abrir(comprovante)}
+              style={estilos.item}
+            >
+              {comprovante.formato !== 'pdf' && !!comprovante.link && (
+                <Image source={{ uri: comprovante.link }} style={estilos.miniatura} contentFit="cover" />
+              )}
+              <Texto style={estilos.textoDoItem}>
+                {t('comprovantes.item', { numero, formato: comprovante.formato.toUpperCase(), quando })}
+              </Texto>
+            </Pressable>
+            {podeRetirar && aRetirar !== comprovante.id && (
+              <Botao
+                titulo={t('comprovantes.retirar', { numero })}
+                variante="secundario"
+                onPress={() => setARetirar(comprovante.id)}
+                desabilitado={enviando}
+              />
             )}
-            <Texto style={estilos.textoDoItem}>
-              {t('comprovantes.item', { numero, formato: comprovante.formato.toUpperCase(), quando })}
-            </Texto>
-          </Pressable>
+            {/* Retirar pede confirmação: o comprovante some da lista do membro. */}
+            {aRetirar === comprovante.id && (
+              <>
+                <Texto variante="destaque">{t('comprovantes.confirmarRetirada')}</Texto>
+                <Botao titulo={t('comprovantes.simRetirar')} onPress={() => retirar(comprovante.id)} carregando={enviando} />
+                <Botao
+                  titulo={t('comprovantes.naoRetirar')}
+                  variante="secundario"
+                  onPress={() => setARetirar(undefined)}
+                  desabilitado={enviando}
+                />
+              </>
+            )}
+          </View>
         );
       })}
 
@@ -147,6 +197,9 @@ export function SecaoDeComprovantes({ igrejaId, lancamentoId, idioma, podeAnexar
 const estilos = StyleSheet.create({
   secao: {
     gap: espacos.medio,
+  },
+  bloco: {
+    gap: espacos.pequeno,
   },
   item: {
     flexDirection: 'row',
