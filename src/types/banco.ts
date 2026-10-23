@@ -113,14 +113,14 @@ isOneToOne: false
                   ]
                 },"comprovantes": {
                   Row: {
-                    "arquivo_path": string,"enviado_em": string,"enviado_por": string | null,"formato": Database["public"]['Enums']["formato_comprovante"],"id": string,"igreja_id": string,"lancamento_id": string
+                    "arquivo_path": string,"enviado_em": string,"enviado_por": string | null,"formato": Database["public"]['Enums']["formato_comprovante"],"id": string,"igreja_id": string,"lancamento_id": string,"retirado_em": string | null,"retirado_por": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "arquivo_path": string,"enviado_em"?: string,"enviado_por"?: string | null,"formato": Database["public"]['Enums']["formato_comprovante"],"id"?: string,"igreja_id": string,"lancamento_id": string
+                    "arquivo_path": string,"enviado_em"?: string,"enviado_por"?: string | null,"formato": Database["public"]['Enums']["formato_comprovante"],"id"?: string,"igreja_id": string,"lancamento_id": string,"retirado_em"?: string | null,"retirado_por"?: string | null
                   }
                   Update: {
-                    "arquivo_path"?: string,"enviado_em"?: string,"enviado_por"?: string | null,"formato"?: Database["public"]['Enums']["formato_comprovante"],"id"?: string,"igreja_id"?: string,"lancamento_id"?: string
+                    "arquivo_path"?: string,"enviado_em"?: string,"enviado_por"?: string | null,"formato"?: Database["public"]['Enums']["formato_comprovante"],"id"?: string,"igreja_id"?: string,"lancamento_id"?: string,"retirado_em"?: string | null,"retirado_por"?: string | null
                   }
                   Relationships: [
                     {
@@ -516,6 +516,9 @@ isOneToOne: false
                            },
 "responder_divergencia":
 { Args: { "p_aceitar": boolean,"p_lancamento_id": string,"p_mensagem"?: string }; Returns: undefined
+                           },
+"retirar_comprovante":
+{ Args: { "p_comprovante_id": string }; Returns: undefined
                            },
 "status_ao_liberar":
 { Args: { "p_resposta": Database["public"]['Enums']["resposta_divergencia"] }; Returns: Database["public"]['Enums']["status_lancamento"]
