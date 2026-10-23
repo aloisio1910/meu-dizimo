@@ -20,7 +20,7 @@ O app atende igrejas de diferentes denominações. O núcleo é o dízimo. Em to
 
 | Versão | Data | O que mudou |
 | --- | --- | --- |
-| 0.4 | 22/10/2026 | Decisões tomadas na construção do banco de dados e das primeiras telas (D-067 a D-082): permissões, lançamentos, campanhas, entrada pela digital, sessão criptografada, LGPD e hospedagem no Brasil |
+| 0.4 | 22/10/2026 | Decisões tomadas na construção do banco de dados e das primeiras telas (D-067 a D-083): permissões, lançamentos, campanhas, entrada pela digital, sessão criptografada, LGPD e hospedagem no Brasil |
 | 0.3 | 20/10/2026 | Decisões das questões abertas, correções de consistência, módulo de Ofertas e Campanhas, QR Code Pix, LGPD, escopo por fases |
 | 0.2 | 17/08/2026 | Documento de requisitos estruturado, regras de negócio e registro de decisões |
 | 0.1 | — | Ideia inicial: janelas do app e perfis |
@@ -371,6 +371,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-080 | Primeiro acesso com dois aceites separados: termos e política de privacidade, e consentimento específico para o dado sensível (vínculo religioso) | Definido |
 | D-081 | Dados hospedados no Brasil (Supabase, região São Paulo), por velocidade e pela LGPD | Definido |
 | D-082 | Formas de devolução definidas por igreja; o padrão é Pix, cartão, dinheiro e transferência | Definido |
+| D-083 | O membro retira um comprovante anexado por engano sem apagá-lo: ele some da lista do membro e fica guardado para a tesouraria como retirado pelo membro, com data. Vale enquanto o lançamento aguarda conferência ou está em divergência | Definido |
 
 ## 14. Questões abertas e próximos passos
 
