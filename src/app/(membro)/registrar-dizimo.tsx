@@ -40,6 +40,7 @@ export default function RegistrarDizimo() {
   const [erroGeral, setErroGeral] = useState<string>();
   const [enviando, setEnviando] = useState(false);
   const [registro, setRegistro] = useState<Registro>();
+  const [idRegistrado, setIdRegistrado] = useState<string>();
   const [conta, setConta] = useState<ContaParaPix | null>();
   const [copiado, setCopiado] = useState(false);
   const [mostrarQr, setMostrarQr] = useState(false);
@@ -80,6 +81,7 @@ export default function RegistrarDizimo() {
       return;
     }
     setRegistro(dados);
+    setIdRegistrado(resultado.id);
     if (dados.forma === 'pix') {
       setConta(await buscarContaPrincipal(ficha!.igreja_id).catch(() => null));
     }
@@ -173,6 +175,13 @@ export default function RegistrarDizimo() {
           </View>
         )}
 
+        {!!idRegistrado && (
+          <Botao
+            titulo={t('registrar.anexarComprovante')}
+            variante="secundario"
+            onPress={() => router.replace({ pathname: '/lancamento/[id]', params: { id: idRegistrado } })}
+          />
+        )}
         <Botao
           titulo={t('registrar.voltarAoCartao')}
           variante={codigo ? 'secundario' : 'principal'}

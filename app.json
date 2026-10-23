@@ -42,6 +42,14 @@
         }
       ],
       [
+        "expo-image-picker",
+        {
+          "cameraPermission": "O Meu Dízimo usa a câmera para fotografar o comprovante do seu dízimo ou oferta.",
+          "photosPermission": "O Meu Dízimo acessa suas fotos para você escolher o comprovante do seu dízimo ou oferta.",
+          "microphonePermission": false
+        }
+      ],
+      [
         "expo-local-authentication",
         {
           "faceIDPermission": "O Meu Dízimo usa o Face ID para proteger o acesso ao seu Cartão de Dízimo."

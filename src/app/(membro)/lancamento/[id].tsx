@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { CamposDoDizimo } from '@/components/campos-do-dizimo';
+import { SecaoDeComprovantes } from '@/components/secao-de-comprovantes';
 import { SeloDeStatus } from '@/components/selo-de-status';
 import { Botao } from '@/components/ui/botao';
 import { CampoTexto } from '@/components/ui/campo-texto';
@@ -292,7 +293,15 @@ export default function DetalheDoDizimo() {
       )}
 
       {modo === 'ver' && (
-        <Botao titulo={t('lancamento.voltarAoCartao')} variante="secundario" onPress={() => router.back()} />
+        <>
+          <SecaoDeComprovantes
+            igrejaId={ficha.igreja_id}
+            lancamentoId={lancamento.id}
+            idioma={idioma}
+            podeAnexar={lancamento.status !== 'cancelado'}
+          />
+          <Botao titulo={t('lancamento.voltarAoCartao')} variante="secundario" onPress={() => router.back()} />
+        </>
       )}
     </Tela>
   );

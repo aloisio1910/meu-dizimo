@@ -145,6 +145,28 @@
       "data_futura": "A data não pode ser depois de hoje."
     }
   },
+  "comprovantes": {
+    "titulo": "Comprovantes",
+    "explicacao": "Anexar o comprovante é opcional e ajuda a tesouraria a conferir. Aceitamos foto (JPG ou PNG) e PDF, até 10 MB.",
+    "nenhum": "Nenhum comprovante anexado.",
+    "tirarFoto": "Tirar foto do comprovante",
+    "escolherGaleria": "Escolher foto da galeria",
+    "escolherPdf": "Escolher arquivo PDF",
+    "enviando": "Enviando o comprovante…",
+    "enviado": "Comprovante anexado!",
+    "item": "Comprovante {{numero}} ({{formato}}), enviado em {{quando}}",
+    "abrir": "Abrir comprovante {{numero}}",
+    "linkIndisponivel": "Não foi possível abrir este comprovante agora. Tente de novo.",
+    "fechadoParaCancelado": "Lançamentos cancelados não recebem comprovantes.",
+    "falhaAoCarregar": "Não conseguimos carregar os comprovantes.",
+    "erros": {
+      "permissao_negada": "O app não tem permissão para usar a câmera ou as fotos. Libere nas configurações do celular.",
+      "formato_nao_aceito": "Este arquivo não é aceito. Use foto JPG ou PNG, ou um PDF.",
+      "arquivo_grande": "O arquivo passa de 10 MB. Tire outra foto ou escolha um arquivo menor.",
+      "envio_falhou": "Não foi possível anexar o comprovante. Tente de novo.",
+      "sem_conexao": "Sem conexão com a internet. Verifique e tente de novo."
+    }
+  },
   "registrar": {
     "titulo": "Registrar dízimo",
     "explicacao": "Informe o dízimo que você devolveu. A tesouraria da igreja vai conferir.",
@@ -180,6 +202,7 @@
     "descricaoQr": "QR Code do Pix de {{valor}} para {{conta}}",
     "contaDestino": "Conta: {{conta}}",
     "semPix": "A igreja ainda não cadastrou a chave Pix. Fale com a tesouraria para saber como pagar.",
+    "anexarComprovante": "Anexar comprovante",
     "voltarAoCartao": "Voltar ao Cartão de Dízimo"
   },
   "biometria": {
