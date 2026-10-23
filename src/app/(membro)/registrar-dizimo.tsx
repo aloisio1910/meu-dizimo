@@ -12,7 +12,7 @@ import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
 import { dataParaIso, hojeIso, isoParaData, mascararData } from '@/lib/data';
-import { formatarMoeda, mascararValor, textoParaCentavos } from '@/lib/dinheiro';
+import { completarValor, formatarMoeda, mascararValor, textoParaCentavos } from '@/lib/dinheiro';
 import { ehFormaConhecida } from '@/lib/formas';
 import { gerarCodigoPix } from '@/lib/pix';
 import {
@@ -202,6 +202,7 @@ export default function RegistrarDizimo() {
         dica={t('registrar.dicaValor')}
         value={valor}
         onChangeText={(texto) => setValor(mascararValor(texto))}
+        onBlur={() => setValor((atual) => completarValor(atual))}
         erro={erros.valor}
         keyboardType="decimal-pad"
       />

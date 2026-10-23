@@ -18,9 +18,33 @@ export function formatarMoeda(centavos: number, moeda: string, idioma: string): 
   return new Intl.NumberFormat(idioma, { style: 'currency', currency: moeda }).format(centavos / 100);
 }
 
-// Máscara do campo de valor enquanto a pessoa digita: só números e uma vírgula com até 2 casas.
+// Até 9 dígitos antes da vírgula: R$ 999.999.999,99, o máximo aceito.
+const MAXIMO_DE_DIGITOS_INTEIROS = 9;
+
+function comPontosDeMilhar(inteiros: string): string {
+  return inteiros.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+// Máscara do campo de valor enquanto a pessoa digita: "10000" -> "10.000".
+// Os pontos de milhar são colocados pelo próprio campo, então um ponto
+// digitado no fim só pode ser a vírgula decimal de teclados que usam ponto
+// ("300." -> "300,"); qualquer outro ponto é descartado.
 export function mascararValor(texto: string): string {
-  const [inteiros, ...resto] = texto.replace(/[^\d,]/g, '').split(',');
-  const semZerosAEsquerda = inteiros.replace(/^0+(?=\d)/, '');
-  return resto.length > 0 ? `${semZerosAEsquerda || '0'},${resto.join('').slice(0, 2)}` : semZerosAEsquerda;
+  const normalizado = texto.endsWith('.') && !texto.includes(',') ? `${texto.slice(0, -1)},` : texto;
+  const [parteInteira, ...resto] = normalizado.split(',');
+  const inteiros = parteInteira
+    .replace(/\D/g, '')
+    .replace(/^0+(?=\d)/, '')
+    .slice(0, MAXIMO_DE_DIGITOS_INTEIROS);
+  const formatado = comPontosDeMilhar(inteiros);
+  if (resto.length === 0) return formatado;
+  return `${formatado || '0'},${resto.join('').replace(/\D/g, '').slice(0, 2)}`;
+}
+
+// Ao sair do campo, completa os centavos: "10.000" -> "10.000,00", "300,5" -> "300,50".
+export function completarValor(texto: string): string {
+  const mascarado = mascararValor(texto);
+  if (!mascarado) return '';
+  const [inteiros, centavos = ''] = mascarado.split(',');
+  return `${inteiros || '0'},${centavos.padEnd(2, '0')}`;
 }

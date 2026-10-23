@@ -113,7 +113,7 @@
     "registrar": "Registrar dízimo",
     "cancelar": "Voltar",
     "erros": {
-      "valorInvalido": "Informe o valor em reais, por exemplo 300,00.",
+      "valorInvalido": "Informe o valor em reais, por exemplo 300,00. O máximo é R$ 999.999.999,99.",
       "dataInvalida": "Confira a data. Use dia, mês e ano, como 12/10/2026.",
       "dataFutura": "A data não pode ser depois de hoje.",
       "escolhaForma": "Escolha como você devolveu.",
