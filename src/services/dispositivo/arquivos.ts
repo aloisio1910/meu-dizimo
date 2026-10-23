@@ -26,14 +26,26 @@ const OPCOES_DE_FOTO: ImagePicker.ImagePickerOptions = {
   preferredAssetRepresentationMode: ImagePicker.UIImagePickerPreferredAssetRepresentationMode.Compatible,
 };
 
-// Lê o arquivo pela API atual (File); se falhar, pelo caminho antigo em base64.
+// Lê o arquivo tentando três caminhos, porque cada origem tem as suas regras:
+// a API atual (File), a leitura clássica em base64 e, por fim, o fetch, que
+// não passa pela checagem de pastas do Expo Go.
 async function lerBytes(uri: string): Promise<Uint8Array> {
-  try {
-    return await new File(uri).bytes();
-  } catch (erro) {
-    if (__DEV__) console.warn('[comprovante] File.bytes falhou, tentando leitura em base64:', uri, erro);
-    return base64ParaBytes(await readAsStringAsync(uri, { encoding: 'base64' }));
+  const tentativas: [string, () => Promise<Uint8Array>][] = [
+    ['File', () => new File(uri).bytes()],
+    ['base64', async () => base64ParaBytes(await readAsStringAsync(uri, { encoding: 'base64' }))],
+    ['fetch', async () => new Uint8Array(await (await fetch(uri)).arrayBuffer())],
+  ];
+  const falhas: string[] = [];
+  for (const [nome, ler] of tentativas) {
+    try {
+      const bytes = await ler();
+      if (__DEV__ && falhas.length > 0) console.warn(`[comprovante] lido por ${nome} depois de:`, falhas.join(' | '));
+      return bytes;
+    } catch (erro) {
+      falhas.push(`${nome}: ${erro instanceof Error ? erro.message : String(erro)}`);
+    }
   }
+  throw new Error(`uri=${uri} | ${falhas.join(' | ')}`);
 }
 
 function deArquivoLocal(uri: string, tipo: string | null, nome: string | null, tamanho: number | null): ArquivoEscolhido {
@@ -61,7 +73,10 @@ export async function escolherFoto(origem: 'camera' | 'galeria'): Promise<Result
 }
 
 export async function escolherPdf(): Promise<ResultadoDaEscolha> {
-  const resultado = await DocumentPicker.getDocumentAsync({ type: 'application/pdf', copyToCacheDirectory: true });
+  // Sem copiar para o cache: no Expo Go, a cópia vai para uma pasta do próprio
+  // Expo Go que o app não tem permissão de ler. O endereço original vem com a
+  // permissão de leitura concedida pelo Android para este arquivo.
+  const resultado = await DocumentPicker.getDocumentAsync({ type: 'application/pdf', copyToCacheDirectory: false });
   const documento = resultado.assets?.[0];
   if (resultado.canceled || !documento) return { ok: false, motivo: 'cancelado' };
   return {

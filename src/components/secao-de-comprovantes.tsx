@@ -9,6 +9,7 @@ import { Texto } from '@/components/ui/texto';
 import { partesDaDataHora } from '@/lib/data';
 import { escolherFoto, escolherPdf, type ResultadoDaEscolha } from '@/services/dispositivo/arquivos';
 import {
+  detalheTecnicoDoUltimoErro,
   enviarComprovante,
   listarComprovantes,
   retirarComprovante,
@@ -71,7 +72,9 @@ export function SecaoDeComprovantes({ igrejaId, lancamentoId, idioma, status }: 
     const falha = await enviarComprovante(igrejaId, lancamentoId, escolha.arquivo);
     setEnviando(false);
     if (falha) {
-      setErro(t(`comprovantes.erros.${falha}`));
+      // Só em desenvolvimento: o motivo técnico aparece junto, para diagnóstico.
+      const detalhe = detalheTecnicoDoUltimoErro();
+      setErro(t(`comprovantes.erros.${falha}`) + (detalhe ? `\n\n${detalhe}` : ''));
       return;
     }
     setAviso(t('comprovantes.enviado'));

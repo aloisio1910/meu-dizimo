@@ -11,9 +11,19 @@ import type { ArquivoEscolhido } from '@/services/dispositivo/arquivos';
 
 import { supabase } from './cliente';
 
-// Em desenvolvimento, o erro real aparece na janela do "npx expo start".
+// Em desenvolvimento, o erro real aparece na janela do "npx expo start" e,
+// pela função abaixo, também na tela. No app publicado, nada disso aparece.
+let detalheDoUltimoErro: string | undefined;
+
 function avisarEmDesenvolvimento(etapa: string, erro: unknown) {
-  if (__DEV__) console.warn(`[comprovante] falha ao ${etapa}:`, erro);
+  if (!__DEV__) return;
+  const texto = erro instanceof Error ? `${erro.name}: ${erro.message}` : JSON.stringify(erro);
+  detalheDoUltimoErro = `[${etapa}] ${texto}`;
+  console.warn(`[comprovante] falha ao ${etapa}:`, erro);
+}
+
+export function detalheTecnicoDoUltimoErro(): string | undefined {
+  return __DEV__ ? detalheDoUltimoErro : undefined;
 }
 
 // Links temporários: o comprovante abre por 5 minutos e o link expira.
