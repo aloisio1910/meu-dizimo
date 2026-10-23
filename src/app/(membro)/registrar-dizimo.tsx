@@ -5,16 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
+import { CamposDoDizimo } from '@/components/campos-do-dizimo';
 import { Botao } from '@/components/ui/botao';
-import { CampoTexto } from '@/components/ui/campo-texto';
-import { Opcoes } from '@/components/ui/opcoes';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
-import { dataParaIso, hojeIso, isoParaData, mascararData } from '@/lib/data';
-import { completarValor, formatarMoeda, mascararValor, textoParaCentavos } from '@/lib/dinheiro';
-import { ehFormaConhecida } from '@/lib/formas';
+import { hojeIso, isoParaData } from '@/lib/data';
+import { formatarMoeda } from '@/lib/dinheiro';
 import { gerarCodigoPix } from '@/lib/pix';
+import { validarDizimo, type DadosDoDizimo, type ErrosDoDizimo } from '@/lib/validar-dizimo';
 import {
   buscarContaPrincipal,
   existeDizimoIgual,
@@ -23,9 +22,7 @@ import {
 } from '@/services/supabase/lancamentos';
 import { cores, espacos } from '@/theme';
 
-type Erros = { valor?: string; data?: string; forma?: string; geral?: string };
-
-type Registro = { centavos: number; data: string; forma: string };
+type Registro = DadosDoDizimo;
 
 // M-04 Registrar dízimo: valor, data e forma; depois de gravar, o código Pix.
 // Gravar antes de pagar garante que o registro não se perde se a pessoa
@@ -39,7 +36,8 @@ export default function RegistrarDizimo() {
   const [valor, setValor] = useState('');
   const [data, setData] = useState(() => isoParaData(hojeIso()));
   const [forma, setForma] = useState<string>();
-  const [erros, setErros] = useState<Erros>({});
+  const [erros, setErros] = useState<ErrosDoDizimo>({});
+  const [erroGeral, setErroGeral] = useState<string>();
   const [enviando, setEnviando] = useState(false);
   const [registro, setRegistro] = useState<Registro>();
   const [conta, setConta] = useState<ContaParaPix | null>();
@@ -53,18 +51,12 @@ export default function RegistrarDizimo() {
   const moeda = igreja?.moeda ?? 'BRL';
   const idioma = igreja?.idioma ?? 'pt-BR';
   const emMoeda = (centavos: number) => formatarMoeda(centavos, moeda, idioma);
-  const rotuloDaForma = (f: string) => (ehFormaConhecida(f) ? t(`formas.${f}`) : f);
 
   function validar(): Registro | null {
-    const novosErros: Erros = {};
-    const centavos = textoParaCentavos(valor);
-    const iso = dataParaIso(data);
-    if (!centavos) novosErros.valor = t('registrar.erros.valorInvalido');
-    if (!iso) novosErros.data = t('registrar.erros.dataInvalida');
-    else if (iso > hojeIso()) novosErros.data = t('registrar.erros.dataFutura');
-    if (!forma) novosErros.forma = t('registrar.erros.escolhaForma');
-    setErros(novosErros);
-    return centavos && iso && forma && Object.keys(novosErros).length === 0 ? { centavos, data: iso, forma } : null;
+    const resultado = validarDizimo({ valor, data, forma }, hojeIso());
+    setErros(resultado.ok ? {} : resultado.erros);
+    setErroGeral(undefined);
+    return resultado.ok ? resultado.dados : null;
   }
 
   async function gravar(dados: Registro) {
@@ -80,12 +72,11 @@ export default function RegistrarDizimo() {
     if (!resultado.ok) {
       setEnviando(false);
       setEtapa('formulario');
-      setErros({
-        geral:
-          resultado.erro === 'sem_conexao' || resultado.erro === 'erro_inesperado'
-            ? t(`comum.erros.${resultado.erro}`)
-            : t(`registrar.erros.${resultado.erro}`),
-      });
+      setErroGeral(
+        resultado.erro === 'sem_conexao' || resultado.erro === 'erro_inesperado'
+          ? t(`comum.erros.${resultado.erro}`)
+          : t(`registrar.erros.${resultado.erro}`),
+      );
       return;
     }
     setRegistro(dados);
@@ -191,37 +182,21 @@ export default function RegistrarDizimo() {
     );
   }
 
-  const formas = igreja?.formas_devolucao ?? [];
-
   return (
     <Tela>
       <Texto variante="titulo">{t('registrar.titulo')}</Texto>
       <Texto>{t('registrar.explicacao')}</Texto>
-      <CampoTexto
-        rotulo={t('registrar.rotuloValor')}
-        dica={t('registrar.dicaValor')}
-        value={valor}
-        onChangeText={(texto) => setValor(mascararValor(texto))}
-        onBlur={() => setValor((atual) => completarValor(atual))}
-        erro={erros.valor}
-        keyboardType="decimal-pad"
+      <CamposDoDizimo
+        valor={valor}
+        aoMudarValor={setValor}
+        data={data}
+        aoMudarData={setData}
+        forma={forma}
+        aoMudarForma={setForma}
+        formasAceitas={igreja?.formas_devolucao ?? []}
+        erros={erros}
       />
-      <CampoTexto
-        rotulo={t('registrar.rotuloData')}
-        dica={t('registrar.dicaData')}
-        value={data}
-        onChangeText={(texto) => setData(mascararData(texto))}
-        erro={erros.data}
-        keyboardType="number-pad"
-      />
-      <Opcoes
-        rotulo={t('registrar.rotuloForma')}
-        opcoes={formas.map((f) => ({ valor: f, rotulo: rotuloDaForma(f) }))}
-        selecionada={forma}
-        onSelecionar={setForma}
-        erro={erros.forma}
-      />
-      {!!erros.geral && <Texto variante="erro">{erros.geral}</Texto>}
+      {!!erroGeral && <Texto variante="erro">{erroGeral}</Texto>}
       {enviando ? (
         <ActivityIndicator size="large" accessibilityLabel={t('comum.carregando')} />
       ) : (

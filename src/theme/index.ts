@@ -18,6 +18,7 @@ export const cores = {
   borda: '#6B6B6B', // 5,3:1: borda de campo visível
   erro: '#B3261E', // 6,5:1
   desabilitado: '#767676', // 4,5:1: mesmo desabilitado, o texto continua legível
+  fundoPressionado: '#F0F0F0', // resposta visual ao toque numa linha
 } as const;
 
 // Selo de status do lançamento: cor clara de fundo e texto escuro, sempre

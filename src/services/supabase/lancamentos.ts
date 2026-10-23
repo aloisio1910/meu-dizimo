@@ -76,6 +76,85 @@ export async function existeDizimoIgual(membroId: string, valorEmCentavos: numbe
   return existe;
 }
 
+export type DetalheDoLancamento = LancamentoDoCartao & {
+  membro_id: string;
+  registrado_em: string;
+  confirmado_em: string | null;
+  observacao_tesouraria: string | null;
+  divergencia_em: string | null;
+  resposta_membro: Enums['resposta_divergencia'] | null;
+  mensagem_membro: string | null;
+  respondido_em: string | null;
+  motivo_cancelamento: string | null;
+  cancelado_em: string | null;
+};
+
+// M-05: o lançamento completo. Null se não existir ou não for da pessoa (RLS).
+export async function buscarLancamento(id: string): Promise<DetalheDoLancamento | null> {
+  const { data, error } = await supabase
+    .from('lancamentos')
+    .select(
+      'id, membro_id, data_contribuicao, valor_informado_centavos, valor_conferido_centavos, moeda, forma, status, confirmado_por_nome, registrado_pela_tesouraria, registrado_em, confirmado_em, observacao_tesouraria, divergencia_em, resposta_membro, mensagem_membro, respondido_em, motivo_cancelamento, cancelado_em',
+    )
+    .eq('id', id)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+// Erros das ações do membro sobre o lançamento, cada um com texto no i18n.
+export type ErroDaAcao =
+  | 'lancamento_bloqueado'
+  | 'motivo_obrigatorio'
+  | 'mensagem_obrigatoria'
+  | 'divergencia_indisponivel'
+  | 'forma_invalida'
+  | 'data_futura'
+  | 'sem_conexao'
+  | 'erro_inesperado';
+
+const ERROS_CONHECIDOS: ErroDaAcao[] = [
+  'lancamento_bloqueado',
+  'motivo_obrigatorio',
+  'mensagem_obrigatoria',
+  'divergencia_indisponivel',
+  'forma_invalida',
+  'data_futura',
+];
+
+async function executarAcao(acao: () => PromiseLike<{ error: PostgrestError | null }>): Promise<ErroDaAcao | null> {
+  try {
+    const { error } = await acao();
+    if (!error) return null;
+    return (ERROS_CONHECIDOS as string[]).includes(error.message) ? (error.message as ErroDaAcao) : 'erro_inesperado';
+  } catch (erro) {
+    return erro instanceof TypeError ? 'sem_conexao' : 'erro_inesperado';
+  }
+}
+
+// RN-013: editar valor, data e forma enquanto aguarda conferência. O banco
+// recusa (lancamento_bloqueado) se a tesouraria já abriu o lançamento.
+export function editarDizimo(id: string, dados: { centavos: number; data: string; forma: string }) {
+  return executarAcao(() =>
+    supabase
+      .from('lancamentos')
+      .update({ valor_informado_centavos: dados.centavos, data_contribuicao: dados.data, forma: dados.forma })
+      .eq('id', id),
+  );
+}
+
+// RN-015 e RN-016: cancelar com motivo; o lançamento continua no histórico.
+export function cancelarLancamento(id: string, motivo: string) {
+  return executarAcao(() => supabase.rpc('cancelar_lancamento', { p_lancamento_id: id, p_motivo: motivo }));
+}
+
+// RN-030: aceitar (confirma com o valor conferido) ou contestar com mensagem.
+export function responderDivergencia(id: string, aceitar: boolean, mensagem?: string) {
+  return executarAcao(() =>
+    supabase.rpc('responder_divergencia', { p_lancamento_id: id, p_aceitar: aceitar, p_mensagem: mensagem }),
+  );
+}
+
 export type NovoDizimo = {
   igrejaId: string;
   membroId: string;

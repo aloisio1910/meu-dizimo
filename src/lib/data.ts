@@ -15,6 +15,17 @@ export function hojeIso(agora: Date = new Date()): string {
   return `${agora.getFullYear()}-${mes}-${dia}`;
 }
 
+// Momento gravado pelo banco (UTC) no horário de quem lê, em partes para a
+// frase vir do i18n: "2026-10-22T23:53:00Z" -> { dia: "22/10/2026", hora: "20:53" } em Brasília.
+export function partesDaDataHora(momento: string, idioma: string, fusoHorario?: string) {
+  const data = new Date(momento);
+  const opcoes = { timeZone: fusoHorario } as const;
+  return {
+    dia: data.toLocaleDateString(idioma, { ...opcoes, day: '2-digit', month: '2-digit', year: 'numeric' }),
+    hora: data.toLocaleTimeString(idioma, { ...opcoes, hour: '2-digit', minute: '2-digit' }),
+  };
+}
+
 // "1990-05-17" -> "17/05/1990" (para mostrar e para preencher o campo).
 export function isoParaData(iso: string): string {
   const [ano, mes, dia] = iso.split('-');

@@ -1,6 +1,22 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { dataParaIso, hojeIso, isoParaData, mascararData } from '../data';
+import { dataParaIso, hojeIso, isoParaData, mascararData, partesDaDataHora } from '../data';
+
+describe('partesDaDataHora', () => {
+  it('mostra no horário de Brasília um momento gravado em UTC', () => {
+    expect(partesDaDataHora('2026-10-22T23:53:00Z', 'pt-BR', 'America/Sao_Paulo')).toEqual({
+      dia: '22/10/2026',
+      hora: '20:53',
+    });
+  });
+
+  it('muda de dia quando o UTC já virou e Brasília ainda não', () => {
+    expect(partesDaDataHora('2026-10-23T01:30:00Z', 'pt-BR', 'America/Sao_Paulo')).toEqual({
+      dia: '22/10/2026',
+      hora: '22:30',
+    });
+  });
+});
 
 describe('hojeIso', () => {
   it('usa o dia do relógio local, não o do UTC', () => {

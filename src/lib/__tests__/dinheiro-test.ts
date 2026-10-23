@@ -1,6 +1,28 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { MAXIMO_EM_CENTAVOS, completarValor, formatarMoeda, mascararValor, textoParaCentavos } from '../dinheiro';
+import {
+  MAXIMO_EM_CENTAVOS,
+  centavosParaCampo,
+  completarValor,
+  formatarMoeda,
+  mascararValor,
+  textoParaCentavos,
+} from '../dinheiro';
+
+describe('centavosParaCampo', () => {
+  it.each([
+    [30050, '300,50'],
+    [1, '0,01'],
+    [1000000, '10.000,00'],
+    [MAXIMO_EM_CENTAVOS, '999.999.999,99'],
+  ])('%i centavos preenche o campo com "%s"', (centavos, esperado) => {
+    expect(centavosParaCampo(centavos)).toBe(esperado);
+  });
+
+  it('volta ao mesmo valor ao ler o campo', () => {
+    expect(textoParaCentavos(centavosParaCampo(123456))).toBe(123456);
+  });
+});
 
 describe('textoParaCentavos', () => {
   it.each([

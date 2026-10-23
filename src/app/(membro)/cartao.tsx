@@ -1,7 +1,7 @@
 import { Redirect, useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
 import { SeloDeStatus } from '@/components/selo-de-status';
 import { Botao } from '@/components/ui/botao';
@@ -79,7 +79,13 @@ export default function Cartao() {
       {dizimos?.map((dizimo) => {
         const moeda = moedaDe(dizimo);
         return (
-          <View key={dizimo.id} style={estilos.linha}>
+          <Pressable
+            key={dizimo.id}
+            accessibilityRole="button"
+            accessibilityHint={t('cartao.abrirDetalhe')}
+            onPress={() => router.push({ pathname: '/lancamento/[id]', params: { id: dizimo.id } })}
+            style={({ pressed }) => [estilos.linha, pressed && estilos.pressionada]}
+          >
             <View style={estilos.topoDaLinha}>
               <Texto variante="destaque">{isoParaData(dizimo.data_contribuicao)}</Texto>
               <Texto variante="destaque">{moeda(dizimo.valor_informado_centavos)}</Texto>
@@ -96,7 +102,8 @@ export default function Cartao() {
                 <Texto>{t('cartao.valorConferido', { valor: moeda(dizimo.valor_conferido_centavos) })}</Texto>
               )}
             {dizimo.registrado_pela_tesouraria && <Texto variante="apoio">{t('cartao.registradoPelaTesouraria')}</Texto>}
-          </View>
+            <Texto variante="apoio">{t('cartao.tocarParaDetalhes')}</Texto>
+          </Pressable>
         );
       })}
 
@@ -119,6 +126,9 @@ const estilos = StyleSheet.create({
     borderWidth: 1,
     borderColor: cores.borda,
     borderRadius: raio,
+  },
+  pressionada: {
+    backgroundColor: cores.fundoPressionado,
   },
   topoDaLinha: {
     flexDirection: 'row',

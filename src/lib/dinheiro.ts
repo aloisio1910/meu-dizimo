@@ -18,6 +18,11 @@ export function formatarMoeda(centavos: number, moeda: string, idioma: string): 
   return new Intl.NumberFormat(idioma, { style: 'currency', currency: moeda }).format(centavos / 100);
 }
 
+// Centavos guardados -> texto do campo de valor, só com inteiros: 30050 -> "300,50".
+export function centavosParaCampo(centavos: number): string {
+  return completarValor(`${Math.floor(centavos / 100)},${String(centavos % 100).padStart(2, '0')}`);
+}
+
 // Até 9 dígitos antes da vírgula: R$ 999.999.999,99, o máximo aceito.
 const MAXIMO_DE_DIGITOS_INTEIROS = 9;
 
