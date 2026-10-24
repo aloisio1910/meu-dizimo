@@ -365,6 +365,71 @@
       "confirmarReabrir": "Reabrir e devolver à fila",
       "reaberto": "Lançamento reaberto. Ele voltou para a fila.",
       "voltar": "Voltar"
+    },
+    "menu": {
+      "fila": "Fila de conferência",
+      "membros": "Membros"
+    },
+    "membros": {
+      "titulo": "Membros",
+      "convidar": "Convidar membro",
+      "busca": "Buscar",
+      "dicaBusca": "Nome, e-mail ou número do dizimista",
+      "filtroSituacao": "Mostrar",
+      "todos": "Todos",
+      "ativos": "Ativos",
+      "convidados": "Convidados",
+      "inativos": "Inativos",
+      "quantidade_one": "{{count}} membro",
+      "quantidade_other": "{{count}} membros",
+      "nenhum": "Nenhum membro com esta busca.",
+      "falhaAoCarregar": "Não conseguimos carregar os membros.",
+      "numero": "Nº {{numero}}",
+      "abrirFicha": "Abre a ficha de {{nome}}",
+      "situacao": {
+        "convidado": "Convidado",
+        "convite_vencido": "Convite vencido",
+        "ativo": "Ativo",
+        "inativo": "Inativo"
+      }
+    },
+    "convidar": {
+      "titulo": "Convidar membro",
+      "explicacao": "A pessoa entra no app com este e-mail e recebe um código para acessar. O convite vale por 7 dias.",
+      "nome": "Nome completo",
+      "email": "E-mail",
+      "dicaEmail": "O mesmo e-mail que a pessoa usa no celular.",
+      "celular": "Celular com DDD",
+      "enviar": "Criar convite",
+      "cancelar": "Voltar",
+      "criado": "Convite criado!",
+      "criadoDetalhe": "{{nome}} já pode instalar o app e entrar com {{email}}. O convite vale até {{data}}.",
+      "outro": "Convidar outra pessoa",
+      "verLista": "Ver a lista de membros",
+      "erros": {
+        "nomeObrigatorio": "Informe o nome.",
+        "emailInvalido": "Confira o e-mail, como nome@exemplo.com.",
+        "celularObrigatorio": "Informe o celular.",
+        "email_ja_cadastrado": "Este e-mail já está cadastrado nesta igreja. Procure a pessoa na lista de membros.",
+        "convite_indisponivel": "Esta pessoa já entrou no app, então o convite não pode mais ser alterado."
+      }
+    },
+    "membro": {
+      "titulo": "Ficha do membro",
+      "naoEncontrado": "Não encontramos este membro.",
+      "email": "E-mail",
+      "celular": "Celular",
+      "conviteAte": "Convite válido até {{data}}",
+      "conviteVenceu": "O convite venceu em {{data}}. Reenvie para dar mais 7 dias.",
+      "convitesEnviados_one": "{{count}} convite enviado",
+      "convitesEnviados_other": "{{count}} convites enviados",
+      "reenviar": "Reenviar convite",
+      "reenviado": "Convite reenviado. Vale até {{data}}.",
+      "corrigirEmail": "Corrigir e-mail",
+      "novoEmail": "E-mail correto",
+      "salvarEmail": "Salvar e-mail",
+      "emailCorrigido": "E-mail corrigido. A pessoa deve entrar com o novo e-mail.",
+      "voltar": "Voltar"
     }
   },
   "registrar": {

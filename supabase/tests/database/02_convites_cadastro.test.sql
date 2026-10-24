@@ -11,7 +11,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(37);
+select plan(41);
 
 create function pg_temp.entrar(p_usuario uuid, p_email text default null, p_admin_master boolean default false)
 returns void
@@ -104,6 +104,26 @@ select throws_ok(
   $$ update public.convites set expira_em = now() + interval '1 year' $$,
   '42501', null,
   'Tesoureiro não altera um convite registrado'
+);
+select public.convidar_membro('1a000000-0000-0000-0000-000000000000', 'Rita', 'rita@errado.test', '11900000007');
+select lives_ok(
+  $$ update public.membros set email = 'rita@a.test' where email = 'rita@errado.test' $$,
+  'Tesoureiro corrige o e-mail de quem ainda é convidado (D-069)'
+);
+select is(
+  (select count(*) from public.membros where email = 'rita@a.test' and status = 'convidado'),
+  1::bigint,
+  'A ficha convidada fica com o e-mail corrigido'
+);
+select throws_ok(
+  $$ update public.membros set email = 'lucas@a.test' where email = 'rita@a.test' $$,
+  '23505', null,
+  'Correção não aceita e-mail de outra ficha da igreja (RN-028)'
+);
+select throws_ok(
+  $$ update public.membros set email = 'ana.nova@a.test' where email = 'ana@a.test' $$,
+  '42501', null,
+  'Tesoureiro não troca o e-mail de membro ativo (D-069)'
 );
 select throws_ok(
   $$ insert into public.campos_cadastro (igreja_id, chave, rotulo, tipo)

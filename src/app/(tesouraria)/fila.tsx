@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator } from 'react-native';
 
 import { LinhaDaFila } from '@/components/linha-da-fila';
+import { MenuDaTesouraria } from '@/components/menu-da-tesouraria';
 import { Botao } from '@/components/ui/botao';
 import { Opcoes } from '@/components/ui/opcoes';
 import { Tela } from '@/components/ui/tela';
@@ -250,7 +251,7 @@ export default function Fila() {
       )}
 
       <Botao titulo={t('tesouraria.fila.atualizar')} variante="secundario" onPress={carregar} />
-      <Botao titulo={t('tesouraria.meuCartao')} variante="secundario" onPress={() => router.push('/cartao')} />
+      <MenuDaTesouraria atual="fila" />
     </Tela>
   );
 }
