@@ -24,7 +24,7 @@ type Carga = { usuarioId: string; fichas: MinhaFicha[]; falhou: boolean };
 
 async function carregar(usuarioId: string): Promise<Carga> {
   try {
-    return { usuarioId, fichas: await buscarMinhasFichas(), falhou: false };
+    return { usuarioId, fichas: await buscarMinhasFichas(usuarioId), falhou: false };
   } catch {
     return { usuarioId, fichas: [], falhou: true };
   }

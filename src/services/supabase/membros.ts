@@ -32,9 +32,11 @@ export type MinhaFicha = {
 export type CampoDoCadastro = Database['public']['Tables']['campos_cadastro']['Row'];
 
 // Liga as fichas convidadas com o e-mail do login (passo 3 do fluxo) e
-// devolve as fichas da pessoa em todas as igrejas. A RLS só devolve as
-// fichas do próprio usuário.
-export async function buscarMinhasFichas(): Promise<MinhaFicha[]> {
+// devolve as fichas da pessoa em todas as igrejas.
+// O filtro por usuario_id é obrigatório: a tesouraria pode ver as fichas de
+// todos os membros da igreja (D-057), e sem ele as fichas de outras pessoas
+// seriam tratadas como da própria pessoa.
+export async function buscarMinhasFichas(usuarioId: string): Promise<MinhaFicha[]> {
   const { error: erroAoAceitar } = await supabase.rpc('aceitar_convites');
   if (erroAoAceitar) throw erroAoAceitar;
 
@@ -43,6 +45,7 @@ export async function buscarMinhasFichas(): Promise<MinhaFicha[]> {
     .select(
       'id, igreja_id, nome, celular, email, numero, perfil, status, tipo_dizimo, familiares, campos_extras, igrejas(nome, titulo_administrador, moeda, idioma, formas_devolucao, versiculo_referencia, versiculo_texto)',
     )
+    .eq('usuario_id', usuarioId)
     .order('criado_em');
   if (error) throw error;
   return data;

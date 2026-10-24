@@ -75,7 +75,9 @@ export default function DetalheDoDizimo() {
     );
   }
 
-  if (lancamento === null) {
+  // Esta tela é do membro: só mostra lançamentos da própria ficha. A
+  // tesouraria pode ler lançamentos de outros pela RLS, mas confere em T-02.
+  if (lancamento === null || lancamento.membro_id !== ficha.id) {
     return (
       <Tela>
         <Texto>{t('lancamento.naoEncontrado')}</Texto>
