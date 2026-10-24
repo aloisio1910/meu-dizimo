@@ -1,10 +1,11 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Tabs } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
 import type { ComponentProps } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ColorValue } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useSessao } from '@/hooks/use-sessao';
 import { useTema } from '@/hooks/use-tema';
 import { cores, fontes, tamanhos } from '@/theme';
 
@@ -17,6 +18,11 @@ export default function LayoutDasAbas() {
   const tema = useTema();
   // Espaço da barra de gestos do celular (ex.: iPhone sem botão), somado à altura.
   const { bottom } = useSafeAreaInsets();
+  const { sessao } = useSessao();
+
+  // Sem login (ex.: logo depois de "Sair"), nenhuma aba faz sentido: volta
+  // para a porta de entrada, que leva ao Entrar. Vale para todas as abas.
+  if (!sessao) return <Redirect href="/" />;
 
   const icone = (nome: NomeDoIcone) =>
     function IconeDaAba({ color }: { color: ColorValue }) {
