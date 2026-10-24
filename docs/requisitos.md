@@ -168,7 +168,7 @@ As ofertas têm uma tela própria, separada do Cartão de Dízimo, e funcionam c
 - Toda igreja começa com uma campanha permanente, **Oferta**, para as ofertas comuns dos cultos.
 - Campanhas extraordinárias têm: nome, descrição, objetivo, data de início e fim, status (rascunho, ativa, encerrada) e mídia.
 - Mídia da campanha: artes (imagens) enviadas pela igreja e vídeos. Vídeos entram por link. Links do YouTube tocam dentro do app, no player oficial incorporado (pode ser vídeo não listado); outros links (Instagram, Vimeo) aparecem como botão Assistir vídeo, que abre o app correspondente. Hospedar vídeos próprios custa caro em armazenamento e tráfego; upload direto pode vir depois, com limite de tamanho por plano.
-- Campanhas encerradas saem da vitrine, mas continuam nos históricos e relatórios. Rascunhos só a tesouraria e o Pastor de Governo veem (D-074).
+- Campanhas encerradas saem da vitrine, mas continuam nos históricos e relatórios. A campanha encerra sozinha depois da data de fim, e o Pastor de Governo pode reabri-la (D-088, D-089). Rascunhos só a tesouraria e o Pastor de Governo veem (D-074).
 - **Sem meta ou total arrecadado visível ao membro.** Os totais por campanha ficam restritos a tesouraria e Pastor de Governo, nos relatórios.
 
 **Tela de Ofertas (membro)**
@@ -376,6 +376,8 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-085 | Convite feito por engano pode ser cancelado pelo tesoureiro ou pelo Pastor de Governo (a ficha fica Inativa). Inativar e reativar membro ativo é só do Pastor de Governo. Na reativação, quem já concluiu o cadastro volta a Ativo; quem não concluiu volta a Convidado e precisa de novo convite. Ninguém altera o próprio status. O membro inativado vê no app que o cadastro está inativo | Definido |
 | D-086 | A planilha do relatório traz, logo depois do nome do membro, todos os campos de cadastro ativos da igreja (ex.: Líder), para distinguir pessoas com nomes parecidos | Definido |
 | D-087 | Os totais do relatório somam só lançamentos confirmados, pelo valor conferido (a devolução presencial vale pelo informado). Aguardando conferência e em divergência aparecem à parte, pelo valor informado; cancelados ficam fora | Definido |
+| D-088 | O Pastor de Governo pode reabrir uma campanha encerrada (volta a Ativa, com log). Campanha publicada não volta a rascunho | Definido |
+| D-089 | A campanha encerra sozinha no dia seguinte à data de fim (horário de Brasília no MVP; fuso por igreja na Fase 2). Sem data de fim, fica aberta até o Pastor encerrar | Definido |
 
 ## 14. Questões abertas e próximos passos
 
