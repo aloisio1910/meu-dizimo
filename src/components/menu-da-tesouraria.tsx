@@ -22,6 +22,7 @@ export function MenuDaTesouraria({ atual }: { atual: Pagina }) {
         <Botao titulo={t('tesouraria.menu.membros')} variante="secundario" onPress={() => router.replace('/membros')} />
       )}
       <Botao titulo={t('tesouraria.menu.lancar')} variante="secundario" onPress={() => router.push('/lancar')} />
+      <Botao titulo={t('tesouraria.menu.relatorio')} variante="secundario" onPress={() => router.push('/relatorio')} />
       <Botao titulo={t('tesouraria.meuCartao')} variante="secundario" onPress={() => router.push('/cartao')} />
     </View>
   );
