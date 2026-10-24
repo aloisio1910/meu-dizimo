@@ -40,6 +40,14 @@ export default function Configuracoes() {
         <Texto variante="destaque">{t('tesouraria.configuracoes.contas')}</Texto>
         <Texto variante="apoio">{t('tesouraria.configuracoes.contasDetalhe')}</Texto>
       </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.push('/dados-da-igreja')}
+        style={({ pressed }) => [estilos.opcao, pressed && estilos.pressionada]}
+      >
+        <Texto variante="destaque">{t('tesouraria.configuracoes.dados')}</Texto>
+        <Texto variante="apoio">{t('tesouraria.configuracoes.dadosDetalhe')}</Texto>
+      </Pressable>
 
       <Texto variante="apoio">{t('tesouraria.configuracoes.emBreve')}</Texto>
       <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => router.back()} />

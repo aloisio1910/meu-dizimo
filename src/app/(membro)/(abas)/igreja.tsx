@@ -9,6 +9,8 @@ import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { REDES, redesIniciais } from '@/lib/dados-da-igreja';
+import { linkDoMapa } from '@/lib/mapa';
 import { linkDoWhatsApp } from '@/lib/whatsapp';
 import {
   buscarDadosDaIgreja,
@@ -64,6 +66,7 @@ export default function Igreja() {
   }
 
   const whatsapp = linkDoWhatsApp(dados?.whatsapp_contato);
+  const redes = redesIniciais(dados?.redes_sociais);
 
   async function copiarChave(conta: ContaDaIgreja) {
     if (!conta.chave_pix) return;
@@ -82,6 +85,11 @@ export default function Igreja() {
         <View style={estilos.bloco}>
           <Texto variante="destaque">{t('igreja.endereco')}</Texto>
           <Texto>{dados.endereco}</Texto>
+          <Botao
+            titulo={t('igreja.abrirMapa')}
+            variante="secundario"
+            onPress={() => Linking.openURL(linkDoMapa(dados.endereco!))}
+          />
         </View>
       )}
       {!!dados?.horarios_culto && (
@@ -97,6 +105,14 @@ export default function Igreja() {
           onPress={() => WebBrowser.openBrowserAsync(dados.site!)}
         />
       )}
+      {REDES.filter((rede) => !!redes[rede]).map((rede) => (
+        <Botao
+          key={rede}
+          titulo={t(`igreja.abrirRede.${rede}`)}
+          variante="secundario"
+          onPress={() => Linking.openURL(redes[rede])}
+        />
+      ))}
 
       <Texto variante="destaque" accessibilityRole="header">
         {t('igreja.contas')}

@@ -185,6 +185,10 @@ export default function DetalheDoDizimo() {
               })}
             </Texto>
           )}
+          {/* Mensagem da igreja ao confirmar (seção 17), ou uma neutra. */}
+          {lancamento.status === 'confirmado' && (
+            <Texto variante="destaque">{ficha.igrejas?.mensagem_confirmacao || t('lancamento.mensagemPadrao')}</Texto>
+          )}
 
           {lancamento.status === 'em_conferencia' && <Texto variante="destaque">{t('lancamento.emConferencia')}</Texto>}
 
