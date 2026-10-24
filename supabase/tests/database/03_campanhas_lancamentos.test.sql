@@ -372,8 +372,8 @@ select throws_ok(
   '42501', null,
   'Não se cria outra campanha permanente pelo app'
 );
-select is((select count(*) from public.campanhas where status = 'rascunho'), 1::bigint,
-  'Pastor de Governo vê os rascunhos de campanha');
+select is((select count(*) from public.campanhas where status = 'rascunho'), 2::bigint,
+  'Pastor de Governo vê os rascunhos de campanha (Natal e a nova Missões, que nasce rascunho)');
 
 reset role;
 

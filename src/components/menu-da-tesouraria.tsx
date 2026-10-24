@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { Botao } from '@/components/ui/botao';
+import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
 import { espacos } from '@/theme';
 
 type Pagina = 'fila' | 'membros';
@@ -13,12 +14,15 @@ type Pagina = 'fila' | 'membros';
 export function MenuDaTesouraria({ atual }: { atual: Pagina }) {
   const { t } = useTranslation();
   const router = useRouter();
+  const { ehAdministrador } = useFichaAtiva();
 
   const itens = [
     atual !== 'fila' && { titulo: t('tesouraria.menu.fila'), ir: () => router.replace('/fila') },
     atual !== 'membros' && { titulo: t('tesouraria.menu.membros'), ir: () => router.replace('/membros') },
     { titulo: t('tesouraria.menu.lancar'), ir: () => router.push('/lancar') },
     { titulo: t('tesouraria.menu.relatorio'), ir: () => router.push('/relatorio') },
+    // Campanhas são do Pastor de Governo (P-02).
+    ehAdministrador && { titulo: t('tesouraria.menu.campanhas'), ir: () => router.push('/campanhas') },
     { titulo: t('tesouraria.meuCartao'), ir: () => router.push('/cartao') },
   ].filter((item) => !!item);
 

@@ -436,11 +436,17 @@ isOneToOne: false
 "eh_vinculado":
 { Args: { "p_igreja_id": string }; Returns: boolean
                            },
+"encerrar_campanhas_vencidas":
+{ Args: Record<PropertyKey, never>; Returns: number
+                           },
 "exigir_conferencia_aberta":
 { Args: { "v": Omit<Database["public"]['Tables']["lancamentos"]['Row'], Database["public"]['Tables']["lancamentos"]['ComputedFields']> }; Returns: undefined
                            },
 "existe_lancamento_igual":
 { Args: { "p_data": string,"p_membro_id": string,"p_tipo": Database["public"]['Enums']["tipo_lancamento"],"p_valor_centavos": number }; Returns: boolean
+                           },
+"hoje_na_igreja":
+{ Args: Record<PropertyKey, never>; Returns: string
                            },
 "hook_antes_de_criar_usuario":
 { Args: { "event": Json }; Returns: Json
