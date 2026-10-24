@@ -257,14 +257,14 @@ isOneToOne: false
                   ]
                 },"membros": {
                   Row: {
-                    "atualizado_em": string,"campos_extras": NonNullable<Json>,"celular": string,"criado_em": string,"email": string,"familiares": NonNullable<Json>,"id": string,"igreja_id": string,"nome": string,"numero": number,"perfil": Database["public"]['Enums']["perfil_membro"],"status": Database["public"]['Enums']["status_membro"],"tipo_dizimo": Database["public"]['Enums']["tipo_dizimo"],"usuario_id": string | null
+                    "atualizado_em": string,"cadastro_concluido_em": string | null,"campos_extras": NonNullable<Json>,"celular": string,"criado_em": string,"email": string,"familiares": NonNullable<Json>,"id": string,"igreja_id": string,"nome": string,"numero": number,"perfil": Database["public"]['Enums']["perfil_membro"],"status": Database["public"]['Enums']["status_membro"],"tipo_dizimo": Database["public"]['Enums']["tipo_dizimo"],"usuario_id": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "atualizado_em"?: string,"campos_extras"?: NonNullable<Json>,"celular": string,"criado_em"?: string,"email": string,"familiares"?: NonNullable<Json>,"id"?: string,"igreja_id": string,"nome": string,"numero": number,"perfil"?: Database["public"]['Enums']["perfil_membro"],"status"?: Database["public"]['Enums']["status_membro"],"tipo_dizimo"?: Database["public"]['Enums']["tipo_dizimo"],"usuario_id"?: string | null
+                    "atualizado_em"?: string,"cadastro_concluido_em"?: string | null,"campos_extras"?: NonNullable<Json>,"celular": string,"criado_em"?: string,"email": string,"familiares"?: NonNullable<Json>,"id"?: string,"igreja_id": string,"nome": string,"numero": number,"perfil"?: Database["public"]['Enums']["perfil_membro"],"status"?: Database["public"]['Enums']["status_membro"],"tipo_dizimo"?: Database["public"]['Enums']["tipo_dizimo"],"usuario_id"?: string | null
                   }
                   Update: {
-                    "atualizado_em"?: string,"campos_extras"?: NonNullable<Json>,"celular"?: string,"criado_em"?: string,"email"?: string,"familiares"?: NonNullable<Json>,"id"?: string,"igreja_id"?: string,"nome"?: string,"numero"?: number,"perfil"?: Database["public"]['Enums']["perfil_membro"],"status"?: Database["public"]['Enums']["status_membro"],"tipo_dizimo"?: Database["public"]['Enums']["tipo_dizimo"],"usuario_id"?: string | null
+                    "atualizado_em"?: string,"cadastro_concluido_em"?: string | null,"campos_extras"?: NonNullable<Json>,"celular"?: string,"criado_em"?: string,"email"?: string,"familiares"?: NonNullable<Json>,"id"?: string,"igreja_id"?: string,"nome"?: string,"numero"?: number,"perfil"?: Database["public"]['Enums']["perfil_membro"],"status"?: Database["public"]['Enums']["status_membro"],"tipo_dizimo"?: Database["public"]['Enums']["tipo_dizimo"],"usuario_id"?: string | null
                   }
                   Relationships: [
                     {

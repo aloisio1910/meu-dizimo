@@ -45,7 +45,7 @@ export default function Convidar() {
       setErroGeral(
         resposta.erro === 'sem_conexao' || resposta.erro === 'erro_inesperado'
           ? t(`comum.erros.${resposta.erro}`)
-          : t(`tesouraria.convidar.erros.${resposta.erro}`),
+          : t(`tesouraria.membros.erros.${resposta.erro}`, { titulo: ficha!.igrejas?.titulo_administrador }),
       );
       return;
     }

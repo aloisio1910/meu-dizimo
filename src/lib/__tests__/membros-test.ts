@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { emailValido, filtrarMembros, situacaoDoMembro, validarConvite } from '../membros';
+import { acaoDeStatus, emailValido, filtrarMembros, situacaoDoMembro, validarConvite } from '../membros';
 
 describe('validarConvite', () => {
   it('aceita e normaliza o e-mail', () => {
@@ -72,5 +72,42 @@ describe('filtrarMembros', () => {
   it('só números procura o número, não pedaços do e-mail', () => {
     expect(filtrarMembros(membros, '12').map((m) => m.numero)).toEqual([12]);
     expect(filtrarMembros(membros, '99')).toEqual([]);
+  });
+});
+
+describe('acaoDeStatus (D-085)', () => {
+  const tesoureiro = { ehAdministrador: false, ehEuMesmo: false };
+  const pastor = { ehAdministrador: true, ehEuMesmo: false };
+  const concluido = '2026-10-01T10:00:00Z';
+
+  it('tesoureiro só cancela convite', () => {
+    expect(acaoDeStatus({ status: 'convidado', cadastro_concluido_em: null }, tesoureiro)).toEqual({
+      acao: 'cancelar_convite',
+      para: 'inativo',
+    });
+    expect(acaoDeStatus({ status: 'ativo', cadastro_concluido_em: concluido }, tesoureiro)).toBeNull();
+    expect(acaoDeStatus({ status: 'inativo', cadastro_concluido_em: concluido }, tesoureiro)).toBeNull();
+  });
+
+  it('Pastor de Governo inativa membro ativo', () => {
+    expect(acaoDeStatus({ status: 'ativo', cadastro_concluido_em: concluido }, pastor)).toEqual({
+      acao: 'inativar',
+      para: 'inativo',
+    });
+  });
+
+  it('reativar leva a Ativo só quem concluiu o cadastro', () => {
+    expect(acaoDeStatus({ status: 'inativo', cadastro_concluido_em: concluido }, pastor)).toEqual({
+      acao: 'reativar',
+      para: 'ativo',
+    });
+    expect(acaoDeStatus({ status: 'inativo', cadastro_concluido_em: null }, pastor)).toEqual({
+      acao: 'reativar',
+      para: 'convidado',
+    });
+  });
+
+  it('ninguém muda o próprio status', () => {
+    expect(acaoDeStatus({ status: 'ativo', cadastro_concluido_em: concluido }, { ...pastor, ehEuMesmo: true })).toBeNull();
   });
 });

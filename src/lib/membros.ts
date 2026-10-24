@@ -70,3 +70,25 @@ export function filtrarMembros<T extends { nome: string; email: string; numero: 
   if (numero !== null) return membros.filter((m) => m.numero === numero);
   return membros.filter((m) => simplificar(m.nome).includes(termo) || simplificar(m.email).includes(termo));
 }
+
+export type AcaoDeStatus =
+  | { acao: 'cancelar_convite'; para: 'inativo' }
+  | { acao: 'inativar'; para: 'inativo' }
+  | { acao: 'reativar'; para: 'ativo' | 'convidado' };
+
+// Qual mudança de status a ficha oferece (D-085). Espelha a trigger
+// validar_membro, que confere de novo:
+// - cancelar convite: tesoureiro ou Pastor de Governo;
+// - inativar e reativar: só o Pastor de Governo;
+// - reativar leva a Ativo quem concluiu o cadastro e a Convidado quem não;
+// - ninguém muda o próprio status.
+export function acaoDeStatus(
+  membro: { status: StatusDoMembro; cadastro_concluido_em: string | null },
+  quemVe: { ehAdministrador: boolean; ehEuMesmo: boolean },
+): AcaoDeStatus | null {
+  if (quemVe.ehEuMesmo) return null;
+  if (membro.status === 'convidado') return { acao: 'cancelar_convite', para: 'inativo' };
+  if (!quemVe.ehAdministrador) return null;
+  if (membro.status === 'ativo') return { acao: 'inativar', para: 'inativo' };
+  return { acao: 'reativar', para: membro.cadastro_concluido_em ? 'ativo' : 'convidado' };
+}

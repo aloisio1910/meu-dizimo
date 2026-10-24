@@ -386,6 +386,14 @@
       "falhaAoCarregar": "Não conseguimos carregar os membros.",
       "numero": "Nº {{numero}}",
       "abrirFicha": "Abre a ficha de {{nome}}",
+      "erros": {
+        "email_ja_cadastrado": "Este e-mail já está cadastrado nesta igreja. Procure a pessoa na lista de membros.",
+        "convite_indisponivel": "Esta pessoa já entrou no app, então o convite não pode mais ser alterado.",
+        "so_o_pastor_altera_status": "Só o {{titulo}} pode fazer esta mudança.",
+        "status_proprio": "Você não pode mudar o seu próprio status.",
+        "reativacao_invalida": "Esta mudança de status não é permitida.",
+        "status_mudou": "A ficha foi alterada por outra pessoa. Confira e tente de novo."
+      },
       "situacao": {
         "convidado": "Convidado",
         "convite_vencido": "Convite vencido",
@@ -409,9 +417,7 @@
       "erros": {
         "nomeObrigatorio": "Informe o nome.",
         "emailInvalido": "Confira o e-mail, como nome@exemplo.com.",
-        "celularObrigatorio": "Informe o celular.",
-        "email_ja_cadastrado": "Este e-mail já está cadastrado nesta igreja. Procure a pessoa na lista de membros.",
-        "convite_indisponivel": "Esta pessoa já entrou no app, então o convite não pode mais ser alterado."
+        "celularObrigatorio": "Informe o celular."
       }
     },
     "membro": {
@@ -429,7 +435,33 @@
       "novoEmail": "E-mail correto",
       "salvarEmail": "Salvar e-mail",
       "emailCorrigido": "E-mail corrigido. A pessoa deve entrar com o novo e-mail.",
-      "voltar": "Voltar"
+      "voltar": "Voltar",
+      "dadosCadastrais": "Dados cadastrais",
+      "dizimo": "Dízimo",
+      "individual": "Individual",
+      "familiar": "Familiar",
+      "familiares": "Família: {{nomes}}",
+      "naoInformado": "Não informado",
+      "historico": "Dízimos e ofertas",
+      "nenhumLancamento": "Nenhum dízimo ou oferta registrado.",
+      "falhaHistorico": "Não conseguimos carregar os dízimos e ofertas.",
+      "ofertaDaCampanha": "Oferta · {{campanha}}",
+      "valorConferido": "Conferido: {{valor}}",
+      "cancelarConvite": "Cancelar convite",
+      "confirmarCancelarConvite": "Cancelar o convite de {{nome}}? A pessoa não vai conseguir entrar no app. O {{titulo}} pode reativar depois.",
+      "simCancelar": "Sim, cancelar convite",
+      "conviteCancelado": "Convite cancelado.",
+      "inativar": "Inativar membro",
+      "confirmarInativar": "Inativar {{nome}}? A pessoa perde o acesso ao app, mas o histórico fica guardado e o cadastro pode ser reativado.",
+      "simInativar": "Sim, inativar",
+      "inativado": "Membro inativado.",
+      "reativar": "Reativar membro",
+      "confirmarReativarAtivo": "Reativar {{nome}}? A pessoa volta a entrar no app, com todo o histórico.",
+      "confirmarReativarConvidado": "Reativar {{nome}}? Como a pessoa ainda não concluiu o cadastro, ela volta a Convidado. Depois, reenvie o convite.",
+      "simReativar": "Sim, reativar",
+      "reativado": "Membro reativado.",
+      "naoVoltar": "Não, voltar",
+      "statusSoPastor": "Inativar e reativar membros é feito pelo {{titulo}}."
     }
   },
   "registrar": {
