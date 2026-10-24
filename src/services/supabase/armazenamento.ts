@@ -104,7 +104,7 @@ export async function autotesteDoArmazenamento(): Promise<void> {
     let sessao: string | null = null;
     for (let i = 0; i < localStorage.length; i++) {
       const nome = localStorage.key(i);
-      if (nome?.endsWith('-auth-token')) sessao = nome;
+      if (nome === 'meudizimo-sessao') sessao = nome;
     }
     const valor = sessao ? localStorage.getItem(sessao) : null;
     etapas.push(`sessão guardada: ${valor ? (valor.startsWith(PREFIXO) ? 'cifrada' : 'sem cifra (antiga)') : 'nenhuma'}`);
