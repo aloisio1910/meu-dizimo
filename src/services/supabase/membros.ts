@@ -87,6 +87,29 @@ function traduzirErro(erro: PostgrestError | Error): ErroDoCadastro {
   return { codigo: 'erro_inesperado' };
 }
 
+// RN-009: o membro altera os próprios dados (M-10). O e-mail não muda por
+// aqui: a troca exige código no novo e-mail (RN-010).
+export async function salvarMeuCadastro(
+  membroId: string,
+  dados: Omit<DadosDoCadastro, 'membroId' | 'versaoDosTermos'>,
+): Promise<ErroDoCadastro | null> {
+  try {
+    const { error } = await supabase
+      .from('membros')
+      .update({
+        nome: dados.nome,
+        celular: dados.celular,
+        tipo_dizimo: dados.tipoDizimo,
+        familiares: dados.familiares,
+        campos_extras: dados.camposExtras,
+      })
+      .eq('id', membroId);
+    return error ? traduzirErro(error) : null;
+  } catch (erro) {
+    return traduzirErro(erro as Error);
+  }
+}
+
 // Passo 4: valida os campos no banco, registra o aceite dos termos e ativa a ficha.
 export async function concluirCadastro(dados: DadosDoCadastro): Promise<ErroDoCadastro | null> {
   try {

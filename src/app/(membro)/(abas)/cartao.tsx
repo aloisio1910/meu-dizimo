@@ -12,7 +12,6 @@ import { useSessao } from '@/hooks/use-sessao';
 import { isoParaData } from '@/lib/data';
 import { formatarMoeda } from '@/lib/dinheiro';
 import { ehFormaConhecida } from '@/lib/formas';
-import { sair } from '@/services/supabase/auth';
 import { listarMeusDizimos, type LancamentoDoCartao } from '@/services/supabase/lancamentos';
 import { cores, espacos, raio } from '@/theme';
 
@@ -109,9 +108,6 @@ export default function Cartao() {
           </Pressable>
         );
       })}
-
-      {/* Provisório: o Sair vai para Meu perfil (M-10). */}
-      <Botao titulo={t('cartao.sair')} variante="secundario" onPress={() => sair()} />
     </Tela>
   );
 }

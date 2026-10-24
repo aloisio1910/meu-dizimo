@@ -3,12 +3,19 @@
 -- Os e-mails @teste.local não existem: os códigos chegam no Mailpit
 -- (http://127.0.0.1:54324). Os convites valem 7 dias a partir do reset.
 
-insert into public.igrejas (id, nome, denominacao) values
-  ('00000000-0000-4000-8000-000000000001', 'Igreja Videira (teste)', 'Videira');
+-- Endereço, horários e WhatsApp são fictícios.
+insert into public.igrejas (id, nome, denominacao, endereco, horarios_culto, site, whatsapp_contato) values
+  ('00000000-0000-4000-8000-000000000001', 'Igreja Videira (teste)', 'Videira',
+   'Rua de Teste, 100, Setor Exemplo, Goiânia (GO)',
+   'Domingo às 9h e às 18h; quarta-feira às 20h',
+   'https://example.com', '62900000000');
 
-insert into public.contas (igreja_id, nome, principal, banco, chave_pix, tipo_chave_pix, nome_recebedor, cidade) values
-  ('00000000-0000-4000-8000-000000000001', 'Dízimos e ofertas', true, 'Banco de Teste',
-   'tesouraria@teste.local', 'email', 'IGREJA VIDEIRA TESTE', 'GOIANIA');
+insert into public.contas (igreja_id, nome, finalidade, principal, banco, agencia, numero_conta,
+                           chave_pix, tipo_chave_pix, nome_recebedor, cidade) values
+  ('00000000-0000-4000-8000-000000000001', 'Dízimos e ofertas', 'Dízimos e ofertas dos cultos', true,
+   'Banco de Teste', '0001', '12345-6', 'tesouraria@teste.local', 'email', 'IGREJA VIDEIRA TESTE', 'GOIANIA'),
+  ('00000000-0000-4000-8000-000000000001', 'Construção do templo', 'Obra do novo templo', false,
+   'Banco de Teste', '0001', '65432-1', null, null, null, null);
 
 -- Campos que a Videira usa no cadastro (Requisitos v0.3, seção 3).
 insert into public.campos_cadastro (igreja_id, chave, rotulo, tipo, obrigatorio, ordem) values
