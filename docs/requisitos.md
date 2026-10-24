@@ -20,7 +20,7 @@ O app atende igrejas de diferentes denominações. O núcleo é o dízimo. Em to
 
 | Versão | Data | O que mudou |
 | --- | --- | --- |
-| 0.4 | 22/10/2026 | Decisões tomadas na construção do banco de dados e das primeiras telas (D-067 a D-083): permissões, lançamentos, campanhas, entrada pela digital, sessão criptografada, LGPD e hospedagem no Brasil |
+| 0.4 | 22/10/2026 | Decisões tomadas na construção do banco de dados e das primeiras telas (D-067 a D-084): permissões, lançamentos, campanhas, entrada pela digital, sessão criptografada, LGPD e hospedagem no Brasil |
 | 0.3 | 20/10/2026 | Decisões das questões abertas, correções de consistência, módulo de Ofertas e Campanhas, QR Code Pix, LGPD, escopo por fases |
 | 0.2 | 17/08/2026 | Documento de requisitos estruturado, regras de negócio e registro de decisões |
 | 0.1 | — | Ideia inicial: janelas do app e perfis |
@@ -216,7 +216,7 @@ A tesouraria trabalha numa fila por ordem de chegada, usada preferencialmente no
 
 **Reabertura**
 
-Só o Pastor de Governo reabre um lançamento confirmado, com justificativa obrigatória. O lançamento volta para a fila e tudo fica no log.
+Só o Pastor de Governo reabre um lançamento confirmado, com justificativa obrigatória. Exceção: o tesoureiro que confirmou por engano desfaz em até 15 minutos, com motivo (D-084). O lançamento volta para a fila e tudo fica no log.
 
 ## 9. Notificações, relatórios e auditoria
 
@@ -372,6 +372,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-081 | Dados hospedados no Brasil (Supabase, região São Paulo), por velocidade e pela LGPD | Definido |
 | D-082 | Formas de devolução definidas por igreja; o padrão é Pix, cartão, dinheiro e transferência | Definido |
 | D-083 | O membro retira um comprovante anexado por engano sem apagá-lo: ele some da lista do membro e fica guardado para a tesouraria como retirado pelo membro, com data. Vale enquanto o lançamento aguarda conferência ou está em divergência | Definido |
+| D-084 | Exceção à RN-031: o tesoureiro que confirmou desfaz a própria confirmação em até 15 minutos, com motivo, e o lançamento volta para a fila. Não vale para o aceite de divergência pelo membro. Depois do prazo, só o Pastor de Governo reabre | Definido |
 
 ## 14. Questões abertas e próximos passos
 

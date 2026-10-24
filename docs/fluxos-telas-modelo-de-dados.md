@@ -2,7 +2,7 @@
 
 Oct 20, 2026 · @Aloisio
 
-Atualizado em 22/10/2026 com o que foi definido na construção do banco de dados e das primeiras telas (decisões D-067 a D-082 do Documento de Requisitos v0.4).
+Atualizado em 22/10/2026 com o que foi definido na construção do banco de dados e das primeiras telas (decisões D-067 a D-084 do Documento de Requisitos v0.4).
 
 ## 1. Fluxo principal
 
@@ -54,7 +54,7 @@ Cinco fluxos complementam o principal; todos reaproveitam o mesmo lançamento e 
 **Reabertura**
 
 1. O Pastor de Governo abre um lançamento confirmado e toca em Reabrir, com justificativa obrigatória.
-2. O lançamento volta para Aguardando conferência, entra na fila e o membro é avisado.
+2. O lançamento volta para Aguardando conferência, entra na fila e o membro é avisado. Se foi o próprio tesoureiro que confirmou por engano, ele desfaz em até 15 minutos pelo filtro Conferidos da fila, com motivo (D-084).
 
 ## 3. Mapa de telas
 
