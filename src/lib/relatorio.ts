@@ -17,7 +17,7 @@ export type LinhaDoRelatorio = {
   status: StatusDoLancamento;
   confirmado_por_nome: string | null;
   registrado_pela_tesouraria: boolean;
-  membros: { nome: string; numero: number } | null;
+  membros: { nome: string; numero: number; campos_extras: unknown } | null;
   campanhas: { nome: string } | null;
   contas: { nome: string } | null;
 };
@@ -122,8 +122,12 @@ export function centavosParaPlanilha(centavos: number): number {
 
 export type Celula = string | number | null;
 
+// Campo de cadastro definido pela igreja (RN-004), como Líder ou Rede.
+export type CampoDaPlanilha = { chave: string; rotulo: string };
+
 export type TextosDaPlanilha = {
   colunas: string[];
+  camposDoCadastro: CampoDaPlanilha[];
   tipo: (tipo: LinhaDoRelatorio['tipo']) => string;
   status: (status: StatusDoLancamento) => string;
   forma: (forma: string) => string;
@@ -132,15 +136,30 @@ export type TextosDaPlanilha = {
   quemRegistrou: (linha: LinhaDoRelatorio) => string;
 };
 
+// Valor guardado nos campos extras como aparece para quem lê: datas
+// AAAA-MM-DD viram DD/MM/AAAA; números continuam números.
+function valorDoCampo(camposExtras: unknown, chave: string): Celula {
+  const extras = camposExtras && typeof camposExtras === 'object' ? (camposExtras as Record<string, unknown>) : {};
+  const valor = extras[chave];
+  if (valor === undefined || valor === null || valor === '') return '';
+  if (typeof valor === 'number') return valor;
+  const texto = String(valor);
+  return /^\d{4}-\d{2}-\d{2}$/.test(texto) ? texto.split('-').reverse().join('/') : texto;
+}
+
 // Colunas da seção 9 do Requisitos, na mesma ordem: ID e nome do membro,
 // tipo, campanha, data do dízimo, data do registro, valor informado, valor
 // conferido, forma, conta de destino, status, tesoureiro, quem registrou.
+// Logo depois do nome entram os campos de cadastro da igreja, para separar
+// pessoas com nomes parecidos (D-086).
 export function linhasDaPlanilha(linhas: LinhaDoRelatorio[], textos: TextosDaPlanilha): Celula[][] {
+  const [id, nome, ...resto] = textos.colunas;
   return [
-    textos.colunas,
+    [id, nome, ...textos.camposDoCadastro.map((c) => c.rotulo), ...resto],
     ...linhas.map((l) => [
       l.membros?.numero ?? null,
       l.membros?.nome ?? '',
+      ...textos.camposDoCadastro.map((c) => valorDoCampo(l.membros?.campos_extras, c.chave)),
       textos.tipo(l.tipo),
       l.campanhas?.nome ?? '',
       textos.data(l.data_contribuicao),
@@ -156,8 +175,11 @@ export function linhasDaPlanilha(linhas: LinhaDoRelatorio[], textos: TextosDaPla
   ];
 }
 
-// Colunas de valor (informado e conferido), para o formato de moeda.
-export const COLUNAS_DE_VALOR = [6, 7];
+// Colunas de valor (informado e conferido), para o formato de moeda. Andam
+// para a direita uma casa por campo de cadastro.
+export function colunasDeValor(quantidadeDeCampos: number): number[] {
+  return [6 + quantidadeDeCampos, 7 + quantidadeDeCampos];
+}
 
 export function nomeDoArquivo(periodo: Periodo): string {
   return `relatorio-${periodo.de}-a-${periodo.ate}.xlsx`;

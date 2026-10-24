@@ -14,7 +14,7 @@ export type FiltrosDoRelatorio = {
 };
 
 const COLUNAS =
-  'id, tipo, data_contribuicao, registrado_em, valor_informado_centavos, valor_conferido_centavos, moeda, forma, status, confirmado_por_nome, registrado_pela_tesouraria, membros(nome, numero), campanhas(nome), contas(nome)';
+  'id, tipo, data_contribuicao, registrado_em, valor_informado_centavos, valor_conferido_centavos, moeda, forma, status, confirmado_por_nome, registrado_pela_tesouraria, membros(nome, numero, campos_extras), campanhas(nome), contas(nome)';
 
 // T-06: lançamentos da igreja no período (pela data do dízimo), do mais
 // antigo para o mais recente. A RLS só deixa a tesouraria ler os da igreja.

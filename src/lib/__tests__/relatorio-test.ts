@@ -2,6 +2,7 @@ import { describe, expect, it } from '@jest/globals';
 
 import {
   centavosParaPlanilha,
+  colunasDeValor,
   linhasDaPlanilha,
   nomeDoArquivo,
   periodoDoMes,
@@ -24,7 +25,7 @@ function linha(parcial: Partial<LinhaDoRelatorio>): LinhaDoRelatorio {
     status: 'confirmado',
     confirmado_por_nome: 'Tiago',
     registrado_pela_tesouraria: false,
-    membros: { nome: 'Maria', numero: 3 },
+    membros: { nome: 'Maria', numero: 3, campos_extras: { lider: 'Carlos', nascimento: '1990-05-17', setor: 4 } },
     campanhas: null,
     contas: { nome: 'Dízimos e ofertas' },
     ...parcial,
@@ -129,6 +130,7 @@ describe('planilha', () => {
   it('monta cabeçalho e linhas na ordem das colunas do Requisitos', () => {
     const textos = {
       colunas: ['ID', 'Nome'],
+      camposDoCadastro: [],
       tipo: (t: string) => t.toUpperCase(),
       status: (s: string) => `[${s}]`,
       forma: (f: string) => f,
@@ -161,6 +163,7 @@ describe('planilha', () => {
   it('sem valor conferido, a célula fica vazia', () => {
     const textos = {
       colunas: [],
+      camposDoCadastro: [],
       tipo: String,
       status: String,
       forma: String,
@@ -169,6 +172,33 @@ describe('planilha', () => {
       quemRegistrou: () => '',
     };
     expect(linhasDaPlanilha([linha({})], textos)[1][7]).toBeNull();
+  });
+
+  it('campos do cadastro da igreja entram logo depois do nome (D-086)', () => {
+    const textos = {
+      colunas: ['ID', 'Nome', 'Tipo'],
+      camposDoCadastro: [
+        { chave: 'lider', rotulo: 'Líder' },
+        { chave: 'nascimento', rotulo: 'Nascimento' },
+        { chave: 'setor', rotulo: 'Setor' },
+        { chave: 'rede', rotulo: 'Rede' },
+      ],
+      tipo: () => 'Dízimo',
+      status: String,
+      forma: String,
+      data: String,
+      dataHora: String,
+      quemRegistrou: () => '',
+    };
+    const [cabecalho, primeira] = linhasDaPlanilha([linha({})], textos);
+    expect(cabecalho).toEqual(['ID', 'Nome', 'Líder', 'Nascimento', 'Setor', 'Rede', 'Tipo']);
+    // Data vira DD/MM/AAAA, número continua número, campo não preenchido fica vazio.
+    expect(primeira.slice(0, 7)).toEqual([3, 'Maria', 'Carlos', '17/05/1990', 4, '', 'Dízimo']);
+  });
+
+  it('colunas de valor andam uma casa por campo do cadastro', () => {
+    expect(colunasDeValor(0)).toEqual([6, 7]);
+    expect(colunasDeValor(3)).toEqual([9, 10]);
   });
 
   it('nome do arquivo com o período', () => {
