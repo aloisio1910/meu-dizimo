@@ -237,8 +237,8 @@ O serviço de notificações fica preparado para outros canais no futuro (e-mail
 **Relatório Excel**
 
 - Filtros: período (qualquer intervalo, com atalho para o mês), tipo (dízimo ou oferta), campanha e status.
-- Colunas: ID e nome do membro, tipo, campanha, data do dízimo, data do registro, valor informado, valor conferido, forma, conta de destino, status, tesoureiro, quem registrou.
-- Totais por tipo e por campanha ficam no relatório, restritos à tesouraria e ao Pastor de Governo.
+- Colunas: ID e nome do membro, campos de cadastro da igreja (D-086), tipo, campanha, data do dízimo, data do registro, valor informado, valor conferido, forma, conta de destino, status, tesoureiro, quem registrou.
+- Totais por tipo e por campanha ficam no relatório, restritos à tesouraria e ao Pastor de Governo. Somam só o confirmado; o que ainda não foi conferido aparece à parte (D-087).
 
 **Logs e auditoria**
 
@@ -374,6 +374,8 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-083 | O membro retira um comprovante anexado por engano sem apagá-lo: ele some da lista do membro e fica guardado para a tesouraria como retirado pelo membro, com data. Vale enquanto o lançamento aguarda conferência ou está em divergência | Definido |
 | D-084 | Exceção à RN-031: o tesoureiro que confirmou desfaz a própria confirmação em até 15 minutos, com motivo, e o lançamento volta para a fila. Não vale para o aceite de divergência pelo membro. Depois do prazo, só o Pastor de Governo reabre | Definido |
 | D-085 | Convite feito por engano pode ser cancelado pelo tesoureiro ou pelo Pastor de Governo (a ficha fica Inativa). Inativar e reativar membro ativo é só do Pastor de Governo. Na reativação, quem já concluiu o cadastro volta a Ativo; quem não concluiu volta a Convidado e precisa de novo convite. Ninguém altera o próprio status. O membro inativado vê no app que o cadastro está inativo | Definido |
+| D-086 | A planilha do relatório traz, logo depois do nome do membro, todos os campos de cadastro ativos da igreja (ex.: Líder), para distinguir pessoas com nomes parecidos | Definido |
+| D-087 | Os totais do relatório somam só lançamentos confirmados, pelo valor conferido (a devolução presencial vale pelo informado). Aguardando conferência e em divergência aparecem à parte, pelo valor informado; cancelados ficam fora | Definido |
 
 ## 14. Questões abertas e próximos passos
 
