@@ -7,5 +7,6 @@ export function useFichaAtiva() {
   const ficha = fichas.find((f) => f.status === 'ativo');
   // Tesouraria = tesoureiro ou Pastor de Governo (que tem tudo do tesoureiro).
   const ehTesouraria = ficha?.perfil === 'tesoureiro' || ficha?.perfil === 'administrador';
-  return { ficha, carregando, ehTesouraria };
+  const ehAdministrador = ficha?.perfil === 'administrador';
+  return { ficha, carregando, ehTesouraria, ehAdministrador };
 }

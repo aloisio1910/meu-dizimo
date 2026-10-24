@@ -13,6 +13,7 @@ import { useSessao } from '@/hooks/use-sessao';
 import {
   abrirConferencia,
   abrirProximo,
+  listarConferidos,
   listarDivergenciasPendentes,
   listarFila,
   type ErroDaConferencia,
@@ -20,6 +21,7 @@ import {
   type ItemDaFila,
 } from '@/services/supabase/tesouraria';
 
+type Situacao = 'fila' | 'conferidos';
 type FiltroDeTipo = 'todos' | 'dizimo' | 'oferta';
 type FiltroDeComprovante = 'todos' | 'com' | 'sem';
 
@@ -30,6 +32,8 @@ export default function Fila() {
   const { sessao } = useSessao();
   const { ficha, carregando, ehTesouraria } = useFichaAtiva();
 
+  const [situacao, setSituacao] = useState<Situacao>('fila');
+  const [conferidos, setConferidos] = useState<ItemDaFila[] | null>(null);
   const [filtroDeTipo, setFiltroDeTipo] = useState<FiltroDeTipo>('todos');
   const [filtroDeComprovante, setFiltroDeComprovante] = useState<FiltroDeComprovante>('todos');
   const [fila, setFila] = useState<ItemDaFila[] | null>(null);
@@ -43,20 +47,25 @@ export default function Fila() {
     tipo: filtroDeTipo === 'todos' ? undefined : filtroDeTipo,
     comComprovante: filtroDeComprovante === 'todos' ? undefined : filtroDeComprovante === 'com',
   };
-  const chaveDosFiltros = `${filtroDeTipo}|${filtroDeComprovante}`;
+  const chaveDosFiltros = `${situacao}|${filtroDeTipo}|${filtroDeComprovante}`;
 
   const carregar = useCallback(async () => {
     if (!ficha) return;
+    const filtrosAtuais: FiltrosDaFila = {
+      tipo: filtroDeTipo === 'todos' ? undefined : filtroDeTipo,
+      comComprovante: filtroDeComprovante === 'todos' ? undefined : filtroDeComprovante === 'com',
+    };
     try {
-      const [itens, pendentes] = await Promise.all([
-        listarFila(ficha.igreja_id, {
-          tipo: filtroDeTipo === 'todos' ? undefined : filtroDeTipo,
-          comComprovante: filtroDeComprovante === 'todos' ? undefined : filtroDeComprovante === 'com',
-        }),
-        listarDivergenciasPendentes(ficha.igreja_id),
-      ]);
-      setFila(itens);
-      setDivergencias(pendentes);
+      if (situacao === 'conferidos') {
+        setConferidos(await listarConferidos(ficha.igreja_id, filtrosAtuais));
+      } else {
+        const [itens, pendentes] = await Promise.all([
+          listarFila(ficha.igreja_id, filtrosAtuais),
+          listarDivergenciasPendentes(ficha.igreja_id),
+        ]);
+        setFila(itens);
+        setDivergencias(pendentes);
+      }
       setFalhou(false);
     } catch {
       setFalhou(true);
@@ -116,6 +125,11 @@ export default function Fila() {
   async function abrirItem(item: ItemDaFila) {
     setErro(undefined);
     setAviso(undefined);
+    // Já conferido: abre a consulta (desfazer ou reabrir), sem bloquear nada.
+    if (item.status === 'confirmado') {
+      router.push({ pathname: '/conferido/[id]', params: { id: item.id } });
+      return;
+    }
     // Se já está aberto para mim, só volta para a conferência.
     if (item.status === 'em_conferencia' && item.em_conferencia_por === meuUsuarioId) {
       irParaConferencia(item.id);
@@ -149,7 +163,9 @@ export default function Fila() {
       <Texto variante="titulo">{t('tesouraria.fila.titulo')}</Texto>
       <Texto>{t('tesouraria.fila.explicacao')}</Texto>
 
-      <Botao titulo={t('tesouraria.fila.conferirProximo')} onPress={conferirProximo} carregando={abrindo} />
+      {situacao === 'fila' && (
+        <Botao titulo={t('tesouraria.fila.conferirProximo')} onPress={conferirProximo} carregando={abrindo} />
+      )}
       {!!aviso && (
         <Texto variante="destaque" accessibilityLiveRegion="polite">
           {aviso}
@@ -157,6 +173,15 @@ export default function Fila() {
       )}
       {!!erro && <Texto variante="erro">{erro}</Texto>}
 
+      <Opcoes
+        rotulo={t('tesouraria.conferidos.situacao')}
+        opcoes={[
+          { valor: 'fila', rotulo: t('tesouraria.conferidos.naFila') },
+          { valor: 'conferidos', rotulo: t('tesouraria.conferidos.conferidos') },
+        ]}
+        selecionada={situacao}
+        onSelecionar={setSituacao}
+      />
       <Opcoes
         rotulo={t('tesouraria.fila.filtroTipo')}
         opcoes={[
@@ -179,9 +204,27 @@ export default function Fila() {
       />
 
       {falhou && <Texto variante="erro">{t('tesouraria.fila.falhaAoCarregar')}</Texto>}
-      {!fila && !falhou && <ActivityIndicator size="large" accessibilityLabel={t('comum.carregando')} />}
 
-      {!!fila && (
+      {situacao === 'conferidos' && (
+        <>
+          {!conferidos && !falhou && <ActivityIndicator size="large" accessibilityLabel={t('comum.carregando')} />}
+          {!!conferidos && (
+            <>
+              <Texto variante="destaque" accessibilityRole="header">
+                {t('tesouraria.conferidos.titulo', { quantidade: conferidos.length })}
+              </Texto>
+              {conferidos.length === 0 && <Texto>{t('tesouraria.conferidos.nenhum')}</Texto>}
+              {conferidos.map(linha)}
+            </>
+          )}
+        </>
+      )}
+
+      {situacao === 'fila' && !fila && !falhou && (
+        <ActivityIndicator size="large" accessibilityLabel={t('comum.carregando')} />
+      )}
+
+      {situacao === 'fila' && !!fila && (
         <>
           <Texto variante="destaque" accessibilityRole="header">
             {t('tesouraria.fila.aguardando', { quantidade: fila.length })}

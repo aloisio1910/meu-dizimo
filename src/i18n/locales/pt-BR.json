@@ -246,8 +246,36 @@
         "valor_igual_ao_informado": "O valor conferido é igual ao informado. Use Confirmar.",
         "observacao_obrigatoria": "Escreva uma observação para o membro entender a diferença.",
         "valor_conferido_obrigatorio": "Informe o valor conferido.",
-        "valorInvalido": "Informe o valor em reais, por exemplo 120,00."
+        "valorInvalido": "Informe o valor em reais, por exemplo 120,00.",
+        "desfazer_indisponivel": "Esta confirmação não pode ser desfeita por você. Só quem confirmou desfaz, e não vale para o aceite do membro.",
+        "prazo_para_desfazer_vencido": "Passaram-se os 15 minutos para desfazer. Peça ao Pastor de Governo para reabrir o lançamento.",
+        "motivo_obrigatorio": "Escreva o motivo.",
+        "justificativa_obrigatoria": "Escreva a justificativa da reabertura.",
+        "so_confirmado_reabre": "Só lançamentos confirmados podem ser reabertos."
       }
+    },
+    "conferidos": {
+      "situacao": "Situação",
+      "naFila": "Na fila",
+      "conferidos": "Conferidos",
+      "titulo": "Conferidos recentes ({{quantidade}})",
+      "nenhum": "Nenhum lançamento conferido com estes filtros.",
+      "confirmadoPorEm": "Confirmado por {{nome}} em {{quando}}",
+      "valorConferido": "Valor conferido: {{valor}}",
+      "detalheTitulo": "Lançamento conferido",
+      "podeDesfazer": "Você confirmou este lançamento. Se foi engano, ainda dá para desfazer por {{minutos}} min.",
+      "desfazer": "Desfazer confirmação",
+      "motivoDesfazer": "Por que você vai desfazer?",
+      "dicaMotivoDesfazer": "Exemplo: confirmei o lançamento errado.",
+      "confirmarDesfazer": "Desfazer e devolver à fila",
+      "desfeito": "Confirmação desfeita. O lançamento voltou para a fila.",
+      "paraCorrigir": "Para corrigir este lançamento, peça ao Pastor de Governo para reabri-lo.",
+      "reabrir": "Reabrir lançamento",
+      "justificativa": "Justificativa da reabertura",
+      "dicaJustificativa": "Exemplo: o tesoureiro confirmou o lançamento de outro membro.",
+      "confirmarReabrir": "Reabrir e devolver à fila",
+      "reaberto": "Lançamento reaberto. Ele voltou para a fila.",
+      "voltar": "Voltar"
     }
   },
   "registrar": {

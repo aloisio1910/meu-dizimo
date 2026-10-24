@@ -28,10 +28,33 @@ export type ItemDaFila = {
   observacao_tesouraria: string | null;
   tem_comprovante: boolean;
   conta_nome: string | null;
+  confirmado_por: string | null;
+  confirmado_por_nome: string | null;
+  confirmado_em: string | null;
+  registrado_pela_tesouraria: boolean;
 };
 
 const COLUNAS_DA_FILA =
-  'id, membro_id, membro_nome, membro_numero, tipo, data_contribuicao, registrado_em, valor_informado_centavos, valor_conferido_centavos, moeda, forma, status, em_conferencia_por, em_conferencia_por_nome, conferencia_parada, divergencia_sinalizada, resposta_membro, mensagem_membro, observacao_tesouraria, tem_comprovante, conta_nome';
+  'id, membro_id, membro_nome, membro_numero, tipo, data_contribuicao, registrado_em, valor_informado_centavos, valor_conferido_centavos, moeda, forma, status, em_conferencia_por, em_conferencia_por_nome, conferencia_parada, divergencia_sinalizada, resposta_membro, mensagem_membro, observacao_tesouraria, tem_comprovante, conta_nome, confirmado_por, confirmado_por_nome, confirmado_em, registrado_pela_tesouraria';
+
+// Quantos conferidos a lista mostra: os mais recentes, para achar um engano.
+const LIMITE_DE_CONFERIDOS = 50;
+
+// Últimos lançamentos confirmados, do mais recente para o mais antigo.
+export async function listarConferidos(igrejaId: string, filtros: FiltrosDaFila): Promise<ItemDaFila[]> {
+  let consulta = supabase
+    .from('lancamentos_detalhados')
+    .select(COLUNAS_DA_FILA)
+    .eq('igreja_id', igrejaId)
+    .eq('status', 'confirmado')
+    .order('confirmado_em', { ascending: false })
+    .limit(LIMITE_DE_CONFERIDOS);
+  if (filtros.tipo) consulta = consulta.eq('tipo', filtros.tipo);
+  if (filtros.comComprovante !== undefined) consulta = consulta.eq('tem_comprovante', filtros.comComprovante);
+  const { data, error } = await consulta;
+  if (error) throw error;
+  return data as ItemDaFila[];
+}
 
 export type FiltrosDaFila = {
   tipo?: Enums['tipo_lancamento'];
@@ -82,10 +105,20 @@ export type ErroDaConferencia =
   | 'valor_igual_ao_informado'
   | 'observacao_obrigatoria'
   | 'valor_conferido_obrigatorio'
+  | 'desfazer_indisponivel'
+  | 'prazo_para_desfazer_vencido'
+  | 'motivo_obrigatorio'
+  | 'justificativa_obrigatoria'
+  | 'so_confirmado_reabre'
   | 'sem_conexao'
   | 'erro_inesperado';
 
 const ERROS_CONHECIDOS: string[] = [
+  'desfazer_indisponivel',
+  'prazo_para_desfazer_vencido',
+  'motivo_obrigatorio',
+  'justificativa_obrigatoria',
+  'so_confirmado_reabre',
   'proprio_lancamento',
   'em_conferencia_por_outro',
   'conferencia_nao_aberta',
@@ -144,6 +177,18 @@ export function confirmarLancamento(lancamentoId: string, valorConferidoCentavos
       p_lancamento_id: lancamentoId,
       p_valor_conferido_centavos: valorConferidoCentavos,
     }),
+  );
+}
+
+// D-084: quem confirmou desfaz em até 15 minutos, com motivo.
+export function desfazerConfirmacao(lancamentoId: string, motivo: string) {
+  return executar(() => supabase.rpc('desfazer_confirmacao', { p_lancamento_id: lancamentoId, p_motivo: motivo }));
+}
+
+// RN-031: o Pastor de Governo reabre um confirmado a qualquer momento, com justificativa.
+export function reabrirLancamento(lancamentoId: string, justificativa: string) {
+  return executar(() =>
+    supabase.rpc('reabrir_lancamento', { p_lancamento_id: lancamentoId, p_justificativa: justificativa }),
   );
 }
 

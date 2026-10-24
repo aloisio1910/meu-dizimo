@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { SeloDeStatus } from '@/components/selo-de-status';
 import { Texto } from '@/components/ui/texto';
-import { isoParaData } from '@/lib/data';
+import { isoParaData, partesDaDataHora } from '@/lib/data';
 import { formatarMoeda } from '@/lib/dinheiro';
 import { ehFormaConhecida } from '@/lib/formas';
 import type { ItemDaFila } from '@/services/supabase/tesouraria';
@@ -25,8 +25,10 @@ export function LinhaDaFila({ item, idioma, meuUsuarioId, ehMeuLancamento, aoAbr
   const conferidoPorMim = item.status === 'em_conferencia' && item.em_conferencia_por === meuUsuarioId;
   const conferidoPorOutro =
     item.status === 'em_conferencia' && item.em_conferencia_por !== meuUsuarioId && !item.conferencia_parada;
-  // Não abre o próprio lançamento (RN-034) nem o que outro está conferindo.
-  const podeAbrir = !ehMeuLancamento && !conferidoPorOutro;
+  const confirmado = item.status === 'confirmado';
+  // Não abre o próprio lançamento (RN-034) nem o que outro está conferindo;
+  // um já conferido sempre abre, para consulta.
+  const podeAbrir = confirmado || (!ehMeuLancamento && !conferidoPorOutro);
 
   return (
     <Pressable
@@ -49,14 +51,31 @@ export function LinhaDaFila({ item, idioma, meuUsuarioId, ehMeuLancamento, aoAbr
       </Texto>
       <Texto variante="apoio">{t(item.tem_comprovante ? 'tesouraria.item.temComprovante' : 'tesouraria.item.semComprovante')}</Texto>
       <SeloDeStatus status={item.status} />
-      {conferidoPorMim && <Texto variante="destaque">{t('tesouraria.item.emConferenciaPorVoce')}</Texto>}
+      {confirmado && !!item.confirmado_por_nome && !!item.confirmado_em && (
+        <Texto>
+          {t('tesouraria.conferidos.confirmadoPorEm', {
+            nome: item.confirmado_por_nome,
+            quando: t('lancamento.dataHora', partesDaDataHora(item.confirmado_em, idioma)),
+          })}
+        </Texto>
+      )}
+      {confirmado &&
+        item.valor_conferido_centavos !== null &&
+        item.valor_conferido_centavos !== item.valor_informado_centavos && (
+          <Texto>
+            {t('tesouraria.conferidos.valorConferido', {
+              valor: formatarMoeda(item.valor_conferido_centavos, item.moeda, idioma),
+            })}
+          </Texto>
+        )}
+      {conferidoPorMim &&<Texto variante="destaque">{t('tesouraria.item.emConferenciaPorVoce')}</Texto>}
       {conferidoPorOutro && (
         <Texto>{t('tesouraria.item.emConferenciaPor', { nome: item.em_conferencia_por_nome ?? '' })}</Texto>
       )}
       {item.conferencia_parada && <Texto>{t('tesouraria.item.parada')}</Texto>}
       {item.resposta_membro === 'contestada' && <Texto variante="erro">{t('tesouraria.item.contestada')}</Texto>}
       {item.divergencia_sinalizada && <Texto variante="erro">{t('tesouraria.item.sinalizada')}</Texto>}
-      {ehMeuLancamento && <Texto variante="apoio">{t('tesouraria.item.seuLancamento')}</Texto>}
+      {ehMeuLancamento && !confirmado && <Texto variante="apoio">{t('tesouraria.item.seuLancamento')}</Texto>}
     </Pressable>
   );
 }
