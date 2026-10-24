@@ -5,12 +5,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { cores, espacos } from '@/theme';
 
 // Moldura padrão das telas: respeita o entalhe do celular, rola quando o
-// conteúdo não cabe e sobe quando o teclado abre. Na web, limita a largura.
-export function Tela({ children }: { children: ReactNode }) {
+// conteúdo não cabe e sobe quando o teclado abre. Na web, limita a largura;
+// "larga" serve ao painel da tesouraria, usado no computador.
+export function Tela({ children, larga = false }: { children: ReactNode; larga?: boolean }) {
   return (
     <SafeAreaView style={estilos.area}>
       <KeyboardAvoidingView style={estilos.area} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView contentContainerStyle={estilos.conteudo} keyboardShouldPersistTaps="handled">
+        <ScrollView
+          contentContainerStyle={[estilos.conteudo, larga && estilos.larga]}
+          keyboardShouldPersistTaps="handled"
+        >
           {children}
         </ScrollView>
       </KeyboardAvoidingView>
@@ -31,5 +35,9 @@ const estilos = StyleSheet.create({
     width: '100%',
     maxWidth: 480,
     alignSelf: 'center',
+  },
+  larga: {
+    maxWidth: 960,
+    justifyContent: 'flex-start',
   },
 });

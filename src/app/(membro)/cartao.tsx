@@ -22,7 +22,7 @@ export default function Cartao() {
   const { t } = useTranslation();
   const router = useRouter();
   const { sessao } = useSessao();
-  const { ficha, carregando: carregandoFicha } = useFichaAtiva();
+  const { ficha, carregando: carregandoFicha, ehTesouraria } = useFichaAtiva();
   const [dizimos, setDizimos] = useState<LancamentoDoCartao[] | null>(null);
   const [falhou, setFalhou] = useState(false);
 
@@ -67,6 +67,9 @@ export default function Cartao() {
       )}
 
       <Botao titulo={t('cartao.registrar')} onPress={() => router.push('/registrar-dizimo')} />
+      {ehTesouraria && (
+        <Botao titulo={t('tesouraria.abrirPainel')} variante="secundario" onPress={() => router.push('/fila')} />
+      )}
 
       <Texto variante="destaque" accessibilityRole="header">
         {t('cartao.seusDizimos')}

@@ -33,6 +33,7 @@ export type Comprovante = {
   id: string;
   formato: FormatoDoComprovante;
   enviado_em: string;
+  retirado_em: string | null;
   link: string | null;
 };
 
@@ -98,15 +99,19 @@ export async function retirarComprovante(
   }
 }
 
-// Comprovantes ainda válidos do lançamento (os retirados ficam de fora),
-// cada um com um link temporário para abrir.
-export async function listarComprovantes(lancamentoId: string): Promise<Comprovante[]> {
-  const { data, error } = await supabase
+// Comprovantes do lançamento, cada um com um link temporário para abrir.
+// O membro vê só os válidos; a tesouraria vê também os retirados (D-083).
+export async function listarComprovantes(
+  lancamentoId: string,
+  opcoes: { incluirRetirados?: boolean } = {},
+): Promise<Comprovante[]> {
+  let consulta = supabase
     .from('comprovantes')
-    .select('id, formato, enviado_em, arquivo_path')
+    .select('id, formato, enviado_em, retirado_em, arquivo_path')
     .eq('lancamento_id', lancamentoId)
-    .is('retirado_em', null)
     .order('enviado_em');
+  if (!opcoes.incluirRetirados) consulta = consulta.is('retirado_em', null);
+  const { data, error } = await consulta;
   if (error) throw error;
   if (data.length === 0) return [];
 
@@ -121,6 +126,7 @@ export async function listarComprovantes(lancamentoId: string): Promise<Comprova
     id: c.id,
     formato: c.formato,
     enviado_em: c.enviado_em,
+    retirado_em: c.retirado_em,
     link: links?.find((l) => l.path === c.arquivo_path)?.signedUrl ?? null,
   }));
 }

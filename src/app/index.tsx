@@ -1,6 +1,6 @@
 import { Redirect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Platform } from 'react-native';
 
 import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
@@ -40,7 +40,12 @@ export default function Inicio() {
   if (fichas.some((f) => f.status === 'convidado')) return <Redirect href="/primeiro-acesso" />;
   // Depois do cadastro, oferece a digital uma vez neste aparelho (D-058).
   if (fichas.length > 0 && temDigital && !escolhaDaDigital) return <Redirect href="/ativar-digital" />;
-  if (fichas.some((f) => f.status === 'ativo')) return <Redirect href="/cartao" />;
+  const ativa = fichas.find((f) => f.status === 'ativo');
+  // A tesouraria usa de preferência a versão web: lá ela já entra na fila.
+  if (ativa && Platform.OS === 'web' && (ativa.perfil === 'tesoureiro' || ativa.perfil === 'administrador')) {
+    return <Redirect href="/fila" />;
+  }
+  if (ativa) return <Redirect href="/cartao" />;
 
   return (
     <Tela>

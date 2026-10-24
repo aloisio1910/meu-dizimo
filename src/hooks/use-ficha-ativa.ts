@@ -4,5 +4,8 @@ import { useMinhasFichas } from './use-minhas-fichas';
 // é a primeira igreja em que a pessoa está ativa.
 export function useFichaAtiva() {
   const { fichas, carregando } = useMinhasFichas();
-  return { ficha: fichas.find((f) => f.status === 'ativo'), carregando };
+  const ficha = fichas.find((f) => f.status === 'ativo');
+  // Tesouraria = tesoureiro ou Pastor de Governo (que tem tudo do tesoureiro).
+  const ehTesouraria = ficha?.perfil === 'tesoureiro' || ficha?.perfil === 'administrador';
+  return { ficha, carregando, ehTesouraria };
 }
