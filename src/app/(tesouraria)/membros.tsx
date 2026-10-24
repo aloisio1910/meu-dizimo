@@ -65,6 +65,7 @@ export default function Membros() {
     <Tela larga>
       <Texto variante="apoio">{ficha.igrejas?.nome}</Texto>
       <Texto variante="titulo">{t('tesouraria.membros.titulo')}</Texto>
+      <MenuDaTesouraria atual="membros" />
       <Botao titulo={t('tesouraria.membros.convidar')} onPress={() => router.push('/convidar')} />
 
       <CampoTexto
@@ -120,7 +121,6 @@ export default function Membros() {
         </>
       )}
 
-      <MenuDaTesouraria atual="membros" />
     </Tela>
   );
 }

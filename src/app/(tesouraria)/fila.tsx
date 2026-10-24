@@ -162,6 +162,7 @@ export default function Fila() {
     <Tela larga>
       <Texto variante="apoio">{ficha.igrejas?.nome}</Texto>
       <Texto variante="titulo">{t('tesouraria.fila.titulo')}</Texto>
+      <MenuDaTesouraria atual="fila" />
       <Texto>{t('tesouraria.fila.explicacao')}</Texto>
 
       {situacao === 'fila' && (
@@ -251,7 +252,6 @@ export default function Fila() {
       )}
 
       <Botao titulo={t('tesouraria.fila.atualizar')} variante="secundario" onPress={carregar} />
-      <MenuDaTesouraria atual="fila" />
     </Tela>
   );
 }
