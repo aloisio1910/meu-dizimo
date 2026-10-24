@@ -412,6 +412,9 @@ isOneToOne: false
 "convidar_membro":
 { Args: { "p_celular": string,"p_email": string,"p_igreja_id": string,"p_nome": string,"p_perfil"?: Database["public"]['Enums']["perfil_membro"] }; Returns: string
                            },
+"definir_conta_principal":
+{ Args: { "p_conta_id": string }; Returns: undefined
+                           },
 "desativar_dispositivo":
 { Args: { "p_token": string }; Returns: undefined
                            },
