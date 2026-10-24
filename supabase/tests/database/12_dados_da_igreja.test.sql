@@ -9,7 +9,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(9);
+select plan(15);
 
 create function pg_temp.entrar(p_usuario uuid, p_admin_master boolean default false)
 returns void
@@ -95,6 +95,45 @@ select is(
   'Rua 1, Centro',
   'Administrador de outra igreja não altera a Igreja A'
 );
+
+-- Logo e capa no bucket privado "igrejas" (seção 17).
+select pg_temp.entrar('a0000000-0000-0000-0000-000000000001');
+set local role authenticated;
+select lives_ok(
+  $$ insert into storage.objects (bucket_id, name, owner)
+     values ('igrejas', '1a000000-0000-0000-0000-000000000000/logo-1.png', 'a0000000-0000-0000-0000-000000000001') $$,
+  'Pastor de Governo envia o logo da igreja'
+);
+select lives_ok(
+  $$ update public.igrejas set logo_path = '1a000000-0000-0000-0000-000000000000/logo-1.png', cor_principal = '#5B2C83'
+      where id = '1a000000-0000-0000-0000-000000000000' $$,
+  'Pastor de Governo aponta o logo e escolhe a cor'
+);
+reset role;
+
+select pg_temp.entrar('a0000000-0000-0000-0000-000000000002');
+set local role authenticated;
+select throws_ok(
+  $$ insert into storage.objects (bucket_id, name, owner)
+     values ('igrejas', '1a000000-0000-0000-0000-000000000000/logo-2.png', 'a0000000-0000-0000-0000-000000000002') $$,
+  '42501', null,
+  'Tesoureiro não envia imagens da igreja'
+);
+select is((select count(*) from storage.objects where bucket_id = 'igrejas'), 1::bigint,
+  'Quem é da igreja vê o logo');
+reset role;
+
+select pg_temp.entrar('b0000000-0000-0000-0000-000000000001');
+set local role authenticated;
+select throws_ok(
+  $$ insert into storage.objects (bucket_id, name, owner)
+     values ('igrejas', '1a000000-0000-0000-0000-000000000000/logo-3.png', 'b0000000-0000-0000-0000-000000000001') $$,
+  '42501', null,
+  'Administrador de outra igreja não envia imagem na pasta da Igreja A'
+);
+select is((select count(*) from storage.objects where bucket_id = 'igrejas'), 0::bigint,
+  'Outra igreja não vê o logo da Igreja A');
+reset role;
 
 select pg_temp.entrar('f0000000-0000-0000-0000-000000000001', true);
 set local role authenticated;

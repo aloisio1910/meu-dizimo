@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { LogoDaIgreja } from '@/components/logo-da-igreja';
 import { Botao } from '@/components/ui/botao';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
@@ -38,7 +39,14 @@ export function MenuDaTesouraria({ atual }: { atual: Pagina }) {
 
   return (
     <View style={estilos.bloco}>
-      {!!ficha && <Texto variante="apoio">{t('tesouraria.menu.conectadoComo', { nome: ficha.nome, perfil })}</Texto>}
+      {!!ficha && (
+        <View style={estilos.quem}>
+          <LogoDaIgreja tamanho={40} />
+          <Texto variante="apoio" style={estilos.textoDeQuem}>
+            {t('tesouraria.menu.conectadoComo', { nome: ficha.nome, perfil })}
+          </Texto>
+        </View>
+      )}
       <View style={estilos.menu} accessibilityRole="menu">
         {itens.map((item) => (
           <View key={item.titulo} style={estilos.item}>
@@ -70,6 +78,14 @@ export function MenuDaTesouraria({ atual }: { atual: Pagina }) {
 }
 
 const estilos = StyleSheet.create({
+  quem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: espacos.pequeno,
+  },
+  textoDeQuem: {
+    flexShrink: 1,
+  },
   bloco: {
     gap: espacos.pequeno,
   },

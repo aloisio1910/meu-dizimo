@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
+import { LogoDaIgreja } from '@/components/logo-da-igreja';
 import { SeloDeStatus } from '@/components/selo-de-status';
 import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
@@ -55,7 +56,12 @@ export default function Cartao() {
 
   return (
     <Tela>
-      <Texto variante="apoio">{igreja?.nome}</Texto>
+      <View style={estilos.cabecalho}>
+        <LogoDaIgreja />
+        <Texto variante="apoio" style={estilos.nomeDaIgreja}>
+          {igreja?.nome}
+        </Texto>
+      </View>
       <Texto variante="titulo">{t('cartao.titulo')}</Texto>
       <Texto variante="destaque">{t('cartao.dizimista', { nome: ficha.nome, numero: ficha.numero })}</Texto>
       {!!igreja && (
@@ -113,6 +119,14 @@ export default function Cartao() {
 }
 
 const estilos = StyleSheet.create({
+  cabecalho: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: espacos.medio,
+  },
+  nomeDaIgreja: {
+    flexShrink: 1,
+  },
   versiculo: {
     gap: espacos.pequeno,
     paddingLeft: espacos.medio,

@@ -1,14 +1,17 @@
 import * as Clipboard from 'expo-clipboard';
+import { Image } from 'expo-image';
 import * as WebBrowser from 'expo-web-browser';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Linking, StyleSheet, View } from 'react-native';
 
+import { LogoDaIgreja } from '@/components/logo-da-igreja';
 import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useImagensDaIgreja } from '@/hooks/use-imagens-da-igreja';
 import { REDES, redesIniciais } from '@/lib/dados-da-igreja';
 import { linkDoMapa } from '@/lib/mapa';
 import { linkDoWhatsApp } from '@/lib/whatsapp';
@@ -24,6 +27,7 @@ import { cores, espacos, raio } from '@/theme';
 export default function Igreja() {
   const { t } = useTranslation();
   const { ficha } = useFichaAtiva();
+  const imagens = useImagensDaIgreja();
   const [dados, setDados] = useState<DadosDaIgreja | null>();
   const [contas, setContas] = useState<ContaDaIgreja[]>([]);
   const [falhou, setFalhou] = useState(false);
@@ -76,8 +80,21 @@ export default function Igreja() {
 
   return (
     <Tela>
+      {!!imagens.capa && (
+        <Image
+          source={{ uri: imagens.capa }}
+          style={estilos.capa}
+          contentFit="cover"
+          accessibilityLabel={t('tesouraria.aparencia.descricaoCapa')}
+        />
+      )}
       <Texto variante="apoio">{t('igreja.titulo')}</Texto>
-      <Texto variante="titulo">{dados?.nome ?? ficha.igrejas?.nome}</Texto>
+      <View style={estilos.cabecalho}>
+        <LogoDaIgreja tamanho={64} />
+        <Texto variante="titulo" style={estilos.nome}>
+          {dados?.nome ?? ficha.igrejas?.nome}
+        </Texto>
+      </View>
 
       {!!whatsapp && <Botao titulo={t('igreja.whatsapp')} onPress={() => Linking.openURL(whatsapp)} />}
 
@@ -151,6 +168,19 @@ export default function Igreja() {
 }
 
 const estilos = StyleSheet.create({
+  capa: {
+    width: '100%',
+    aspectRatio: 16 / 9,
+    borderRadius: raio,
+  },
+  cabecalho: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: espacos.medio,
+  },
+  nome: {
+    flexShrink: 1,
+  },
   bloco: {
     gap: espacos.pequeno,
   },
