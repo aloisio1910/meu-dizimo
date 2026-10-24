@@ -12,7 +12,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(48);
+select plan(52);
 
 create function pg_temp.entrar(p_usuario uuid)
 returns void
@@ -286,6 +286,35 @@ select is(
   'aguardando',
   'Dízimo do próprio tesoureiro vai para a fila; ele não se confirma (RN-034)'
 );
+select lives_ok(
+  $$ insert into public.lancamentos (id, igreja_id, membro_id, tipo, campanha_id, valor_informado_centavos, moeda, data_contribuicao, forma)
+     values ('5a000000-0000-0000-0000-000000000006', '1a000000-0000-0000-0000-000000000000',
+       '2a000000-0000-0000-0000-000000000004', 'oferta', '4a000000-0000-0000-0000-000000000001', 7000, 'BRL', current_date, 'dinheiro') $$,
+  'Tesoureiro lança oferta presencial numa campanha'
+);
+select results_eq(
+  $$ select status::text, conta_id from public.lancamentos where id = '5a000000-0000-0000-0000-000000000006' $$,
+  $$ values ('confirmado', '3a000000-0000-0000-0000-000000000002'::uuid) $$,
+  'Oferta presencial nasce confirmada, na conta da campanha'
+);
+select throws_ok(
+  $$ insert into public.lancamentos (igreja_id, membro_id, tipo, valor_informado_centavos, moeda, data_contribuicao, forma)
+     values ('1b000000-0000-0000-0000-000000000000', '2b000000-0000-0000-0000-000000000001', 'dizimo', 1000, 'BRL', current_date, 'dinheiro') $$,
+  '42501', null,
+  'Tesoureiro não lança para membro de outra igreja'
+);
+reset role;
+update public.membros set status = 'inativo' where id = '2a000000-0000-0000-0000-000000000004';
+set local role authenticated;
+select throws_ok(
+  $$ insert into public.lancamentos (igreja_id, membro_id, tipo, valor_informado_centavos, moeda, data_contribuicao, forma)
+     values ('1a000000-0000-0000-0000-000000000000', '2a000000-0000-0000-0000-000000000004', 'dizimo', 1000, 'BRL', current_date, 'dinheiro') $$,
+  '42501', 'membro_indisponivel',
+  'Membro inativo não recebe lançamento (RN-035)'
+);
+reset role;
+update public.membros set status = 'ativo' where id = '2a000000-0000-0000-0000-000000000004';
+set local role authenticated;
 update public.lancamentos set valor_informado_centavos = 1 where id = '5a000000-0000-0000-0000-000000000001';
 select is(
   (select valor_informado_centavos from public.lancamentos where id = '5a000000-0000-0000-0000-000000000001'),

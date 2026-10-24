@@ -235,6 +235,14 @@ export default function CartaoDoMembro() {
               />
             </>
           )}
+          {membro.status !== 'inativo' && membro.id !== ficha.id && (
+            <Botao
+              titulo={t('tesouraria.membro.lancar')}
+              variante="secundario"
+              onPress={() => router.push({ pathname: '/lancar', params: { membro: membro.id } })}
+              desabilitado={enviando}
+            />
+          )}
           {!!textosDaMudanca && (
             <Botao
               titulo={textosDaMudanca.botao}

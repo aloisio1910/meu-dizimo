@@ -58,16 +58,24 @@ function simplificar(texto: string): string {
     .trim();
 }
 
-// Busca por nome, e-mail ou número do dizimista. Só números (com ou sem #)
-// procura o número exato; texto vazio mostra todos.
-export function filtrarMembros<T extends { nome: string; email: string; numero: number }>(
+// Até 5 dígitos é o número do dizimista; mais que isso, um telefone.
+const MAIOR_NUMERO_DE_DIZIMISTA = 5;
+
+// Busca por nome, e-mail, número do dizimista ou celular, os dados que o
+// envelope traz. Texto vazio mostra todos.
+export function filtrarMembros<T extends { nome: string; email: string; numero: number; celular?: string }>(
   membros: T[],
   busca: string,
 ): T[] {
   const termo = simplificar(busca);
   if (!termo) return membros;
-  const numero = /^#?\d+$/.test(termo) ? Number(termo.replace('#', '')) : null;
-  if (numero !== null) return membros.filter((m) => m.numero === numero);
+  if (/^#?[\d\s().+-]+$/.test(termo)) {
+    const digitos = termo.replace(/\D/g, '');
+    if (termo.startsWith('#') || digitos.length <= MAIOR_NUMERO_DE_DIZIMISTA) {
+      return membros.filter((m) => m.numero === Number(digitos));
+    }
+    return membros.filter((m) => (m.celular ?? '').replace(/\D/g, '').includes(digitos));
+  }
   return membros.filter((m) => simplificar(m.nome).includes(termo) || simplificar(m.email).includes(termo));
 }
 

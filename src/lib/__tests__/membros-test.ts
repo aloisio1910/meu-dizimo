@@ -69,6 +69,16 @@ describe('filtrarMembros', () => {
     expect(filtrarMembros(membros, '#3').map((m) => m.numero)).toEqual([3]);
   });
 
+  it('telefone com 6 dígitos ou mais procura no celular, com ou sem pontuação', () => {
+    const comCelular = [
+      { nome: 'Ana', email: 'ana@teste.local', numero: 7, celular: '(62) 99876-5432' },
+      { nome: 'Bia', email: 'bia@teste.local', numero: 8, celular: '62 91111-2222' },
+    ];
+    expect(filtrarMembros(comCelular, '998765432').map((m) => m.numero)).toEqual([7]);
+    expect(filtrarMembros(comCelular, '(62) 9111').map((m) => m.numero)).toEqual([8]);
+    expect(filtrarMembros(comCelular, '62').map((m) => m.numero)).toEqual([]);
+  });
+
   it('só números procura o número, não pedaços do e-mail', () => {
     expect(filtrarMembros(membros, '12').map((m) => m.numero)).toEqual([12]);
     expect(filtrarMembros(membros, '99')).toEqual([]);

@@ -369,7 +369,41 @@
     },
     "menu": {
       "fila": "Fila de conferência",
-      "membros": "Membros"
+      "membros": "Membros",
+      "lancar": "Lançar para membro"
+    },
+    "lancar": {
+      "titulo": "Lançar para membro",
+      "explicacao": "Para devoluções entregues na igreja, como o envelope. O lançamento já entra como Confirmado, marcado como registrado pela tesouraria.",
+      "buscar": "Buscar o membro",
+      "dicaBuscar": "Nome, e-mail, número do dizimista ou celular do envelope",
+      "digiteParaBuscar": "Digite algum dado do envelope para encontrar o membro.",
+      "nenhum": "Nenhum membro encontrado. Confira o dado ou procure na lista de membros.",
+      "falhaAoCarregar": "Não conseguimos carregar os membros.",
+      "escolher": "Lançar para {{nome}}",
+      "paraQuem": "Para: {{nome}} · nº {{numero}}",
+      "trocarMembro": "Escolher outro membro",
+      "tipo": "O que foi entregue?",
+      "dizimo": "Dízimo",
+      "oferta": "Oferta",
+      "campanha": "Para qual campanha?",
+      "escolhaCampanha": "Escolha a campanha da oferta.",
+      "semCampanhas": "Não há campanhas abertas para receber ofertas.",
+      "revisar": "Revisar",
+      "confirmarTitulo": "Confira antes de lançar",
+      "resumoDizimo": "Dízimo de {{valor}} de {{nome}}, em {{data}}, pago em {{forma}}.",
+      "resumoOferta": "Oferta de {{valor}} de {{nome}} para {{campanha}}, em {{data}}, paga em {{forma}}.",
+      "avisoConfirmado": "O lançamento entra como Confirmado por você e aparece no Cartão do membro.",
+      "lancarAgora": "Lançar como confirmado",
+      "corrigir": "Voltar e corrigir",
+      "duplicadoTitulo": "Lançar de novo?",
+      "duplicado": "{{nome}} já tem {{valor}} lançado em {{data}}. Deseja lançar novamente?",
+      "lancarMesmoAssim": "Sim, lançar novamente",
+      "lancado": "Lançado e confirmado!",
+      "lancadoDetalhe": "{{valor}} de {{nome}}, em {{data}}.",
+      "outroParaMesmo": "Lançar outro para {{nome}}",
+      "outroMembro": "Lançar para outro membro",
+      "voltar": "Voltar"
     },
     "membros": {
       "titulo": "Membros",
@@ -462,7 +496,8 @@
       "simReativar": "Sim, reativar",
       "reativado": "Membro reativado.",
       "naoVoltar": "Não, voltar",
-      "statusSoPastor": "Inativar e reativar membros é feito pelo {{titulo}}."
+      "statusSoPastor": "Inativar e reativar membros é feito pelo {{titulo}}.",
+      "lancar": "Lançar devolução para este membro"
     }
   },
   "registrar": {
@@ -484,7 +519,8 @@
       "escolhaForma": "Escolha como você devolveu.",
       "forma_invalida": "Esta forma de devolução não é aceita pela igreja.",
       "data_futura": "A data não pode ser depois de hoje.",
-      "campanha_indisponivel": "Esta campanha não está mais recebendo ofertas."
+      "campanha_indisponivel": "Esta campanha não está mais recebendo ofertas.",
+      "membro_indisponivel": "Este membro está inativo e não pode receber lançamentos."
     },
     "duplicadoTitulo": "Registrar de novo?",
     "duplicado": "Você já registrou {{valor}} em {{data}}. Deseja registrar novamente?",

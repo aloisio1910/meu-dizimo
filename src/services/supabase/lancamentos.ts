@@ -179,19 +179,22 @@ export type ErroAoRegistrar =
   | 'forma_invalida'
   | 'data_futura'
   | 'campanha_indisponivel'
+  | 'membro_indisponivel'
   | 'sem_conexao'
   | 'erro_inesperado';
 
+const ERROS_DO_REGISTRO: string[] = ['forma_invalida', 'data_futura', 'campanha_indisponivel', 'membro_indisponivel'];
+
 function traduzirErro(erro: PostgrestError | Error): ErroAoRegistrar {
-  if (erro.message === 'forma_invalida' || erro.message === 'data_futura' || erro.message === 'campanha_indisponivel') {
-    return erro.message;
-  }
+  if (ERROS_DO_REGISTRO.includes(erro.message)) return erro.message as ErroAoRegistrar;
   if (erro instanceof TypeError) return 'sem_conexao';
   return 'erro_inesperado';
 }
 
-// Dízimo e oferta usam o mesmo lançamento (D-050). O banco define status
-// (aguardando), conta de destino, autor e data do registro.
+// Dízimo e oferta usam o mesmo lançamento (D-050). O banco define status,
+// conta de destino, autor e data do registro: o membro registrando para si
+// vai para a fila; a tesouraria lançando para outro (devolução presencial,
+// RN-033) já nasce confirmado.
 export async function registrarDizimo(
   dizimo: NovoDizimo,
 ): Promise<{ ok: true; id: string } | { ok: false; erro: ErroAoRegistrar }> {
