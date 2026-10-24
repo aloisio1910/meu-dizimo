@@ -115,7 +115,7 @@ O membro só entra por convite da igreja e acessa sem senha, com um código de 6
 | Ativo | Cadastro concluído | Sim |
 | Inativo | Saiu da igreja ou foi desligado pela liderança | Não, histórico preservado |
 
-O Pastor de Governo pode reativar um membro inativo; o histórico volta junto.
+O Pastor de Governo pode reativar um membro inativo; o histórico volta junto. Quem nunca concluiu o cadastro volta a Convidado, não a Ativo. Um convite feito por engano pode ser cancelado pela tesouraria (D-085).
 
 ## 5. Cartão de Dízimo e lançamentos
 
@@ -373,6 +373,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-082 | Formas de devolução definidas por igreja; o padrão é Pix, cartão, dinheiro e transferência | Definido |
 | D-083 | O membro retira um comprovante anexado por engano sem apagá-lo: ele some da lista do membro e fica guardado para a tesouraria como retirado pelo membro, com data. Vale enquanto o lançamento aguarda conferência ou está em divergência | Definido |
 | D-084 | Exceção à RN-031: o tesoureiro que confirmou desfaz a própria confirmação em até 15 minutos, com motivo, e o lançamento volta para a fila. Não vale para o aceite de divergência pelo membro. Depois do prazo, só o Pastor de Governo reabre | Definido |
+| D-085 | Convite feito por engano pode ser cancelado pelo tesoureiro ou pelo Pastor de Governo (a ficha fica Inativa). Inativar e reativar membro ativo é só do Pastor de Governo. Na reativação, quem já concluiu o cadastro volta a Ativo; quem não concluiu volta a Convidado e precisa de novo convite. Ninguém altera o próprio status. O membro inativado vê no app que o cadastro está inativo | Definido |
 
 ## 14. Questões abertas e próximos passos
 
