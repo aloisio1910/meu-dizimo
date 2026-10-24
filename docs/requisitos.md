@@ -380,6 +380,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-089 | A campanha encerra sozinha no dia seguinte à data de fim (horário de Brasília no MVP; fuso por igreja na Fase 2). Sem data de fim, fica aberta até o Pastor encerrar | Definido |
 | D-090 | Tesoureiro suspenso volta a ser membro: perde o acesso à tesouraria na hora e continua com o próprio Cartão; as confirmações que já fez continuam valendo. Ninguém altera o próprio perfil, e dar ou tirar o perfil de Pastor de Governo é só do Admin Master | Definido |
 | D-091 | A troca da conta principal acontece numa só operação, e a igreja nunca fica sem conta principal. Conta usada por campanha em rascunho ou ativa não pode ser desativada; troca-se antes a conta da campanha. A chave Pix é validada pelo tipo (CPF e CNPJ com dígito verificador) | Definido |
+| D-092 | País, idioma e moeda da igreja são alterados só pelo Admin Master; o Pastor de Governo ajusta dados, contato, versículo, mensagem de confirmação e formas de devolução | Definido |
 
 ## 14. Questões abertas e próximos passos
 
@@ -510,7 +511,7 @@ Ficam de fora, para preservar a simplicidade e o suporte: temas completos, troca
 
 - Todos os textos do app ficam em arquivos de idioma (ex.: pt-BR), nunca escritos direto nas telas.
 - Valores guardados em centavos junto com o código da moeda (BRL, USD, EUR); datas e valores exibidos no formato do idioma.
-- Cada igreja tem país, moeda e idioma padrão; o membro pode trocar o idioma no perfil.
+- Cada igreja tem país, moeda e idioma padrão, definidos pelo Admin Master (D-092); o membro pode trocar o idioma no perfil.
 - Dados de pagamento tratados como meios de pagamento da igreja: Pix no Brasil, outros meios em outros países (D-064).
 
 **Antes de lançar em outro país:** tradução revisada por falante nativo, termos de uso e privacidade conforme a lei local (ex.: GDPR na Europa), meios de pagamento locais e publicação nas lojas daquele país.
