@@ -176,6 +176,8 @@ export default function CartaoDoMembro() {
       <Texto variante={situacao === 'convite_vencido' ? 'erro' : 'destaque'}>
         {t(`tesouraria.membros.situacao.${situacao}`)}
       </Texto>
+      {membro.perfil === 'tesoureiro' && <Texto variante="destaque">{t('tesouraria.membro.perfilTesoureiro')}</Texto>}
+      {membro.perfil === 'administrador' && <Texto variante="destaque">{titulo}</Texto>}
 
       <View style={estilos.cartao}>
         <Texto variante="destaque" accessibilityRole="header">

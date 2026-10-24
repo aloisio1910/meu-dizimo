@@ -372,7 +372,33 @@
       "membros": "Membros",
       "lancar": "Lançar para membro",
       "relatorio": "Relatórios",
-      "campanhas": "Campanhas"
+      "campanhas": "Campanhas",
+      "tesoureiros": "Tesoureiros"
+    },
+    "tesoureiros": {
+      "titulo": "Tesoureiros",
+      "explicacao": "Tesoureiros conferem e confirmam os lançamentos, convidam membros e geram relatórios. Quem é suspenso volta a ser membro e continua com o próprio Cartão.",
+      "soPastor": "Só o {{titulo}} autoriza e suspende tesoureiros.",
+      "falhaAoCarregar": "Não conseguimos carregar a tesouraria.",
+      "pastores": "{{titulo}}",
+      "atuais": "Tesoureiros atuais",
+      "nenhum": "Ainda não há tesoureiros.",
+      "convidado": "Convite pendente: ainda não entrou no app.",
+      "suspender": "Suspender {{nome}}",
+      "perguntaSuspender": "Suspender {{nome}}? A pessoa perde o acesso à tesouraria agora e continua com o próprio Cartão de Dízimo. As confirmações que já fez continuam valendo.",
+      "simSuspender": "Sim, suspender",
+      "suspenso": "{{nome}} foi suspenso e voltou a ser membro.",
+      "autorizarTitulo": "Autorizar um membro",
+      "autorizarExplicacao": "Busque um membro da igreja para dar acesso à tesouraria.",
+      "buscar": "Buscar membro",
+      "dicaBuscar": "Nome, e-mail, número do dizimista ou celular",
+      "nenhumEncontrado": "Nenhum membro encontrado.",
+      "autorizar": "Autorizar {{nome}}",
+      "perguntaAutorizar": "Autorizar {{nome}} como tesoureiro? A pessoa passa a ver os dados de todos os membros e a conferir os lançamentos.",
+      "simAutorizar": "Sim, autorizar",
+      "autorizado": "{{nome}} agora é tesoureiro.",
+      "nao": "Não, voltar",
+      "convidarNovo": "Convidar alguém de fora como tesoureiro"
     },
     "campanhas": {
       "titulo": "Campanhas",
@@ -583,7 +609,12 @@
         "so_o_pastor_altera_status": "Só o {{titulo}} pode fazer esta mudança.",
         "status_proprio": "Você não pode mudar o seu próprio status.",
         "reativacao_invalida": "Esta mudança de status não é permitida.",
-        "status_mudou": "A ficha foi alterada por outra pessoa. Confira e tente de novo."
+        "status_mudou": "A ficha foi alterada por outra pessoa. Confira e tente de novo.",
+        "so_o_pastor_altera_perfil": "Só o {{titulo}} autoriza e suspende tesoureiros.",
+        "so_admin_master_define_pastor": "O perfil de {{titulo}} só é alterado pela equipe do Meu Dízimo.",
+        "perfil_proprio": "Você não pode mudar o seu próprio perfil.",
+        "membro_inativo": "Este membro está inativo. Reative antes de mudar o perfil.",
+        "perfil_mudou": "A ficha foi alterada por outra pessoa. Confira e tente de novo."
       },
       "situacao": {
         "convidado": "Convidado",
@@ -594,6 +625,8 @@
     },
     "convidar": {
       "titulo": "Convidar membro",
+      "tituloTesoureiro": "Convidar tesoureiro",
+      "avisoTesoureiro": "A pessoa entra já como tesoureiro, com acesso aos dados de todos os membros.",
       "explicacao": "A pessoa entra no app com este e-mail e recebe um código para acessar. O convite vale por 7 dias.",
       "nome": "Nome completo",
       "email": "E-mail",
@@ -653,7 +686,8 @@
       "reativado": "Membro reativado.",
       "naoVoltar": "Não, voltar",
       "statusSoPastor": "Inativar e reativar membros é feito pelo {{titulo}}.",
-      "lancar": "Lançar devolução para este membro"
+      "lancar": "Lançar devolução para este membro",
+      "perfilTesoureiro": "Tesoureiro"
     }
   },
   "registrar": {

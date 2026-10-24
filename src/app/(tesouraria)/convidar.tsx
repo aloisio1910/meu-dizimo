@@ -1,4 +1,4 @@
-import { Redirect, useRouter } from 'expo-router';
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,11 +14,14 @@ import { convidarMembro } from '@/services/supabase/membros-da-igreja';
 const SETE_DIAS_MS = 7 * 24 * 60 * 60 * 1000;
 
 // Convidar (passo 1 do fluxo principal): nome, e-mail e celular. O banco
-// recusa e-mail já cadastrado na igreja (RN-028).
+// recusa e-mail já cadastrado na igreja (RN-028). Com ?perfil=tesoureiro,
+// o Pastor de Governo convida já como tesoureiro (P-01).
 export default function Convidar() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { ficha, carregando, ehTesouraria } = useFichaAtiva();
+  const { perfil: perfilPedido } = useLocalSearchParams<{ perfil?: string }>();
+  const { ficha, carregando, ehTesouraria, ehAdministrador } = useFichaAtiva();
+  const comoTesoureiro = perfilPedido === 'tesoureiro' && ehAdministrador;
 
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
@@ -39,7 +42,7 @@ export default function Convidar() {
     setErroGeral(undefined);
     if (!resultado.ok) return;
     setEnviando(true);
-    const resposta = await convidarMembro(ficha!.igreja_id, resultado.dados);
+    const resposta = await convidarMembro(ficha!.igreja_id, resultado.dados, comoTesoureiro ? 'tesoureiro' : 'membro');
     setEnviando(false);
     if (!resposta.ok) {
       setErroGeral(
@@ -79,8 +82,11 @@ export default function Convidar() {
 
   return (
     <Tela>
-      <Texto variante="titulo">{t('tesouraria.convidar.titulo')}</Texto>
+      <Texto variante="titulo">
+        {comoTesoureiro ? t('tesouraria.convidar.tituloTesoureiro') : t('tesouraria.convidar.titulo')}
+      </Texto>
       <Texto>{t('tesouraria.convidar.explicacao')}</Texto>
+      {comoTesoureiro && <Texto variante="destaque">{t('tesouraria.convidar.avisoTesoureiro')}</Texto>}
       <CampoTexto
         rotulo={t('tesouraria.convidar.nome')}
         value={nome}

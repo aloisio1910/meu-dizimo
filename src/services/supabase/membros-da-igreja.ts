@@ -59,11 +59,24 @@ export type ErroDoConvite =
   | 'status_proprio'
   | 'reativacao_invalida'
   | 'status_mudou'
+  | 'so_o_pastor_altera_perfil'
+  | 'so_admin_master_define_pastor'
+  | 'perfil_proprio'
+  | 'membro_inativo'
+  | 'perfil_mudou'
   | 'sem_conexao'
   | 'erro_inesperado';
 
-// Códigos curtos que a trigger validar_membro devolve (D-085).
-const ERROS_DE_STATUS: string[] = ['so_o_pastor_altera_status', 'status_proprio', 'reativacao_invalida'];
+// Códigos curtos que a trigger validar_membro devolve (D-085 e D-090).
+const ERROS_DE_STATUS: string[] = [
+  'so_o_pastor_altera_status',
+  'status_proprio',
+  'reativacao_invalida',
+  'so_o_pastor_altera_perfil',
+  'so_admin_master_define_pastor',
+  'perfil_proprio',
+  'membro_inativo',
+];
 
 function traduzir(erro: PostgrestError | Error): ErroDoConvite {
   // "23505" também é o índice único de e-mail por igreja (RN-028).
@@ -84,16 +97,33 @@ async function executar<T>(acao: () => PromiseLike<{ data: T; error: PostgrestEr
   }
 }
 
-// Cria a ficha como Convidado e o convite de 7 dias (passos 1 e 2).
-export function convidarMembro(igrejaId: string, dados: DadosDoConvite) {
+// Cria a ficha como Convidado e o convite de 7 dias (passos 1 e 2). Já
+// como tesoureiro, só o Pastor de Governo convida (o banco confere).
+export function convidarMembro(igrejaId: string, dados: DadosDoConvite, perfil: 'membro' | 'tesoureiro' = 'membro') {
   return executar(() =>
     supabase.rpc('convidar_membro', {
       p_igreja_id: igrejaId,
       p_nome: dados.nome,
       p_email: dados.email,
       p_celular: dados.celular,
+      p_perfil: perfil,
     }),
   );
+}
+
+// Autorizar (membro -> tesoureiro) ou suspender (tesoureiro -> membro),
+// só pelo Pastor de Governo (D-068, D-090). O filtro pelo perfil atual
+// evita mudar uma ficha que outra pessoa acabou de alterar.
+export async function mudarPerfilDoMembro(
+  membroId: string,
+  de: 'membro' | 'tesoureiro',
+  para: 'membro' | 'tesoureiro',
+): Promise<Resultado<null>> {
+  const resultado = await executar(() =>
+    supabase.from('membros').update({ perfil: para }).eq('id', membroId).eq('perfil', de).select('id'),
+  );
+  if (!resultado.ok) return resultado;
+  return resultado.dados?.length ? { ok: true, dados: null } : { ok: false, erro: 'perfil_mudou' };
 }
 
 // Novo convite com mais 7 dias (RN-027); só para quem ainda é convidado.

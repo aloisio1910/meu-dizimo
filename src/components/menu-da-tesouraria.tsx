@@ -21,8 +21,9 @@ export function MenuDaTesouraria({ atual }: { atual: Pagina }) {
     atual !== 'membros' && { titulo: t('tesouraria.menu.membros'), ir: () => router.replace('/membros') },
     { titulo: t('tesouraria.menu.lancar'), ir: () => router.push('/lancar') },
     { titulo: t('tesouraria.menu.relatorio'), ir: () => router.push('/relatorio') },
-    // Campanhas são do Pastor de Governo (P-02).
+    // Campanhas e tesoureiros são do Pastor de Governo (P-02, P-01).
     ehAdministrador && { titulo: t('tesouraria.menu.campanhas'), ir: () => router.push('/campanhas') },
+    ehAdministrador && { titulo: t('tesouraria.menu.tesoureiros'), ir: () => router.push('/tesoureiros') },
     { titulo: t('tesouraria.meuCartao'), ir: () => router.push('/cartao') },
   ].filter((item) => !!item);
 
