@@ -373,7 +373,10 @@
       "lancar": "Lançar para membro",
       "relatorio": "Relatórios",
       "campanhas": "Campanhas",
-      "tesoureiros": "Tesoureiros"
+      "tesoureiros": "Tesoureiros",
+      "conectadoComo": "Você entrou como {{nome}} ({{perfil}})",
+      "sair": "Sair da conta",
+      "confirmarSaida": "Sair da conta? Para entrar de novo, você vai precisar do código enviado ao seu e-mail."
     },
     "tesoureiros": {
       "titulo": "Tesoureiros",
