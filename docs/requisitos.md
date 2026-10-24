@@ -189,7 +189,7 @@ O app mostra a chave Pix oficial da igreja e gera um QR Code Pix com o valor já
 - O Pastor de Governo cadastra até 5 contas da igreja, cada uma com um nome escolhido pela igreja (ex.: Dízimos e ofertas, Construção do templo, Missões), banco, agência, conta, chave Pix, tipo de chave e nome do recebedor. Uma delas é a principal. Cada campanha aponta para uma conta: o dízimo usa a principal e a oferta usa a conta da campanha (ou a principal, se a campanha não tiver conta própria, D-073), sem o membro precisar escolher. A tesouraria vê em cada lançamento a conta de destino.
 - O membro vê todas as contas na aba Igreja, a principal primeiro, cada uma com o botão **Copiar chave Pix**.
 - **QR Code e Pix Copia e Cola com valor:** ao registrar dízimo ou oferta, o app gera o código Pix estático com a chave da igreja e o valor informado. No celular, o botão principal é Copiar código Pix: o membro cola no aplicativo do banco (Pix Copia e Cola) e só confirma. O QR Code fica como opção secundária, para pagar a partir do computador, do telão ou de material impresso. Isso reduz erro de digitação e o risco de chave fraudulenta.
-- Toda alteração de dados bancários ou chave Pix gera registro no log e notificação aos tesoureiros, como proteção contra troca indevida da chave.
+- Toda alteração de dados bancários ou chave Pix gera registro no log e notificação aos tesoureiros, como proteção contra troca indevida da chave. O Pastor de Governo pode gerar um Pix de teste de R$ 0,01 para conferir a conta antes de os membros pagarem (D-091).
 - O app não confirma automaticamente que o Pix caiu na conta. Essa confirmação continua sendo da tesouraria.
 
 **Gateway de pagamento (fora do MVP).** A arquitetura fica preparada para os três modelos já definidos: gateway da própria igreja (link), gateway parceiro do Meu Dízimo.app (modelo de negócio a pesquisar, por exemplo divisão de pagamento) e sem gateway.
@@ -379,6 +379,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-088 | O Pastor de Governo pode reabrir uma campanha encerrada (volta a Ativa, com log). Campanha publicada não volta a rascunho | Definido |
 | D-089 | A campanha encerra sozinha no dia seguinte à data de fim (horário de Brasília no MVP; fuso por igreja na Fase 2). Sem data de fim, fica aberta até o Pastor encerrar | Definido |
 | D-090 | Tesoureiro suspenso volta a ser membro: perde o acesso à tesouraria na hora e continua com o próprio Cartão; as confirmações que já fez continuam valendo. Ninguém altera o próprio perfil, e dar ou tirar o perfil de Pastor de Governo é só do Admin Master | Definido |
+| D-091 | A troca da conta principal acontece numa só operação, e a igreja nunca fica sem conta principal. Conta usada por campanha em rascunho ou ativa não pode ser desativada; troca-se antes a conta da campanha. A chave Pix é validada pelo tipo (CPF e CNPJ com dígito verificador) | Definido |
 
 ## 14. Questões abertas e próximos passos
 
