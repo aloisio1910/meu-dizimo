@@ -415,6 +415,9 @@ isOneToOne: false
 "desativar_dispositivo":
 { Args: { "p_token": string }; Returns: undefined
                            },
+"desfazer_confirmacao":
+{ Args: { "p_lancamento_id": string,"p_motivo": string }; Returns: undefined
+                           },
 "eh_admin_master":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
@@ -497,6 +500,9 @@ isOneToOne: false
 { Args: { "p_igreja_id": string }; Returns: Database["public"]['Enums']["perfil_membro"]
                            },
 "prazo_conferencia":
+{ Args: Record<PropertyKey, never>; Returns: string
+                           },
+"prazo_desfazer_confirmacao":
 { Args: Record<PropertyKey, never>; Returns: string
                            },
 "prazo_resposta_divergencia":
