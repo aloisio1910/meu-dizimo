@@ -16,9 +16,11 @@ type Props = {
   aoMudarForma: (forma: string) => void;
   formasAceitas: string[];
   erros: ErrosDoDizimo;
+  oferta?: boolean; // muda só os rótulos ("Data da oferta")
 };
 
-// Valor, data e forma do dízimo: usados no registro (M-04) e na edição (M-05).
+// Valor, data e forma do dízimo ou da oferta: usados no registro (M-04), na
+// edição (M-05) e no registro opcional da oferta.
 export function CamposDoDizimo(props: Props) {
   const { t } = useTranslation();
   const rotuloDaForma = (forma: string) => (ehFormaConhecida(forma) ? t(`formas.${forma}`) : forma);
@@ -35,7 +37,7 @@ export function CamposDoDizimo(props: Props) {
         keyboardType="decimal-pad"
       />
       <CampoTexto
-        rotulo={t('registrar.rotuloData')}
+        rotulo={props.oferta ? t('registrar.rotuloDataOferta') : t('registrar.rotuloData')}
         dica={t('registrar.dicaData')}
         value={props.data}
         onChangeText={(texto) => props.aoMudarData(mascararData(texto))}
@@ -43,7 +45,7 @@ export function CamposDoDizimo(props: Props) {
         keyboardType="number-pad"
       />
       <Opcoes
-        rotulo={t('registrar.rotuloForma')}
+        rotulo={props.oferta ? t('registrar.rotuloFormaOferta') : t('registrar.rotuloForma')}
         opcoes={props.formasAceitas.map((forma) => ({ valor: forma, rotulo: rotuloDaForma(forma) }))}
         selecionada={props.forma}
         onSelecionar={props.aoMudarForma}

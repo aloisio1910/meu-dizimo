@@ -15,7 +15,17 @@ insert into public.contas (igreja_id, nome, finalidade, principal, banco, agenci
   ('00000000-0000-4000-8000-000000000001', 'Dízimos e ofertas', 'Dízimos e ofertas dos cultos', true,
    'Banco de Teste', '0001', '12345-6', 'tesouraria@teste.local', 'email', 'IGREJA VIDEIRA TESTE', 'GOIANIA'),
   ('00000000-0000-4000-8000-000000000001', 'Construção do templo', 'Obra do novo templo', false,
-   'Banco de Teste', '0001', '65432-1', null, null, null, null);
+   'Banco de Teste', '0001', '65432-1', 'construcao@teste.local', 'email', 'IGREJA VIDEIRA OBRAS', 'GOIANIA');
+
+-- Campanha de exemplo, além da permanente "Oferta" criada com a igreja.
+-- O vídeo é o curta livre "Big Buck Bunny" (Blender Foundation).
+insert into public.campanhas (igreja_id, nome, descricao, objetivo, inicio, status, link_video, conta_id)
+select '00000000-0000-4000-8000-000000000001', 'Construção do templo',
+       'Estamos construindo o novo templo para receber mais famílias. Cada oferta ajuda a levantar as paredes da nossa nova casa.',
+       'Concluir a estrutura do novo templo', current_date, 'ativa',
+       'https://www.youtube.com/watch?v=aqz-KE-bpKQ', c.id
+from public.contas c
+where c.igreja_id = '00000000-0000-4000-8000-000000000001' and c.nome = 'Construção do templo';
 
 -- Campos que a Videira usa no cadastro (Requisitos v0.3, seção 3).
 insert into public.campos_cadastro (igreja_id, chave, rotulo, tipo, obrigatorio, ordem) values

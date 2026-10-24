@@ -136,11 +136,15 @@ export default function DetalheDoDizimo() {
     await executar(() => editarDizimo(lancamento!.id, resultado.dados), t('lancamento.editado'));
   }
 
+  const ehOferta = lancamento.tipo === 'oferta';
   const divergenciaAberta = lancamento.status === 'divergencia' && !lancamento.resposta_membro;
 
   return (
     <Tela>
-      <Texto variante="titulo">{t('lancamento.titulo')}</Texto>
+      <Texto variante="titulo">{ehOferta ? t('lancamento.tituloOferta') : t('lancamento.titulo')}</Texto>
+      {ehOferta && !!lancamento.campanhas && (
+        <Texto variante="destaque">{t('lancamento.campanha', { nome: lancamento.campanhas.nome })}</Texto>
+      )}
 
       {modo === 'editar' ? (
         <>
@@ -153,6 +157,7 @@ export default function DetalheDoDizimo() {
             aoMudarForma={setForma}
             formasAceitas={ficha.igrejas?.formas_devolucao ?? []}
             erros={errosDaEdicao}
+            oferta={ehOferta}
           />
           {!!erro && <Texto variante="erro">{erro}</Texto>}
           <Botao titulo={t('lancamento.salvar')} onPress={salvarEdicao} carregando={enviando} />
@@ -162,7 +167,7 @@ export default function DetalheDoDizimo() {
         <>
           <View style={estilos.cartao}>
             <SeloDeStatus status={lancamento.status} />
-            <Texto variante="apoio">{t('lancamento.rotuloData')}</Texto>
+            <Texto variante="apoio">{ehOferta ? t('lancamento.rotuloDataOferta') : t('lancamento.rotuloData')}</Texto>
             <Texto variante="destaque">{isoParaData(lancamento.data_contribuicao)}</Texto>
             <Texto variante="apoio">{t('lancamento.rotuloValor')}</Texto>
             <Texto variante="destaque">{emMoeda(lancamento.valor_informado_centavos)}</Texto>
@@ -302,7 +307,11 @@ export default function DetalheDoDizimo() {
             idioma={idioma}
             status={lancamento.status}
           />
-          <Botao titulo={t('lancamento.voltarAoCartao')} variante="secundario" onPress={() => router.back()} />
+          <Botao
+            titulo={ehOferta ? t('lancamento.voltarAsOfertas') : t('lancamento.voltarAoCartao')}
+            variante="secundario"
+            onPress={() => router.back()}
+          />
         </>
       )}
     </Tela>

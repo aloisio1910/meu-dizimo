@@ -12,7 +12,6 @@ import { cores, fontes, tamanhos } from '@/theme';
 type NomeDoIcone = ComponentProps<typeof Ionicons>['name'];
 
 // Abas do membro (Fluxos, seção 3): grandes, com ícone e nome escrito.
-// A aba Ofertas entra junto com as telas M-06 a M-08.
 export default function LayoutDasAbas() {
   const { t } = useTranslation();
   const tema = useTema();
@@ -40,6 +39,7 @@ export default function LayoutDasAbas() {
       }}
     >
       <Tabs.Screen name="cartao" options={{ title: t('abas.cartao'), tabBarIcon: icone('card-outline') }} />
+      <Tabs.Screen name="ofertas" options={{ title: t('abas.ofertas'), tabBarIcon: icone('gift-outline') }} />
       <Tabs.Screen name="igreja" options={{ title: t('abas.igreja'), tabBarIcon: icone('home-outline') }} />
       <Tabs.Screen name="perfil" options={{ title: t('abas.perfil'), tabBarIcon: icone('person-outline') }} />
     </Tabs>

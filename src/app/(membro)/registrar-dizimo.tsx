@@ -1,26 +1,23 @@
-import * as Clipboard from 'expo-clipboard';
 import { Redirect, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import QRCode from 'react-native-qrcode-svg';
+import { ActivityIndicator } from 'react-native';
 
 import { CamposDoDizimo } from '@/components/campos-do-dizimo';
+import { PagamentoPix } from '@/components/pagamento-pix';
 import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
 import { hojeIso, isoParaData } from '@/lib/data';
 import { formatarMoeda } from '@/lib/dinheiro';
-import { gerarCodigoPix } from '@/lib/pix';
 import { validarDizimo, type DadosDoDizimo, type ErrosDoDizimo } from '@/lib/validar-dizimo';
 import {
   buscarContaPrincipal,
-  existeDizimoIgual,
+  existeLancamentoIgual,
   registrarDizimo,
   type ContaParaPix,
 } from '@/services/supabase/lancamentos';
-import { cores, espacos } from '@/theme';
 
 type Registro = DadosDoDizimo;
 
@@ -42,8 +39,6 @@ export default function RegistrarDizimo() {
   const [registro, setRegistro] = useState<Registro>();
   const [idRegistrado, setIdRegistrado] = useState<string>();
   const [conta, setConta] = useState<ContaParaPix | null>();
-  const [copiado, setCopiado] = useState(false);
-  const [mostrarQr, setMostrarQr] = useState(false);
 
   if (!carregando && !ficha) return <Redirect href="/" />;
   if (!ficha) return null;
@@ -94,7 +89,7 @@ export default function RegistrarDizimo() {
     if (!dados) return;
     setEnviando(true);
     // RN-032: mesmo valor na mesma data gera alerta, não bloqueio.
-    const repetido = await existeDizimoIgual(ficha!.id, dados.centavos, dados.data).catch(() => false);
+    const repetido = await existeLancamentoIgual(ficha!.id, dados.centavos, dados.data).catch(() => false);
     setEnviando(false);
     if (repetido) {
       setRegistro(dados);
@@ -121,58 +116,22 @@ export default function RegistrarDizimo() {
   }
 
   if (etapa === 'registrado' && registro) {
-    const codigo =
-      conta &&
-      gerarCodigoPix({
-        chave: conta.chave_pix,
-        tipoDeChave: conta.tipo_chave_pix,
-        nomeDoRecebedor: conta.nome_recebedor,
-        cidade: conta.cidade,
-        valorEmCentavos: registro.centavos,
-        descricao: 'Dizimo',
-      });
+    const pagaComPix = registro.forma === 'pix' && !!conta;
 
     return (
       <Tela>
         <Texto variante="titulo">{t('registrar.registradoTitulo')}</Texto>
         <Texto>{t('registrar.registrado', { valor: emMoeda(registro.centavos), data: isoParaData(registro.data) })}</Texto>
 
-        {registro.forma === 'pix' && !codigo && <Texto variante="erro">{t('registrar.semPix')}</Texto>}
+        {registro.forma === 'pix' && !conta && <Texto variante="erro">{t('registrar.semPix')}</Texto>}
 
-        {!!codigo && !!conta && (
-          <View style={estilos.bloco}>
-            <Texto variante="destaque">{t('registrar.pagarComPix')}</Texto>
-            <Texto>{t('registrar.passoCopiar')}</Texto>
-            <Texto>{t('registrar.passoBanco')}</Texto>
-            <Texto>{t('registrar.passoConfirmar')}</Texto>
-            <Texto variante="apoio">{t('registrar.contaDestino', { conta: conta.nome })}</Texto>
-            <Botao
-              titulo={t('registrar.copiar')}
-              onPress={async () => {
-                await Clipboard.setStringAsync(codigo);
-                setCopiado(true);
-              }}
-            />
-            {copiado && (
-              <Texto variante="destaque" accessibilityLiveRegion="polite">
-                {t('registrar.copiado')}
-              </Texto>
-            )}
-            <Botao
-              titulo={mostrarQr ? t('registrar.esconderQr') : t('registrar.mostrarQr')}
-              variante="secundario"
-              onPress={() => setMostrarQr(!mostrarQr)}
-            />
-            {mostrarQr && (
-              <View
-                style={estilos.qr}
-                accessible
-                accessibilityLabel={t('registrar.descricaoQr', { valor: emMoeda(registro.centavos), conta: conta.nome })}
-              >
-                <QRCode value={codigo} size={240} />
-              </View>
-            )}
-          </View>
+        {pagaComPix && (
+          <PagamentoPix
+            conta={conta}
+            valorEmCentavos={registro.centavos}
+            valorFormatado={emMoeda(registro.centavos)}
+            descricao="Dizimo"
+          />
         )}
 
         {!!idRegistrado && (
@@ -184,7 +143,7 @@ export default function RegistrarDizimo() {
         )}
         <Botao
           titulo={t('registrar.voltarAoCartao')}
-          variante={codigo ? 'secundario' : 'principal'}
+          variante={pagaComPix ? 'secundario' : 'principal'}
           onPress={() => router.back()}
         />
       </Tela>
@@ -215,14 +174,3 @@ export default function RegistrarDizimo() {
     </Tela>
   );
 }
-
-const estilos = StyleSheet.create({
-  bloco: {
-    gap: espacos.medio,
-  },
-  qr: {
-    alignSelf: 'center',
-    padding: espacos.medio,
-    backgroundColor: cores.fundo,
-  },
-});

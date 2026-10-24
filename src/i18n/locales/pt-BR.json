@@ -106,6 +106,10 @@
   },
   "lancamento": {
     "titulo": "Detalhe do dízimo",
+    "tituloOferta": "Detalhe da oferta",
+    "campanha": "Campanha: {{nome}}",
+    "rotuloDataOferta": "Data da oferta",
+    "voltarAsOfertas": "Voltar às ofertas",
     "dataHora": "{{dia}} às {{hora}}",
     "rotuloData": "Data do dízimo",
     "rotuloValor": "Valor informado",
@@ -176,8 +180,45 @@
   },
   "abas": {
     "cartao": "Cartão",
+    "ofertas": "Ofertas",
     "igreja": "Igreja",
     "perfil": "Perfil"
+  },
+  "ofertas": {
+    "titulo": "Ofertas",
+    "explicacao": "Escolha uma campanha para ofertar. Registrar a oferta no app é opcional.",
+    "nenhuma": "A igreja não tem campanhas abertas no momento.",
+    "historico": "Meu histórico de ofertas",
+    "verCampanha": "Abre a campanha {{nome}}",
+    "falhaAoCarregar": "Não conseguimos carregar as campanhas.",
+    "campanha": {
+      "objetivo": "Objetivo: {{texto}}",
+      "ofertar": "Ofertar",
+      "assistirVideo": "Assistir vídeo",
+      "encerrada": "Esta campanha foi encerrada e não recebe mais ofertas.",
+      "naoEncontrada": "Não encontramos esta campanha.",
+      "voltar": "Voltar"
+    },
+    "ofertar": {
+      "titulo": "Ofertar",
+      "explicacao": "Informe o valor para gerar o código Pix da igreja.",
+      "gerarPix": "Gerar código Pix",
+      "pagar": "Pague pelo app do seu banco:",
+      "registrarTitulo": "Quer registrar esta oferta no app?",
+      "registrarExplicacao": "É opcional. Registrando, a tesouraria confere e a oferta aparece no seu histórico.",
+      "registrar": "Registrar esta oferta",
+      "registrarAgora": "Registrar oferta",
+      "concluirSemRegistrar": "Concluir sem registrar",
+      "registrada": "Oferta registrada!",
+      "registradaDetalhe": "{{valor}} para {{campanha}}. A tesouraria vai conferir.",
+      "verDetalhe": "Ver a oferta e anexar comprovante",
+      "voltarAsOfertas": "Voltar às ofertas"
+    },
+    "historicoTela": {
+      "titulo": "Histórico de ofertas",
+      "nenhuma": "Você ainda não registrou ofertas no app.",
+      "campanha": "Campanha: {{nome}}"
+    }
   },
   "igreja": {
     "titulo": "Minha igreja",
@@ -332,8 +373,10 @@
     "rotuloValor": "Valor (R$)",
     "dicaValor": "Exemplo: 300,00",
     "rotuloData": "Data do dízimo",
+    "rotuloDataOferta": "Data da oferta",
     "dicaData": "Pode ser uma data anterior. Use dia, mês e ano.",
     "rotuloForma": "Como você devolveu?",
+    "rotuloFormaOferta": "Como você ofertou?",
     "registrar": "Registrar dízimo",
     "cancelar": "Voltar",
     "erros": {
@@ -342,7 +385,8 @@
       "dataFutura": "A data não pode ser depois de hoje.",
       "escolhaForma": "Escolha como você devolveu.",
       "forma_invalida": "Esta forma de devolução não é aceita pela igreja.",
-      "data_futura": "A data não pode ser depois de hoje."
+      "data_futura": "A data não pode ser depois de hoje.",
+      "campanha_indisponivel": "Esta campanha não está mais recebendo ofertas."
     },
     "duplicadoTitulo": "Registrar de novo?",
     "duplicado": "Você já registrou {{valor}} em {{data}}. Deseja registrar novamente?",
