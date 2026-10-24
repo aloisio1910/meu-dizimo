@@ -378,6 +378,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-087 | Os totais do relatório somam só lançamentos confirmados, pelo valor conferido (a devolução presencial vale pelo informado). Aguardando conferência e em divergência aparecem à parte, pelo valor informado; cancelados ficam fora | Definido |
 | D-088 | O Pastor de Governo pode reabrir uma campanha encerrada (volta a Ativa, com log). Campanha publicada não volta a rascunho | Definido |
 | D-089 | A campanha encerra sozinha no dia seguinte à data de fim (horário de Brasília no MVP; fuso por igreja na Fase 2). Sem data de fim, fica aberta até o Pastor encerrar | Definido |
+| D-090 | Tesoureiro suspenso volta a ser membro: perde o acesso à tesouraria na hora e continua com o próprio Cartão; as confirmações que já fez continuam valendo. Ninguém altera o próprio perfil, e dar ou tirar o perfil de Pastor de Governo é só do Admin Master | Definido |
 
 ## 14. Questões abertas e próximos passos
 
