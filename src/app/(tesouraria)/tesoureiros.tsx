@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
+import { Retorno } from '@/components/retorno';
 import { Botao } from '@/components/ui/botao';
 import { CampoTexto } from '@/components/ui/campo-texto';
 import { Tela } from '@/components/ui/tela';
@@ -34,6 +35,7 @@ export default function Tesoureiros() {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string>();
   const [aviso, setAviso] = useState<string>();
+  const [local, setLocal] = useState<'atuais' | 'autorizar'>('atuais');
 
   const carregar = useCallback(async () => {
     if (!ficha) return;
@@ -87,6 +89,8 @@ export default function Tesoureiros() {
   async function aoConfirmar() {
     if (!confirmacao) return;
     const { membro, para } = confirmacao;
+    // O retorno aparece onde a pessoa tocou: na lista ou na busca.
+    setLocal(para === 'membro' ? 'atuais' : 'autorizar');
     setEnviando(true);
     const resultado = await mudarPerfilDoMembro(membro.id, para === 'tesoureiro' ? 'membro' : 'tesoureiro', para);
     await carregar();
@@ -136,12 +140,6 @@ export default function Tesoureiros() {
       <Texto variante="titulo">{t('tesouraria.tesoureiros.titulo')}</Texto>
       <Texto>{t('tesouraria.tesoureiros.explicacao')}</Texto>
 
-      {!!aviso && (
-        <Texto variante="destaque" accessibilityLiveRegion="polite">
-          {aviso}
-        </Texto>
-      )}
-      {!!erro && <Texto variante="erro">{erro}</Texto>}
       {falhou && <Texto variante="erro">{t('tesouraria.tesoureiros.falhaAoCarregar')}</Texto>}
       {!membros && !falhou && <ActivityIndicator size="large" accessibilityLabel={t('comum.carregando')} />}
 
@@ -177,6 +175,7 @@ export default function Tesoureiros() {
               )}
             </View>
           ))}
+          {local === 'atuais' && <Retorno aviso={aviso} erro={erro} />}
 
           <Texto variante="destaque" accessibilityRole="header">
             {t('tesouraria.tesoureiros.autorizarTitulo')}
@@ -190,6 +189,7 @@ export default function Tesoureiros() {
             autoCapitalize="none"
             autoCorrect={false}
           />
+          {local === 'autorizar' && <Retorno aviso={aviso} erro={erro} />}
           {!!busca.trim() && candidatos.length === 0 && <Texto>{t('tesouraria.tesoureiros.nenhumEncontrado')}</Texto>}
           {candidatos.map((membro) =>
             confirmacao?.membro.id === membro.id ? (

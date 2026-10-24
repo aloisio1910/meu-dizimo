@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { PagamentoPix } from '@/components/pagamento-pix';
+import { Retorno } from '@/components/retorno';
 import { Botao } from '@/components/ui/botao';
 import { CampoTexto } from '@/components/ui/campo-texto';
 import { Opcoes } from '@/components/ui/opcoes';
@@ -71,6 +72,8 @@ export default function GerenciarConta() {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string>();
   const [aviso, setAviso] = useState<string>();
+  // Onde mostrar o retorno: junto do botão que a pessoa tocou.
+  const [local, setLocal] = useState<'formulario' | 'acoes'>('formulario');
 
   const igrejaId = ficha?.igreja_id;
 
@@ -135,6 +138,7 @@ export default function GerenciarConta() {
 
   async function aoSalvar() {
     limparMensagens();
+    setLocal('formulario');
     setMostrarTeste(false);
     const resultado = validarConta(campos, ehPrincipal);
     setErros(resultado.ok ? {} : resultado.erros);
@@ -160,6 +164,7 @@ export default function GerenciarConta() {
   async function aoConfirmar() {
     if (!conta || !confirmacao) return;
     limparMensagens();
+    setLocal('acoes');
     setEnviando(true);
     const resultado =
       confirmacao === 'principal' ? await definirContaPrincipal(conta.id) : await mudarAtivacaoDaConta(conta.id, false);
@@ -176,6 +181,7 @@ export default function GerenciarConta() {
   async function aoReativar() {
     if (!conta) return;
     limparMensagens();
+    setLocal('acoes');
     setEnviando(true);
     const resultado = await mudarAtivacaoDaConta(conta.id, true);
     await recarregar();
@@ -192,13 +198,6 @@ export default function GerenciarConta() {
       <Texto variante="titulo">{conta ? conta.nome : t(`${e}.tituloNova`)}</Texto>
       {ehPrincipal && <Texto variante="destaque">{t('tesouraria.contas.principal')}</Texto>}
       {conta && !conta.ativa && <Texto variante="apoio">{t('tesouraria.contas.desativada')}</Texto>}
-
-      {!!aviso && (
-        <Texto variante="destaque" accessibilityLiveRegion="polite">
-          {aviso}
-        </Texto>
-      )}
-      {!!erro && <Texto variante="erro">{erro}</Texto>}
 
       <CampoTexto
         rotulo={t(`${e}.nome`)}
@@ -251,6 +250,7 @@ export default function GerenciarConta() {
       />
 
       <Botao titulo={conta ? t(`${e}.salvar`) : t(`${e}.criar`)} onPress={aoSalvar} carregando={enviando && !confirmacao} />
+      {local === 'formulario' && <Retorno aviso={aviso} erro={erro} />}
 
       {!!conta && conta.ativa && temPixSalvo && (
         <View style={estilos.cartao}>
@@ -317,6 +317,7 @@ export default function GerenciarConta() {
       {!!conta && !conta.ativa && (
         <Botao titulo={t(`${e}.reativar`)} variante="secundario" onPress={aoReativar} carregando={enviando} />
       )}
+      {local === 'acoes' && <Retorno aviso={aviso} erro={erro} />}
 
       <Botao
         titulo={t(`${e}.voltar`)}

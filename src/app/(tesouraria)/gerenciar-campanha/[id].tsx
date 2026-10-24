@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
+import { Retorno } from '@/components/retorno';
 import { Botao } from '@/components/ui/botao';
 import { CampoTexto } from '@/components/ui/campo-texto';
 import { Opcoes } from '@/components/ui/opcoes';
@@ -63,6 +64,8 @@ export default function GerenciarCampanha() {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string>();
   const [aviso, setAviso] = useState<string | undefined>(avisoInicial === 'criada' ? 'criada' : undefined);
+  // Onde mostrar o retorno: junto do botão que a pessoa tocou.
+  const [local, setLocal] = useState<'status' | 'formulario' | 'artes'>('status');
 
   const igrejaId = ficha?.igreja_id;
 
@@ -131,6 +134,7 @@ export default function GerenciarCampanha() {
 
   async function aoSalvar() {
     limparMensagens();
+    setLocal('formulario');
     const resultado = validarCampanha(campos, hojeIso(), campanha?.status === 'ativa');
     setErros(resultado.ok ? {} : resultado.erros);
     if (!resultado.ok) return;
@@ -157,6 +161,7 @@ export default function GerenciarCampanha() {
   async function aoConfirmarMudanca() {
     if (!campanha || !mudanca) return;
     limparMensagens();
+    setLocal('status');
     setEnviando(true);
     const resultado = await mudarStatusDaCampanha(campanha.id, campanha.status, mudanca.para);
     await recarregar();
@@ -173,6 +178,7 @@ export default function GerenciarCampanha() {
   async function aoAdicionarArte() {
     if (!campanha) return;
     limparMensagens();
+    setLocal('artes');
     const escolha = await escolherFoto('galeria');
     if (!escolha.ok) {
       if (escolha.motivo === 'permissao_negada') setErro(t('tesouraria.campanhas.artes.erros.permissao_negada'));
@@ -189,6 +195,7 @@ export default function GerenciarCampanha() {
 
   async function aoRetirarArte(arteId: string) {
     limparMensagens();
+    setLocal('artes');
     setEnviando(true);
     const retirou = await retirarArte(arteId);
     await recarregar();
@@ -242,12 +249,7 @@ export default function GerenciarCampanha() {
         </View>
       )}
 
-      {!!textoDoAviso && (
-        <Texto variante="destaque" accessibilityLiveRegion="polite">
-          {textoDoAviso}
-        </Texto>
-      )}
-      {!!erro && <Texto variante="erro">{erro}</Texto>}
+      {local === 'status' && <Retorno aviso={textoDoAviso} erro={erro} />}
 
       <CampoTexto
         rotulo={t('tesouraria.campanhas.editar.nome')}
@@ -311,6 +313,7 @@ export default function GerenciarCampanha() {
         onPress={aoSalvar}
         carregando={enviando && !confirmando}
       />
+      {local === 'formulario' && <Retorno aviso={textoDoAviso} erro={erro} />}
 
       <Texto variante="destaque" accessibilityRole="header">
         {t('tesouraria.campanhas.artes.titulo')}
@@ -345,6 +348,7 @@ export default function GerenciarCampanha() {
             onPress={aoAdicionarArte}
             desabilitado={enviando}
           />
+          {local === 'artes' && <Retorno aviso={textoDoAviso} erro={erro} />}
         </>
       )}
 
