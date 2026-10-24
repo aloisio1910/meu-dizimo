@@ -10,7 +10,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(19);
+select plan(22);
 
 create function pg_temp.entrar(p_usuario uuid, p_email text default null)
 returns void
@@ -157,6 +157,29 @@ update public.membros set status = 'inativo' where email = 'marcos@a.test';
 reset role;
 
 select is(pg_temp.status_de('marcos@a.test'), 'ativo', 'Administrador de outra igreja não inativa membro da Igreja A');
+
+
+-- -----------------------------------------------------------------------------
+-- Marcos inativado: o app explica por que ele não entra
+-- -----------------------------------------------------------------------------
+
+update public.membros set status = 'inativo' where email = 'marcos@a.test';
+
+select pg_temp.entrar('a0000000-0000-0000-0000-000000000003', 'marcos@a.test');
+set local role authenticated;
+
+select is((select count(*) from public.membros), 0::bigint, 'Inativo não vê a própria ficha (RN-035)');
+select results_eq(
+  $$ select public.igrejas_onde_estou_inativo() $$,
+  $$ values ('Igreja A') $$,
+  'Inativo fica sabendo em qual igreja está inativo'
+);
+
+select pg_temp.entrar('a0000000-0000-0000-0000-000000000002', 'tiago@a.test');
+select is((select count(*) from public.igrejas_onde_estou_inativo()), 0::bigint,
+  'A função só fala da própria pessoa, não dos outros inativos');
+
+reset role;
 
 
 -- -----------------------------------------------------------------------------

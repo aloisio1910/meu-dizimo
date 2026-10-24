@@ -445,6 +445,9 @@ isOneToOne: false
 "hook_antes_de_criar_usuario":
 { Args: { "event": Json }; Returns: Json
                            },
+"igrejas_onde_estou_inativo":
+{ Args: Record<PropertyKey, never>; Returns: string[]
+                           },
 "lancamento_para_conferir":
 { Args: { "p_lancamento_id": string }; Returns: {
               "atualizado_em": string,

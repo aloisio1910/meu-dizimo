@@ -127,3 +127,11 @@ export async function concluirCadastro(dados: DadosDoCadastro): Promise<ErroDoCa
     return traduzirErro(erro as Error);
   }
 }
+
+// Nomes das igrejas em que a própria ficha está inativa (RN-035). A RLS
+// esconde a ficha inativa da pessoa; isto só serve para explicar o motivo.
+export async function buscarIgrejasOndeEstouInativo(): Promise<string[]> {
+  const { data, error } = await supabase.rpc('igrejas_onde_estou_inativo');
+  if (error) throw error;
+  return data;
+}

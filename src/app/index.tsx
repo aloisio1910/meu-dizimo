@@ -2,6 +2,7 @@ import { Redirect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Platform } from 'react-native';
 
+import { SemIgreja } from '@/components/sem-igreja';
 import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
@@ -52,7 +53,7 @@ export default function Inicio() {
       <Texto variante="titulo">{t('app.nome')}</Texto>
       <Texto>{t('inicio.bemVindo', { email: sessao.user.email })}</Texto>
       {fichas.length === 0 ? (
-        <Texto>{t('inicio.semIgreja')}</Texto>
+        <SemIgreja />
       ) : (
         <>
           {fichas.map((ficha) => (

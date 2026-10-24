@@ -38,7 +38,8 @@
     "emBreve": "Em breve, aqui estará o seu Cartão de Dízimo.",
     "sair": "Sair",
     "falhaAoCarregar": "Não conseguimos carregar os seus dados.",
-    "semIgreja": "Não encontramos um convite ativo para este e-mail. O convite vale por 7 dias: peça à tesouraria da sua igreja para reenviá-lo."
+    "semIgreja": "Não encontramos um convite ativo para este e-mail. O convite vale por 7 dias: peça à tesouraria da sua igreja para reenviá-lo.",
+    "inativo": "O seu cadastro em {{igrejas}} está inativo, por isso o acesso ao app foi suspenso. O seu histórico continua guardado. Se quiser voltar, fale com a liderança da igreja."
   },
   "primeiroAcesso": {
     "titulo": "Boas-vindas!",
