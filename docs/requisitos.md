@@ -103,7 +103,7 @@ O membro só entra por convite da igreja e acessa sem senha, com um código de 6
 **Cadastro**
 
 - Obrigatórios em todas as igrejas: nome, e-mail e celular.
-- Campos configuráveis por igreja: cada um pode ser obrigatório, opcional ou não usado. Tipos: texto, data, número, lista de opções.
+- Campos configuráveis por igreja: cada um pode ser obrigatório, opcional, preenchido pela tesouraria (o membro só vê, D-093) ou não usado. Tipos: texto, data, número, lista de opções.
 - Dízimo individual ou familiar; no familiar, o membro informa os nomes da família. Sem acesso compartilhado ao cartão.
 - O membro altera os próprios dados. Troca de e-mail exige código no novo e-mail; o anterior continua valendo até a confirmação.
 
@@ -381,6 +381,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-090 | Tesoureiro suspenso volta a ser membro: perde o acesso à tesouraria na hora e continua com o próprio Cartão; as confirmações que já fez continuam valendo. Ninguém altera o próprio perfil, e dar ou tirar o perfil de Pastor de Governo é só do Admin Master | Definido |
 | D-091 | A troca da conta principal acontece numa só operação, e a igreja nunca fica sem conta principal. Conta usada por campanha em rascunho ou ativa não pode ser desativada; troca-se antes a conta da campanha. A chave Pix é validada pelo tipo (CPF e CNPJ com dígito verificador) | Definido |
 | D-092 | País, idioma e moeda da igreja são alterados só pelo Admin Master; o Pastor de Governo ajusta dados, contato, versículo, mensagem de confirmação e formas de devolução | Definido |
+| D-093 | Campos do cadastro podem ser "Preenchidos pela tesouraria": tesoureiro e Pastor de Governo preenchem na ficha do membro; o membro vê no perfil, sem editar (LGPD, direito de acesso). O tesoureiro continua sem editar os dados que o membro informa. Trocar quem preenche um campo leva as respostas junto | Definido |
 
 ## 14. Questões abertas e próximos passos
 
