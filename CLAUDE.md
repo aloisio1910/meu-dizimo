@@ -12,11 +12,11 @@ Plataforma multi-igreja que substitui o envelope físico de dízimo por um Cart�
 
 ## Documentos de referência (o desenvolvedor tem acesso)
 
-- Documento de Requisitos v0.4: regras de negócio RN-001 a RN-041, decisões D-001 a D-093, escopo por fases, preços, LGPD.
+- Documento de Requisitos v0.4: regras de negócio RN-001 a RN-041, decisões D-001 a D-094, escopo por fases, preços, LGPD.
 - Fluxos, Telas e Modelo de Dados: fluxo principal em 9 passos, fluxos secundários, mapa de 22 telas (M-01 a M-10, T-01 a T-06, P-01 a P-04, A-01 a A-02), 12 tabelas.
 - Protótipo clicável: app do membro (celular) e painel da tesouraria (web).
 Se algo aqui parecer incompleto, pergunte ao desenvolvedor em vez de inventar regra de negócio.
-Os originais ficam no Claude Docs (links em `docs/README.md`); `docs/requisitos.md` e `docs/fluxos-telas-modelo-de-dados.md` são exportações em Markdown, legíveis direto. Ao tomar uma decisão nova, registre-a no original (seção 13 do Requisitos, a partir de D-094) e exporte de novo.
+Os originais ficam no Claude Docs (links em `docs/README.md`); `docs/requisitos.md` e `docs/fluxos-telas-modelo-de-dados.md` são exportações em Markdown, legíveis direto. Ao tomar uma decisão nova, registre-a no original (seção 13 do Requisitos, a partir de D-095) e exporte de novo.
 
 ## Tecnologia
 

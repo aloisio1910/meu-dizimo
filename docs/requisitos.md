@@ -239,6 +239,7 @@ O serviço de notificações fica preparado para outros canais no futuro (e-mail
 - Filtros: período (qualquer intervalo, com atalho para o mês), tipo (dízimo ou oferta), campanha e status.
 - Colunas: ID e nome do membro, campos de cadastro da igreja (D-086), tipo, campanha, data do dízimo, data do registro, valor informado, valor conferido, forma, conta de destino, status, tesoureiro, quem registrou.
 - Totais por tipo e por campanha ficam no relatório, restritos à tesouraria e ao Pastor de Governo. Somam só o confirmado; o que ainda não foi conferido aparece à parte (D-087).
+- Outros relatórios: Membros por situação e Participação no período, todos com filtro por campo do cadastro (ex.: Célula). A lista de quem não devolveu no período é só do Pastor de Governo, sem valores (D-094).
 
 **Logs e auditoria**
 
@@ -382,6 +383,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-091 | A troca da conta principal acontece numa só operação, e a igreja nunca fica sem conta principal. Conta usada por campanha em rascunho ou ativa não pode ser desativada; troca-se antes a conta da campanha. A chave Pix é validada pelo tipo (CPF e CNPJ com dígito verificador) | Definido |
 | D-092 | País, idioma e moeda da igreja são alterados só pelo Admin Master; o Pastor de Governo ajusta dados, contato, versículo, mensagem de confirmação e formas de devolução | Definido |
 | D-093 | Campos do cadastro podem ser "Preenchidos pela tesouraria": tesoureiro e Pastor de Governo preenchem na ficha do membro; o membro vê no perfil, sem editar (LGPD, direito de acesso). O tesoureiro continua sem editar os dados que o membro informa. Trocar quem preenche um campo leva as respostas junto | Definido |
+| D-094 | Relatórios de Membros (por situação) e de Participação no período (quantos devolveram dízimo e ofertaram, por campanha e por grupo), com filtro por campo do cadastro. Conta como "devolveu" quem registrou no período, mesmo sem conferência; os valores somam só o confirmado. A lista de membros ativos sem dízimo no período é só do Pastor de Governo, sem valores, como cuidado pastoral | Definido |
 
 ## 14. Questões abertas e próximos passos
 
