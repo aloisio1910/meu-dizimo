@@ -33,7 +33,7 @@ import {
 import { cores, espacos, raio } from '@/theme';
 
 const TIPOS: TipoDoCampo[] = ['texto', 'data', 'numero', 'lista'];
-const SITUACOES: SituacaoDoCampo[] = ['obrigatorio', 'opcional', 'nao_usado'];
+const SITUACOES: SituacaoDoCampo[] = ['obrigatorio', 'opcional', 'tesouraria', 'nao_usado'];
 
 type Edicao = {
   id: string | 'novo';
@@ -113,7 +113,8 @@ export default function CamposDoCadastro() {
     setErros(resultado.ok ? {} : resultado.erros);
     if (!resultado.ok) return;
     setEnviando(true);
-    const situacao = camposDaSituacao(edicao.situacao);
+    const original = campos.find((campo) => campo.id === edicao.id);
+    const situacao = camposDaSituacao(edicao.situacao, original?.preenchido_por);
     const falha =
       edicao.id === 'novo'
         ? await criarCampo(ficha!.igreja_id, {
@@ -218,6 +219,7 @@ export default function CamposDoCadastro() {
           onSelecionar={(situacao) => mudar({ situacao })}
         />
         {ficouObrigatorio && <Texto variante="apoio">{t(`${c}.avisoObrigatorio`)}</Texto>}
+        {edicao.situacao === 'tesouraria' && <Texto variante="apoio">{t(`${c}.avisoTesouraria`, { titulo })}</Texto>}
         <Botao titulo={original ? t(`${c}.salvar`) : t(`${c}.criar`)} onPress={aoSalvar} carregando={enviando} />
         <Botao
           titulo={t(`${c}.cancelar`)}

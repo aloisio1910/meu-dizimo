@@ -63,25 +63,54 @@ export function validarCadastro(
   if (!dados.celular.trim()) erros.celular = 'celularObrigatorio';
   if (dados.tipoDizimo === 'familiar' && dados.familiares.length === 0) erros.familiares = 'familiaresObrigatorios';
 
+  const convertidos = converterValores(dados.valores, campos, true);
+  Object.assign(erros, convertidos.erros);
+  Object.assign(camposExtras, convertidos.valores);
+
+  return { erros, camposExtras };
+}
+
+// Converte o texto digitado em cada campo para o formato do banco (datas
+// AAAA-MM-DD, números como número). Usado pelo membro (com obrigatórios) e
+// pela tesouraria nos campos dela (D-093, sem obrigatórios).
+export function converterValores(
+  valores: Record<string, string>,
+  campos: CampoDoCadastroBase[],
+  exigirObrigatorios: boolean,
+): { erros: ErrosDoCadastro; valores: Record<string, string | number> } {
+  const erros: ErrosDoCadastro = {};
+  const convertidos: Record<string, string | number> = {};
   for (const campo of campos) {
-    const texto = (dados.valores[campo.chave] ?? '').trim();
+    const texto = (valores[campo.chave] ?? '').trim();
     const chaveDoErro = `campo:${campo.chave}`;
     if (!texto) {
-      if (campo.obrigatorio) erros[chaveDoErro] = 'campoObrigatorio';
+      if (exigirObrigatorios && campo.obrigatorio) erros[chaveDoErro] = 'campoObrigatorio';
       continue;
     }
     if (campo.tipo === 'data') {
       const iso = dataParaIso(texto);
-      if (iso) camposExtras[campo.chave] = iso;
+      if (iso) convertidos[campo.chave] = iso;
       else erros[chaveDoErro] = 'dataInvalida';
     } else if (campo.tipo === 'numero') {
       const numero = Number(texto.replace(',', '.'));
-      if (Number.isFinite(numero)) camposExtras[campo.chave] = numero;
+      if (Number.isFinite(numero)) convertidos[campo.chave] = numero;
       else erros[chaveDoErro] = 'numeroInvalido';
     } else {
-      camposExtras[campo.chave] = texto;
+      convertidos[campo.chave] = texto;
     }
   }
+  return { erros, valores: convertidos };
+}
 
-  return { erros, camposExtras };
+// Ao salvar, mantém os valores guardados de campos que não estão no
+// formulário (ex.: campo que ficou "não usado"), em vez de apagá-los. Um
+// campo do formulário deixado em branco é apagado de propósito.
+export function mesclarValores(
+  guardados: unknown,
+  novos: Record<string, string | number>,
+  chavesDoFormulario: string[],
+): Record<string, unknown> {
+  const antes = guardados && typeof guardados === 'object' ? (guardados as Record<string, unknown>) : {};
+  const mantidos = Object.fromEntries(Object.entries(antes).filter(([chave]) => !chavesDoFormulario.includes(chave)));
+  return { ...mantidos, ...novos };
 }

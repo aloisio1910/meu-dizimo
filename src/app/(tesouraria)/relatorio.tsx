@@ -30,7 +30,7 @@ import {
   type Totais,
 } from '@/lib/relatorio';
 import { entregarPlanilha } from '@/services/dispositivo/planilha';
-import { buscarCamposDoCadastro } from '@/services/supabase/membros';
+import { buscarCamposDaTesouraria, buscarCamposDoCadastro } from '@/services/supabase/membros';
 import {
   buscarLancamentosDoRelatorio,
   listarCampanhasDoRelatorio,
@@ -79,9 +79,19 @@ export default function Relatorio() {
     listarCampanhasDoRelatorio(igrejaId)
       .then((lista) => ativo && setCampanhas(lista))
       .catch(() => ativo && setCampanhas([]));
-    // Campos do cadastro da igreja (ex.: Líder) viram colunas da planilha.
-    buscarCamposDoCadastro(igrejaId)
-      .then((campos) => ativo && setCamposDoCadastro(campos.map((c) => ({ chave: c.chave, rotulo: c.rotulo }))))
+    // Campos do cadastro (ex.: Líder) e os da tesouraria (ex.: Célula, D-093)
+    // viram colunas da planilha, na ordem do formulário.
+    Promise.all([buscarCamposDoCadastro(igrejaId), buscarCamposDaTesouraria(igrejaId)])
+      .then(([doMembro, daTesouraria]) => {
+        if (!ativo) return;
+        const todos = [
+          ...doMembro.map((c) => ({ chave: c.chave, rotulo: c.rotulo, ordem: c.ordem, daTesouraria: false })),
+          ...daTesouraria.map((c) => ({ chave: c.chave, rotulo: c.rotulo, ordem: c.ordem, daTesouraria: true })),
+        ].sort((a, b) => a.ordem - b.ordem);
+        setCamposDoCadastro(
+          todos.map(({ chave, rotulo, daTesouraria: daT }) => ({ chave, rotulo, daTesouraria: daT })),
+        );
+      })
       .catch(() => ativo && setCamposDoCadastro([]));
     return () => {
       ativo = false;

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import {
   familiaresIniciais,
+  mesclarValores,
   validarCadastro,
   valoresIniciais,
   type CodigoDeErroDoCadastro,
@@ -66,7 +67,12 @@ export function useFormularioDoCadastro(ficha: MinhaFicha) {
       celular: celular.trim(),
       tipoDizimo,
       familiares: tipoDizimo === 'familiar' ? familiares.map((n) => ({ nome: n })) : [],
-      camposExtras: resultado.camposExtras,
+      // Mantém as respostas de campos fora do formulário (ex.: não usados).
+      camposExtras: mesclarValores(
+        ficha.campos_extras,
+        resultado.camposExtras,
+        (campos ?? []).map((campo) => campo.chave),
+      ) as Record<string, string | number>,
     };
   }
 

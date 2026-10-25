@@ -18,6 +18,7 @@ export type MinhaFicha = {
   tipo_dizimo: Enums['tipo_dizimo'];
   familiares: Json;
   campos_extras: Json;
+  campos_internos: Json;
   igrejas: {
     nome: string;
     titulo_administrador: string;
@@ -47,7 +48,7 @@ export async function buscarMinhasFichas(usuarioId: string): Promise<MinhaFicha[
   const { data, error } = await supabase
     .from('membros')
     .select(
-      'id, igreja_id, nome, celular, email, numero, perfil, status, tipo_dizimo, familiares, campos_extras, igrejas(nome, titulo_administrador, moeda, idioma, formas_devolucao, versiculo_referencia, versiculo_texto, mensagem_confirmacao, cor_principal, logo_path, capa_path)',
+      'id, igreja_id, nome, celular, email, numero, perfil, status, tipo_dizimo, familiares, campos_extras, campos_internos, igrejas(nome, titulo_administrador, moeda, idioma, formas_devolucao, versiculo_referencia, versiculo_texto, mensagem_confirmacao, cor_principal, logo_path, capa_path)',
     )
     .eq('usuario_id', usuarioId)
     .order('criado_em');
@@ -55,12 +56,23 @@ export async function buscarMinhasFichas(usuarioId: string): Promise<MinhaFicha[
   return data;
 }
 
+// Campos ativos que o membro preenche, na ordem do formulário (RN-004).
 export async function buscarCamposDoCadastro(igrejaId: string): Promise<CampoDoCadastro[]> {
+  return buscarCampos(igrejaId, 'membro');
+}
+
+// Campos ativos que só a tesouraria preenche; o membro só lê (D-093).
+export async function buscarCamposDaTesouraria(igrejaId: string): Promise<CampoDoCadastro[]> {
+  return buscarCampos(igrejaId, 'tesouraria');
+}
+
+async function buscarCampos(igrejaId: string, quemPreenche: 'membro' | 'tesouraria'): Promise<CampoDoCadastro[]> {
   const { data, error } = await supabase
     .from('campos_cadastro')
     .select('*')
     .eq('igreja_id', igrejaId)
     .eq('ativo', true)
+    .eq('preenchido_por', quemPreenche)
     .order('ordem');
   if (error) throw error;
   return data;

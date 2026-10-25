@@ -273,6 +273,8 @@
     "cancelarEdicao": "Cancelar",
     "dizimo": "Dízimo: {{tipo}}",
     "familiares": "Família: {{nomes}}",
+    "informacoesDaIgreja": "Informações registradas pela igreja",
+    "informacoesDaIgrejaExplicacao": "A tesouraria usa estas informações para organizar os dizimistas. Se algo estiver errado, fale com a tesouraria.",
     "digital": "Entrada pela digital",
     "digitalAtivada": "A entrada pela digital está ativada neste celular.",
     "digitalDesativada": "A entrada pela digital está desativada neste celular.",
@@ -437,7 +439,8 @@
       "situacoes": {
         "obrigatorio": "Obrigatório",
         "opcional": "Opcional",
-        "nao_usado": "Não usado (escondido do formulário)"
+        "tesouraria": "Preenchido pela tesouraria",
+        "nao_usado": "Não usado (desligado)"
       },
       "resumo": "{{tipo}} · {{situacao}}",
       "opcoesAtuais": "Opções: {{opcoes}}",
@@ -446,6 +449,7 @@
       "adicionarOpcao": "Adicionar opção",
       "retirarOpcao": "Retirar {{opcao}}",
       "avisoObrigatorio": "Quem já é membro não fica bloqueado: o campo será pedido quando a pessoa editar o perfil. Os novos membros preenchem no primeiro acesso.",
+      "avisoTesouraria": "O membro não preenche este campo: o tesoureiro e o {{titulo}} preenchem na ficha do membro, em Membros. O membro vê o valor no perfil, sem poder mudar.",
       "avisoOpcoesRetiradas": "Quem escolheu {{opcoes}} vai precisar escolher outra opção ao editar o perfil.",
       "salvar": "Salvar campo",
       "criar": "Criar campo",
@@ -868,7 +872,9 @@
         "so_admin_master_define_pastor": "O perfil de {{titulo}} só é alterado pela equipe do Meu Dízimo.",
         "perfil_proprio": "Você não pode mudar o seu próprio perfil.",
         "membro_inativo": "Este membro está inativo. Reative antes de mudar o perfil.",
-        "perfil_mudou": "A ficha foi alterada por outra pessoa. Confira e tente de novo."
+        "perfil_mudou": "A ficha foi alterada por outra pessoa. Confira e tente de novo.",
+        "so_a_tesouraria_preenche": "Só a tesouraria preenche estes campos.",
+        "campo_invalido": "Algum valor não combina com o tipo do campo. Confira e tente de novo."
       },
       "situacao": {
         "convidado": "Convidado",
@@ -941,7 +947,15 @@
       "naoVoltar": "Não, voltar",
       "statusSoPastor": "Inativar e reativar membros é feito pelo {{titulo}}.",
       "lancar": "Lançar devolução para este membro",
-      "perfilTesoureiro": "Tesoureiro"
+      "perfilTesoureiro": "Tesoureiro",
+      "anotacoes": {
+        "titulo": "Informações da tesouraria",
+        "explicacao": "Preenchidas pela tesouraria para organizar os dizimistas. O membro vê no perfil, sem poder mudar.",
+        "editar": "Editar informações da tesouraria",
+        "salvar": "Salvar informações",
+        "cancelar": "Cancelar",
+        "salvas": "Informações salvas."
+      }
     }
   },
   "registrar": {

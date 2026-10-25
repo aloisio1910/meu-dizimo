@@ -1,6 +1,6 @@
 import type { PostgrestError } from '@supabase/supabase-js';
 
-import type { TipoDoCampo } from '@/lib/campos-do-cadastro';
+import type { QuemPreenche, TipoDoCampo } from '@/lib/campos-do-cadastro';
 
 import { supabase } from './cliente';
 
@@ -15,10 +15,11 @@ export type CampoDaIgreja = {
   opcoes: string[];
   obrigatorio: boolean;
   ativo: boolean;
+  preenchido_por: QuemPreenche;
   ordem: number;
 };
 
-const COLUNAS = 'id, chave, rotulo, tipo, opcoes, obrigatorio, ativo, ordem';
+const COLUNAS = 'id, chave, rotulo, tipo, opcoes, obrigatorio, ativo, preenchido_por, ordem';
 
 // Todos, inclusive os não usados (ativo = false), na ordem do formulário.
 export async function listarTodosOsCampos(igrejaId: string): Promise<CampoDaIgreja[]> {
@@ -29,7 +30,7 @@ export async function listarTodosOsCampos(igrejaId: string): Promise<CampoDaIgre
     .order('ordem')
     .order('criado_em');
   if (error) throw error;
-  return data;
+  return data as CampoDaIgreja[];
 }
 
 export type ErroDoCampo = 'chave_repetida' | 'sem_permissao' | 'sem_conexao' | 'erro_inesperado';
@@ -62,7 +63,7 @@ export function criarCampo(igrejaId: string, campo: Omit<CampoDaIgreja, 'id'>): 
 // Chave e tipo não mudam depois de criados (o banco recusa).
 export function salvarCampo(
   id: string,
-  mudancas: Pick<CampoDaIgreja, 'rotulo' | 'opcoes' | 'obrigatorio' | 'ativo'>,
+  mudancas: Pick<CampoDaIgreja, 'rotulo' | 'opcoes' | 'obrigatorio' | 'ativo' | 'preenchido_por'>,
 ): Promise<ErroDoCampo | null> {
   return executar(() => supabase.from('campos_cadastro').update(mudancas).eq('id', id).select('id'));
 }

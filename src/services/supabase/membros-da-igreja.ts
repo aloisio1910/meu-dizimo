@@ -23,11 +23,12 @@ export type MembroDaLista = {
   tipo_dizimo: Enums['tipo_dizimo'];
   familiares: Json;
   campos_extras: Json;
+  campos_internos: Json;
   convites: { enviado_em: string; expira_em: string; aceito_em: string | null }[];
 };
 
 const COLUNAS =
-  'id, numero, nome, email, celular, status, perfil, cadastro_concluido_em, tipo_dizimo, familiares, campos_extras, convites(enviado_em, expira_em, aceito_em)';
+  'id, numero, nome, email, celular, status, perfil, cadastro_concluido_em, tipo_dizimo, familiares, campos_extras, campos_internos, convites(enviado_em, expira_em, aceito_em)';
 
 export async function listarMembrosDaIgreja(igrejaId: string): Promise<MembroDaLista[]> {
   const { data, error } = await supabase
@@ -64,6 +65,8 @@ export type ErroDoConvite =
   | 'perfil_proprio'
   | 'membro_inativo'
   | 'perfil_mudou'
+  | 'so_a_tesouraria_preenche'
+  | 'campo_invalido'
   | 'sem_conexao'
   | 'erro_inesperado';
 
@@ -76,6 +79,8 @@ const ERROS_DE_STATUS: string[] = [
   'so_admin_master_define_pastor',
   'perfil_proprio',
   'membro_inativo',
+  'so_a_tesouraria_preenche',
+  'campo_invalido',
 ];
 
 function traduzir(erro: PostgrestError | Error): ErroDoConvite {
@@ -182,4 +187,14 @@ export async function listarLancamentosDoMembro(igrejaId: string, membroId: stri
     .order('registrado_em', { ascending: false });
   if (error) throw error;
   return data;
+}
+
+// D-093: o tesoureiro e o Pastor anotam os campos da tesouraria na ficha. O
+// banco recusa quem não é da tesouraria e valores fora do tipo do campo.
+export async function salvarCamposInternos(membroId: string, valores: Record<string, unknown>): Promise<Resultado<null>> {
+  const resultado = await executar(() =>
+    supabase.from('membros').update({ campos_internos: valores as NonNullable<Json> }).eq('id', membroId).select('id'),
+  );
+  if (!resultado.ok) return resultado;
+  return resultado.dados?.length ? { ok: true, dados: null } : { ok: false, erro: 'so_a_tesouraria_preenche' };
 }

@@ -36,10 +36,22 @@ describe('chaveDoRotulo', () => {
 
 describe('situação do campo', () => {
   it('vai e volta entre a tela e o banco', () => {
-    for (const situacao of ['obrigatorio', 'opcional', 'nao_usado'] as const) {
+    for (const situacao of ['obrigatorio', 'opcional', 'tesouraria', 'nao_usado'] as const) {
       expect(situacaoDoCampo(camposDaSituacao(situacao))).toBe(situacao);
     }
-    expect(situacaoDoCampo({ obrigatorio: true, ativo: false })).toBe('nao_usado');
+    expect(situacaoDoCampo({ obrigatorio: true, ativo: false, preenchido_por: 'membro' })).toBe('nao_usado');
+  });
+
+  it('campo da tesouraria nunca é obrigatório para o membro (D-093)', () => {
+    expect(camposDaSituacao('tesouraria')).toEqual({ obrigatorio: false, ativo: true, preenchido_por: 'tesouraria' });
+  });
+
+  it('desligar mantém quem preenchia, para as respostas não mudarem de lugar', () => {
+    expect(camposDaSituacao('nao_usado', 'tesouraria')).toEqual({
+      obrigatorio: false,
+      ativo: false,
+      preenchido_por: 'tesouraria',
+    });
   });
 });
 

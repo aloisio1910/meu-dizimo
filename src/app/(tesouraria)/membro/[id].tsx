@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
+import { AnotacoesDaTesouraria } from '@/components/anotacoes-da-tesouraria';
 import { SeloDeStatus } from '@/components/selo-de-status';
 import { Botao } from '@/components/ui/botao';
 import { CampoTexto } from '@/components/ui/campo-texto';
@@ -205,6 +206,8 @@ export default function CartaoDoMembro() {
           </>
         )}
       </View>
+
+      <AnotacoesDaTesouraria igrejaId={ficha.igreja_id} membro={membro} titulo={titulo} aoSalvar={recarregar} />
 
       {ehConvidado && (
         <View style={estilos.cartao}>

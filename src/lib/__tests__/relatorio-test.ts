@@ -25,7 +25,7 @@ function linha(parcial: Partial<LinhaDoRelatorio>): LinhaDoRelatorio {
     status: 'confirmado',
     confirmado_por_nome: 'Tiago',
     registrado_pela_tesouraria: false,
-    membros: { nome: 'Maria', numero: 3, campos_extras: { lider: 'Carlos', nascimento: '1990-05-17', setor: 4 } },
+    membros: { nome: 'Maria', numero: 3, campos_extras: { lider: 'Carlos', nascimento: '1990-05-17', setor: 4 }, campos_internos: { celula: 'Norte' } },
     campanhas: null,
     contas: { nome: 'Dízimos e ofertas' },
     ...parcial,
@@ -182,6 +182,7 @@ describe('planilha', () => {
         { chave: 'nascimento', rotulo: 'Nascimento' },
         { chave: 'setor', rotulo: 'Setor' },
         { chave: 'rede', rotulo: 'Rede' },
+        { chave: 'celula', rotulo: 'Célula', daTesouraria: true },
       ],
       tipo: () => 'Dízimo',
       status: String,
@@ -191,9 +192,9 @@ describe('planilha', () => {
       quemRegistrou: () => '',
     };
     const [cabecalho, primeira] = linhasDaPlanilha([linha({})], textos);
-    expect(cabecalho).toEqual(['ID', 'Nome', 'Líder', 'Nascimento', 'Setor', 'Rede', 'Tipo']);
+    expect(cabecalho).toEqual(['ID', 'Nome', 'Líder', 'Nascimento', 'Setor', 'Rede', 'Célula', 'Tipo']);
     // Data vira DD/MM/AAAA, número continua número, campo não preenchido fica vazio.
-    expect(primeira.slice(0, 7)).toEqual([3, 'Maria', 'Carlos', '17/05/1990', 4, '', 'Dízimo']);
+    expect(primeira.slice(0, 8)).toEqual([3, 'Maria', 'Carlos', '17/05/1990', 4, '', 'Norte', 'Dízimo']);
   });
 
   it('colunas de valor andam uma casa por campo do cadastro', () => {

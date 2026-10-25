@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 
 import { CamposDoCadastro } from '@/components/campos-do-cadastro';
+import { InformacoesDaTesouraria } from '@/components/informacoes-da-tesouraria';
 import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
@@ -123,6 +124,8 @@ function ConteudoDoPerfil({ ficha }: { ficha: MinhaFicha }) {
           />
         </View>
       )}
+
+      {!editando && <InformacoesDaTesouraria ficha={ficha} />}
 
       {ehCelular && (
         <View style={estilos.cartao}>

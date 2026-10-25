@@ -17,7 +17,7 @@ export type LinhaDoRelatorio = {
   status: StatusDoLancamento;
   confirmado_por_nome: string | null;
   registrado_pela_tesouraria: boolean;
-  membros: { nome: string; numero: number; campos_extras: unknown } | null;
+  membros: { nome: string; numero: number; campos_extras: unknown; campos_internos: unknown } | null;
   campanhas: { nome: string } | null;
   contas: { nome: string } | null;
 };
@@ -41,9 +41,10 @@ export function periodoDoMes(hoje: string, deslocamento = 0): Periodo {
 export type ErrosDoPeriodo = { de?: 'dataInvalida'; ate?: 'dataInvalida' | 'fimAntesDoInicio' };
 
 // O período vale para a data do dízimo, que pode ser retroativa (RN-011).
-export function validarPeriodo(
-  campos: { de: string; ate: string },
-): { ok: true; periodo: Periodo } | { ok: false; erros: ErrosDoPeriodo } {
+export function validarPeriodo(campos: {
+  de: string;
+  ate: string;
+}): { ok: true; periodo: Periodo } | { ok: false; erros: ErrosDoPeriodo } {
   const de = dataParaIso(campos.de);
   const ate = dataParaIso(campos.ate);
   const erros: ErrosDoPeriodo = {};
@@ -123,7 +124,8 @@ export function centavosParaPlanilha(centavos: number): number {
 export type Celula = string | number | null;
 
 // Campo de cadastro definido pela igreja (RN-004), como Líder ou Rede.
-export type CampoDaPlanilha = { chave: string; rotulo: string };
+// daTesouraria: o valor vem das anotações da tesouraria (D-093).
+export type CampoDaPlanilha = { chave: string; rotulo: string; daTesouraria?: boolean };
 
 export type TextosDaPlanilha = {
   colunas: string[];
@@ -159,7 +161,9 @@ export function linhasDaPlanilha(linhas: LinhaDoRelatorio[], textos: TextosDaPla
     ...linhas.map((l) => [
       l.membros?.numero ?? null,
       l.membros?.nome ?? '',
-      ...textos.camposDoCadastro.map((c) => valorDoCampo(l.membros?.campos_extras, c.chave)),
+      ...textos.camposDoCadastro.map((c) =>
+        valorDoCampo(c.daTesouraria ? l.membros?.campos_internos : l.membros?.campos_extras, c.chave),
+      ),
       textos.tipo(l.tipo),
       l.campanhas?.nome ?? '',
       textos.data(l.data_contribuicao),

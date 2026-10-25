@@ -2,7 +2,10 @@
 // e tipo fixos depois de criados, lista sempre com opções.
 
 export type TipoDoCampo = 'texto' | 'data' | 'numero' | 'lista';
-export type SituacaoDoCampo = 'obrigatorio' | 'opcional' | 'nao_usado';
+// Obrigatório e opcional: o membro preenche. Tesouraria: só o tesoureiro e o
+// Pastor preenchem, e o membro só lê (D-093). Não usado: desligado.
+export type SituacaoDoCampo = 'obrigatorio' | 'opcional' | 'tesouraria' | 'nao_usado';
+export type QuemPreenche = 'membro' | 'tesouraria';
 
 // Até 40 caracteres, começando por letra (regra da tabela campos_cadastro).
 const TAMANHO_DA_CHAVE = 40;
@@ -27,13 +30,25 @@ export function chaveDoRotulo(rotulo: string, existentes: string[]): string {
   }
 }
 
-export function situacaoDoCampo(campo: { obrigatorio: boolean; ativo: boolean }): SituacaoDoCampo {
+export function situacaoDoCampo(campo: {
+  obrigatorio: boolean;
+  ativo: boolean;
+  preenchido_por: string;
+}): SituacaoDoCampo {
   if (!campo.ativo) return 'nao_usado';
+  if (campo.preenchido_por === 'tesouraria') return 'tesouraria';
   return campo.obrigatorio ? 'obrigatorio' : 'opcional';
 }
 
-export function camposDaSituacao(situacao: SituacaoDoCampo): { obrigatorio: boolean; ativo: boolean } {
-  return { obrigatorio: situacao === 'obrigatorio', ativo: situacao !== 'nao_usado' };
+// Campo desligado guarda quem preenchia antes, para as respostas não
+// mudarem de lugar à toa.
+export function camposDaSituacao(
+  situacao: SituacaoDoCampo,
+  quemPreenchiaAntes: QuemPreenche = 'membro',
+): { obrigatorio: boolean; ativo: boolean; preenchido_por: QuemPreenche } {
+  if (situacao === 'nao_usado') return { obrigatorio: false, ativo: false, preenchido_por: quemPreenchiaAntes };
+  if (situacao === 'tesouraria') return { obrigatorio: false, ativo: true, preenchido_por: 'tesouraria' };
+  return { obrigatorio: situacao === 'obrigatorio', ativo: true, preenchido_por: 'membro' };
 }
 
 export type ErrosDoCampo = {

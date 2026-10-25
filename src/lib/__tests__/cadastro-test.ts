@@ -1,6 +1,13 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { familiaresIniciais, validarCadastro, valoresIniciais, type CampoDoCadastroBase } from '../cadastro';
+import {
+  converterValores,
+  familiaresIniciais,
+  mesclarValores,
+  validarCadastro,
+  valoresIniciais,
+  type CampoDoCadastroBase,
+} from '../cadastro';
 
 const campos: CampoDoCadastroBase[] = [
   { chave: 'lider', rotulo: 'Líder', tipo: 'texto', opcoes: [], obrigatorio: true },
@@ -79,5 +86,40 @@ describe('validarCadastro', () => {
 
   it('dízimo familiar com familiares é válido', () => {
     expect(validarCadastro({ ...base, tipoDizimo: 'familiar', familiares: ['Joana'] }, campos).erros).toEqual({});
+  });
+});
+
+describe('mesclarValores', () => {
+  it('mantém o valor de campo que não está no formulário (ex.: não usado)', () => {
+    expect(mesclarValores({ lider: 'Carlos', antigo: 'guardado' }, { lider: 'Paulo' }, ['lider'])).toEqual({
+      antigo: 'guardado',
+      lider: 'Paulo',
+    });
+  });
+
+  it('campo do formulário deixado em branco é apagado de propósito', () => {
+    expect(mesclarValores({ lider: 'Carlos', batismo: '2010-05-17' }, { lider: 'Carlos' }, ['lider', 'batismo'])).toEqual({
+      lider: 'Carlos',
+    });
+  });
+
+  it('sem nada guardado', () => {
+    expect(mesclarValores(null, { lider: 'Carlos' }, ['lider'])).toEqual({ lider: 'Carlos' });
+  });
+});
+
+describe('converterValores', () => {
+  const campos = [
+    { chave: 'celula', rotulo: 'Célula', tipo: 'lista' as const, opcoes: ['Norte'], obrigatorio: false },
+    { chave: 'entrada', rotulo: 'Entrada', tipo: 'data' as const, opcoes: [], obrigatorio: true },
+  ];
+
+  it('sem exigir obrigatórios (campos da tesouraria)', () => {
+    expect(converterValores({ celula: 'Norte' }, campos, false)).toEqual({ erros: {}, valores: { celula: 'Norte' } });
+  });
+
+  it('converte a data e aponta a inválida', () => {
+    expect(converterValores({ entrada: '17/05/2010' }, campos, false).valores).toEqual({ entrada: '2010-05-17' });
+    expect(converterValores({ entrada: '31/02/2010' }, campos, false).erros).toEqual({ 'campo:entrada': 'dataInvalida' });
   });
 });
