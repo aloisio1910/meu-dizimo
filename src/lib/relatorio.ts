@@ -7,6 +7,7 @@ export type StatusDoLancamento = 'aguardando' | 'em_conferencia' | 'confirmado' 
 
 export type LinhaDoRelatorio = {
   id: string;
+  membro_id: string;
   tipo: 'dizimo' | 'oferta';
   data_contribuicao: string; // AAAA-MM-DD
   registrado_em: string; // momento ISO

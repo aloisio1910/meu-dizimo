@@ -15,6 +15,7 @@ import {
 function linha(parcial: Partial<LinhaDoRelatorio>): LinhaDoRelatorio {
   return {
     id: 'x',
+    membro_id: 'm3',
     tipo: 'dizimo',
     data_contribuicao: '2026-10-10',
     registrado_em: '2026-10-10T13:00:00Z',

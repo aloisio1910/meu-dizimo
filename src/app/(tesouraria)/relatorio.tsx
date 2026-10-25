@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View } from 'react-native';
 
+import { RelatorioDeMembros } from '@/components/relatorios/relatorio-de-membros';
+import { RelatorioDeParticipacao } from '@/components/relatorios/relatorio-de-participacao';
 import { SeletorDeFiltroPorCampo, useCamposFiltraveis } from '@/components/seletor-de-filtro-por-campo';
 import { Botao } from '@/components/ui/botao';
 import { CampoTexto } from '@/components/ui/campo-texto';
@@ -58,7 +60,8 @@ type Resultado = {
 export default function Relatorio() {
   const { t } = useTranslation();
   const voltar = useVoltar('/fila');
-  const { ficha, carregando, ehTesouraria } = useFichaAtiva();
+  const { ficha, carregando, ehTesouraria, ehAdministrador } = useFichaAtiva();
+  const [qualRelatorio, setQualRelatorio] = useState<'lancamentos' | 'membros' | 'participacao'>('lancamentos');
 
   const [de, setDe] = useState(() => isoParaData(periodoDoMes(hojeIso()).de));
   const [ate, setAte] = useState(() => isoParaData(periodoDoMes(hojeIso()).ate));
@@ -279,10 +282,56 @@ export default function Relatorio() {
     </View>
   );
 
+  const seletorDoRelatorio = (
+    <Opcoes
+      rotulo={t('tesouraria.relatorios.qual')}
+      opcoes={(['lancamentos', 'membros', 'participacao'] as const).map((valor) => ({
+        valor,
+        rotulo: t(`tesouraria.relatorios.tipos.${valor}`),
+      }))}
+      selecionada={qualRelatorio}
+      onSelecionar={setQualRelatorio}
+    />
+  );
+
+  // Membros e Participação têm filtros próprios; o de lançamentos é o desta tela.
+  if (qualRelatorio !== 'lancamentos') {
+    return (
+      <Tela larga>
+        <Texto variante="apoio">{igreja?.nome}</Texto>
+        <Texto variante="titulo">{t('tesouraria.relatorio.titulo')}</Texto>
+        {seletorDoRelatorio}
+        {qualRelatorio === 'membros' ? (
+          <RelatorioDeMembros
+            igrejaId={ficha.igreja_id}
+            titulo={igreja?.titulo_administrador}
+            camposFiltraveis={camposFiltraveis}
+            colunasDeCampo={camposDoCadastro.map((c) => ({
+              chave: c.chave,
+              rotulo: c.rotulo,
+              preenchido_por: c.daTesouraria ? 'tesouraria' : 'membro',
+            }))}
+          />
+        ) : (
+          <RelatorioDeParticipacao
+            igrejaId={ficha.igreja_id}
+            moeda={moeda}
+            idioma={idioma}
+            titulo={igreja?.titulo_administrador}
+            ehAdministrador={ehAdministrador}
+            camposFiltraveis={camposFiltraveis}
+          />
+        )}
+        <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => voltar()} />
+      </Tela>
+    );
+  }
+
   return (
     <Tela larga>
       <Texto variante="apoio">{igreja?.nome}</Texto>
       <Texto variante="titulo">{t('tesouraria.relatorio.titulo')}</Texto>
+      {seletorDoRelatorio}
       <Texto>{t('tesouraria.relatorio.explicacao')}</Texto>
 
       <Texto variante="destaque" accessibilityRole="header">

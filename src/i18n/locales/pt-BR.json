@@ -749,6 +749,82 @@
         }
       }
     },
+    "relatorios": {
+      "qual": "Qual relatório?",
+      "tipos": {
+        "lancamentos": "Dízimos e ofertas (lançamentos)",
+        "membros": "Membros",
+        "participacao": "Participação no período"
+      },
+      "membros": {
+        "explicacao": "Lista dos membros por situação, com os campos do cadastro. Use o filtro para ver um grupo, como uma célula.",
+        "situacao": "Mostrar",
+        "todos": "Todos",
+        "contagem": "Ativos: {{ativo}} · Convidados: {{convidado}} · Convite vencido: {{vencido}} · Inativos: {{inativo}}",
+        "gerar": "Gerar relatório de membros",
+        "nenhum": "Nenhum membro com estes filtros.",
+        "aba": "Membros",
+        "colunas": {
+          "numero": "Nº",
+          "nome": "Nome",
+          "email": "E-mail",
+          "celular": "Celular",
+          "situacao": "Situação",
+          "perfil": "Perfil",
+          "dizimo": "Dízimo"
+        },
+        "perfis": {
+          "membro": "Membro",
+          "tesoureiro": "Tesoureiro"
+        },
+        "dizimo": {
+          "individual": "Individual",
+          "familiar": "Familiar"
+        },
+        "arquivo": "membros"
+      },
+      "participacao": {
+        "explicacao": "Quantos membros ativos devolveram o dízimo e quantos ofertaram no período. Conta como devolveu quem registrou, mesmo que a tesouraria ainda não tenha conferido; os valores somam só o confirmado.",
+        "separarPor": "Separar por campo",
+        "semSeparar": "Não separar",
+        "gerar": "Gerar relatório de participação",
+        "ativos_one": "{{count}} membro ativo",
+        "ativos_other": "{{count}} membros ativos",
+        "devolveram": "Devolveram dízimo: {{parte}} de {{total}} ({{pct}}%)",
+        "ofertaram": "Ofertaram: {{parte}} de {{total}} ({{pct}}%)",
+        "porCampanha": "Ofertas por campanha",
+        "linhaCampanha_one": "{{nome}}: {{count}} pessoa · {{valor}} confirmados",
+        "linhaCampanha_other": "{{nome}}: {{count}} pessoas · {{valor}} confirmados",
+        "semOfertas": "Nenhuma oferta no período.",
+        "porGrupo": "Por {{campo}}",
+        "linhaGrupo": "{{grupo}}: {{dizimo}} de {{ativos}} devolveram · {{oferta}} ofertaram",
+        "semGrupo": "Não informado",
+        "visitaTitulo": "Membros que talvez precisem de uma visita",
+        "visitaExplicacao": "Membros ativos sem dízimo registrado no período. Só o {{titulo}} vê esta lista, sem valores. Pode haver motivos simples, como uma devolução em envelope ainda não lançada.",
+        "visitaNenhum": "Todos os membros ativos registraram dízimo no período.",
+        "visitaLinha": "{{nome}} · nº {{numero}} · {{celular}}",
+        "abas": {
+          "resumo": "Resumo",
+          "campanhas": "Campanhas",
+          "grupos": "Grupos",
+          "visita": "Visitas"
+        },
+        "colunas": {
+          "item": "Item",
+          "quantidade": "Quantidade",
+          "total": "Total",
+          "porcentagem": "%",
+          "campanha": "Campanha",
+          "pessoas": "Pessoas",
+          "valor": "Confirmado ({{moeda}})",
+          "grupo": "Grupo",
+          "ativos": "Ativos",
+          "devolveram": "Devolveram dízimo",
+          "ofertaram": "Ofertaram"
+        },
+        "arquivo": "participacao"
+      }
+    },
     "relatorio": {
       "titulo": "Relatórios",
       "explicacao": "Escolha o período e os filtros, confira os totais e baixe a planilha do Excel.",
