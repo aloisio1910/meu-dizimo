@@ -58,8 +58,15 @@ export default function Configuracoes() {
         <Texto variante="destaque">{t('tesouraria.configuracoes.aparencia')}</Texto>
         <Texto variante="apoio">{t('tesouraria.configuracoes.aparenciaDetalhe')}</Texto>
       </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.push('/campos-do-cadastro')}
+        style={({ pressed }) => [estilos.opcao, pressed && estilos.pressionada]}
+      >
+        <Texto variante="destaque">{t('tesouraria.configuracoes.campos')}</Texto>
+        <Texto variante="apoio">{t('tesouraria.configuracoes.camposDetalhe')}</Texto>
+      </Pressable>
 
-      <Texto variante="apoio">{t('tesouraria.configuracoes.emBreve')}</Texto>
       <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => voltar()} />
     </Tela>
   );
