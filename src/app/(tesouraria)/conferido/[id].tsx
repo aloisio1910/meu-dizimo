@@ -11,6 +11,7 @@ import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
 import { useSessao } from '@/hooks/use-sessao';
+import { useVoltar } from '@/hooks/use-voltar';
 import { isoParaData, partesDaDataHora } from '@/lib/data';
 import { minutosRestantes, tempoRestanteParaDesfazer } from '@/lib/desfazer';
 import { formatarMoeda } from '@/lib/dinheiro';
@@ -32,6 +33,7 @@ type Acao = 'desfazer' | 'reabrir';
 export default function Conferido() {
   const { t } = useTranslation();
   const router = useRouter();
+  const voltar = useVoltar('/fila');
   const { id } = useLocalSearchParams<{ id: string }>();
   const { sessao } = useSessao();
   const { ficha, ehTesouraria, ehAdministrador } = useFichaAtiva();
@@ -191,7 +193,7 @@ export default function Conferido() {
       <Botao
         titulo={t('tesouraria.conferencia.voltarAFila')}
         variante="secundario"
-        onPress={() => router.back()}
+        onPress={() => voltar()}
         desabilitado={enviando}
       />
     </Tela>

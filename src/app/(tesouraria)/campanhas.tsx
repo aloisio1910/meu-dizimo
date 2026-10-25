@@ -7,6 +7,7 @@ import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useVoltar } from '@/hooks/use-voltar';
 import { isoParaData } from '@/lib/data';
 import { listarCampanhasDaIgreja, type CampanhaDaIgreja } from '@/services/supabase/campanhas-da-igreja';
 import { cores, espacos, raio } from '@/theme';
@@ -16,6 +17,7 @@ import { cores, espacos, raio } from '@/theme';
 export default function Campanhas() {
   const { t } = useTranslation();
   const router = useRouter();
+  const voltar = useVoltar('/fila');
   const { ficha, carregando, ehAdministrador } = useFichaAtiva();
   const [campanhas, setCampanhas] = useState<CampanhaDaIgreja[] | null>(null);
   const [falhou, setFalhou] = useState(false);
@@ -45,7 +47,7 @@ export default function Campanhas() {
     return (
       <Tela>
         <Texto>{t('tesouraria.campanhas.soPastor', { titulo })}</Texto>
-        <Botao titulo={t('tesouraria.lancar.voltar')} onPress={() => router.back()} />
+        <Botao titulo={t('tesouraria.lancar.voltar')} onPress={() => voltar()} />
       </Tela>
     );
   }
@@ -88,7 +90,7 @@ export default function Campanhas() {
         </Pressable>
       ))}
 
-      <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => router.back()} />
+      <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => voltar()} />
     </Tela>
   );
 }

@@ -6,6 +6,7 @@ import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useVoltar } from '@/hooks/use-voltar';
 import { cores, espacos, raio } from '@/theme';
 
 // P-03 Configurações da igreja: ponto de entrada das partes que o Pastor de
@@ -13,6 +14,7 @@ import { cores, espacos, raio } from '@/theme';
 export default function Configuracoes() {
   const { t } = useTranslation();
   const router = useRouter();
+  const voltar = useVoltar('/fila');
   const { ficha, carregando, ehAdministrador } = useFichaAtiva();
 
   if (!carregando && !ficha) return <Redirect href="/" />;
@@ -21,7 +23,7 @@ export default function Configuracoes() {
     return (
       <Tela>
         <Texto>{t('tesouraria.configuracoes.soPastor', { titulo: ficha.igrejas?.titulo_administrador })}</Texto>
-        <Botao titulo={t('tesouraria.lancar.voltar')} onPress={() => router.back()} />
+        <Botao titulo={t('tesouraria.lancar.voltar')} onPress={() => voltar()} />
       </Tela>
     );
   }
@@ -58,7 +60,7 @@ export default function Configuracoes() {
       </Pressable>
 
       <Texto variante="apoio">{t('tesouraria.configuracoes.emBreve')}</Texto>
-      <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => router.back()} />
+      <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => voltar()} />
     </Tela>
   );
 }

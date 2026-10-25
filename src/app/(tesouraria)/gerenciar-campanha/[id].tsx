@@ -11,6 +11,7 @@ import { Opcoes } from '@/components/ui/opcoes';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useVoltar } from '@/hooks/use-voltar';
 import { mudancaDaCampanha, validarCampanha, type CamposDaCampanha, type ErrosDaCampanha } from '@/lib/campanha';
 import { hojeIso, isoParaData, mascararData } from '@/lib/data';
 import { escolherFoto } from '@/services/dispositivo/arquivos';
@@ -50,6 +51,7 @@ function camposDe(c: CampanhaDaIgreja): CamposDaCampanha {
 export default function GerenciarCampanha() {
   const { t } = useTranslation();
   const router = useRouter();
+  const voltar = useVoltar('/campanhas');
   const { id, aviso: avisoInicial } = useLocalSearchParams<{ id: string; aviso?: string }>();
   const { ficha, carregando, ehAdministrador } = useFichaAtiva();
   const ehNova = id === 'nova';
@@ -107,7 +109,7 @@ export default function GerenciarCampanha() {
     return (
       <Tela>
         <Texto>{t('tesouraria.campanhas.editar.naoEncontrada')}</Texto>
-        <Botao titulo={t('tesouraria.campanhas.editar.voltar')} onPress={() => router.back()} />
+        <Botao titulo={t('tesouraria.campanhas.editar.voltar')} onPress={() => voltar()} />
       </Tela>
     );
   }

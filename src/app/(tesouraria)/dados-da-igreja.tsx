@@ -1,4 +1,4 @@
-import { Redirect, useRouter } from 'expo-router';
+import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator } from 'react-native';
@@ -11,6 +11,7 @@ import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
 import { useMinhasFichas } from '@/hooks/use-minhas-fichas';
+import { useVoltar } from '@/hooks/use-voltar';
 import {
   LIMITE_DA_MENSAGEM,
   LIMITE_DO_VERSICULO,
@@ -42,7 +43,7 @@ function camposDe(d: DadosParaEditar): CamposDaIgreja {
 // P-03 Dados e contato: o que o membro vê na aba Igreja e no Cartão.
 export default function DadosDaIgreja() {
   const { t } = useTranslation();
-  const router = useRouter();
+  const voltar = useVoltar('/configuracoes');
   const { ficha, carregando, ehAdministrador } = useFichaAtiva();
   const { recarregar } = useMinhasFichas();
   const [campos, setCampos] = useState<CamposDaIgreja | null>();
@@ -75,7 +76,7 @@ export default function DadosDaIgreja() {
     return (
       <Tela>
         <Texto variante="erro">{t('tesouraria.dadosDaIgreja.falhaAoCarregar')}</Texto>
-        <Botao titulo={t('tesouraria.dadosDaIgreja.voltar')} onPress={() => router.back()} />
+        <Botao titulo={t('tesouraria.dadosDaIgreja.voltar')} onPress={() => voltar()} />
       </Tela>
     );
   }
@@ -224,7 +225,7 @@ export default function DadosDaIgreja() {
 
       <Botao titulo={t(`${d}.salvar`)} onPress={aoSalvar} carregando={enviando} />
       <Retorno aviso={aviso} erro={erro} />
-      <Botao titulo={t(`${d}.voltar`)} variante="secundario" onPress={() => router.back()} desabilitado={enviando} />
+      <Botao titulo={t(`${d}.voltar`)} variante="secundario" onPress={() => voltar()} desabilitado={enviando} />
     </Tela>
   );
 }

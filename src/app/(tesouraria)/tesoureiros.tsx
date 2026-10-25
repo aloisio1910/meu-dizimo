@@ -9,6 +9,7 @@ import { CampoTexto } from '@/components/ui/campo-texto';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useVoltar } from '@/hooks/use-voltar';
 import { filtrarMembros } from '@/lib/membros';
 import {
   listarMembrosDaIgreja,
@@ -27,6 +28,7 @@ const LIMITE_DA_BUSCA = 20;
 export default function Tesoureiros() {
   const { t } = useTranslation();
   const router = useRouter();
+  const voltar = useVoltar('/fila');
   const { ficha, carregando, ehAdministrador } = useFichaAtiva();
   const [membros, setMembros] = useState<MembroDaLista[] | null>(null);
   const [falhou, setFalhou] = useState(false);
@@ -60,7 +62,7 @@ export default function Tesoureiros() {
     return (
       <Tela>
         <Texto>{t('tesouraria.tesoureiros.soPastor', { titulo })}</Texto>
-        <Botao titulo={t('tesouraria.lancar.voltar')} onPress={() => router.back()} />
+        <Botao titulo={t('tesouraria.lancar.voltar')} onPress={() => voltar()} />
       </Tela>
     );
   }
@@ -220,7 +222,7 @@ export default function Tesoureiros() {
         </>
       )}
 
-      <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => router.back()} />
+      <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => voltar()} />
     </Tela>
   );
 }

@@ -8,6 +8,7 @@ import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useVoltar } from '@/hooks/use-voltar';
 import { isoParaData } from '@/lib/data';
 import { formatarMoeda } from '@/lib/dinheiro';
 import { listarMinhasOfertas, type OfertaDoHistorico } from '@/services/supabase/ofertas';
@@ -18,6 +19,7 @@ import { cores, espacos, raio } from '@/theme';
 export default function HistoricoDeOfertas() {
   const { t } = useTranslation();
   const router = useRouter();
+  const voltar = useVoltar('/ofertas');
   const { ficha, carregando } = useFichaAtiva();
   const [ofertas, setOfertas] = useState<OfertaDoHistorico[] | null>(null);
   const [falhou, setFalhou] = useState(false);
@@ -80,7 +82,7 @@ export default function HistoricoDeOfertas() {
         );
       })}
 
-      <Botao titulo={t('ofertas.ofertar.voltarAsOfertas')} variante="secundario" onPress={() => router.back()} />
+      <Botao titulo={t('ofertas.ofertar.voltarAsOfertas')} variante="secundario" onPress={() => voltar()} />
     </Tela>
   );
 }

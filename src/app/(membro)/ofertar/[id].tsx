@@ -10,6 +10,7 @@ import { CampoTexto } from '@/components/ui/campo-texto';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useVoltar } from '@/hooks/use-voltar';
 import { hojeIso, isoParaData } from '@/lib/data';
 import { completarValor, formatarMoeda, mascararValor, textoParaCentavos } from '@/lib/dinheiro';
 import { validarDizimo, type DadosDoDizimo, type ErrosDoDizimo } from '@/lib/validar-dizimo';
@@ -29,6 +30,7 @@ type Etapa = 'valor' | 'pagar' | 'registrar' | 'duplicado' | 'registrada';
 export default function Ofertar() {
   const { t } = useTranslation();
   const router = useRouter();
+  const voltar = useVoltar('/ofertas');
   const { id } = useLocalSearchParams<{ id: string }>();
   const { ficha, carregando } = useFichaAtiva();
 
@@ -76,7 +78,7 @@ export default function Ofertar() {
     return (
       <Tela>
         <Texto>{t('registrar.erros.campanha_indisponivel')}</Texto>
-        <Botao titulo={t('ofertas.ofertar.voltarAsOfertas')} onPress={() => router.back()} />
+        <Botao titulo={t('ofertas.ofertar.voltarAsOfertas')} onPress={() => voltar()} />
       </Tela>
     );
   }
@@ -244,7 +246,7 @@ export default function Ofertar() {
         keyboardType="decimal-pad"
       />
       <Botao titulo={t('ofertas.ofertar.gerarPix')} onPress={aoGerarPix} />
-      <Botao titulo={t('registrar.cancelar')} variante="secundario" onPress={() => router.back()} />
+      <Botao titulo={t('registrar.cancelar')} variante="secundario" onPress={() => voltar()} />
     </Tela>
   );
 }

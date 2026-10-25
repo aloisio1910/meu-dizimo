@@ -1,4 +1,4 @@
-import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
+import { Redirect, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
@@ -11,6 +11,7 @@ import { CampoTexto } from '@/components/ui/campo-texto';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useVoltar } from '@/hooks/use-voltar';
 import { hojeIso, isoParaData, partesDaDataHora } from '@/lib/data';
 import { centavosParaCampo, formatarMoeda } from '@/lib/dinheiro';
 import { ehFormaConhecida } from '@/lib/formas';
@@ -31,7 +32,7 @@ type Modo = 'ver' | 'editar' | 'cancelar' | 'aceitar' | 'contestar';
 // aceitar ou contestar a divergência.
 export default function DetalheDoDizimo() {
   const { t } = useTranslation();
-  const router = useRouter();
+  const voltar = useVoltar('/cartao');
   const { id } = useLocalSearchParams<{ id: string }>();
   const { ficha } = useFichaAtiva();
 
@@ -81,7 +82,7 @@ export default function DetalheDoDizimo() {
     return (
       <Tela>
         <Texto>{t('lancamento.naoEncontrado')}</Texto>
-        <Botao titulo={t('lancamento.voltarAoCartao')} onPress={() => router.back()} />
+        <Botao titulo={t('lancamento.voltarAoCartao')} onPress={() => voltar()} />
       </Tela>
     );
   }
@@ -314,7 +315,7 @@ export default function DetalheDoDizimo() {
           <Botao
             titulo={ehOferta ? t('lancamento.voltarAsOfertas') : t('lancamento.voltarAoCartao')}
             variante="secundario"
-            onPress={() => router.back()}
+            onPress={() => voltar()}
           />
         </>
       )}

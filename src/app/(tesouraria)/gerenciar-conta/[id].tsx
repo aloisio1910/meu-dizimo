@@ -11,6 +11,7 @@ import { Opcoes } from '@/components/ui/opcoes';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useVoltar } from '@/hooks/use-voltar';
 import { validarConta, type CamposDaConta, type ErrosDaConta } from '@/lib/conta';
 import { formatarMoeda } from '@/lib/dinheiro';
 import type { TipoDeChavePix } from '@/lib/pix';
@@ -59,6 +60,7 @@ function camposDe(c: ContaCompleta): CamposDaConta {
 export default function GerenciarConta() {
   const { t } = useTranslation();
   const router = useRouter();
+  const voltar = useVoltar('/contas');
   const { id } = useLocalSearchParams<{ id: string }>();
   const { ficha, carregando, ehAdministrador } = useFichaAtiva();
   const ehNova = id === 'nova';
@@ -112,7 +114,7 @@ export default function GerenciarConta() {
     return (
       <Tela>
         <Texto>{t('tesouraria.contas.editar.naoEncontrada')}</Texto>
-        <Botao titulo={t('tesouraria.contas.editar.voltar')} onPress={() => router.back()} />
+        <Botao titulo={t('tesouraria.contas.editar.voltar')} onPress={() => voltar()} />
       </Tela>
     );
   }

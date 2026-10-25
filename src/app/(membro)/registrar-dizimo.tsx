@@ -9,6 +9,7 @@ import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useVoltar } from '@/hooks/use-voltar';
 import { hojeIso, isoParaData } from '@/lib/data';
 import { formatarMoeda } from '@/lib/dinheiro';
 import { validarDizimo, type DadosDoDizimo, type ErrosDoDizimo } from '@/lib/validar-dizimo';
@@ -27,6 +28,7 @@ type Registro = DadosDoDizimo;
 export default function RegistrarDizimo() {
   const { t } = useTranslation();
   const router = useRouter();
+  const voltar = useVoltar('/cartao');
   const { ficha, carregando } = useFichaAtiva();
 
   const [etapa, setEtapa] = useState<'formulario' | 'duplicado' | 'registrado'>('formulario');
@@ -144,7 +146,7 @@ export default function RegistrarDizimo() {
         <Botao
           titulo={t('registrar.voltarAoCartao')}
           variante={pagaComPix ? 'secundario' : 'principal'}
-          onPress={() => router.back()}
+          onPress={() => voltar()}
         />
       </Tela>
     );
@@ -170,7 +172,7 @@ export default function RegistrarDizimo() {
       ) : (
         <Botao titulo={t('registrar.registrar')} onPress={aoRegistrar} />
       )}
-      <Botao titulo={t('registrar.cancelar')} variante="secundario" onPress={() => router.back()} desabilitado={enviando} />
+      <Botao titulo={t('registrar.cancelar')} variante="secundario" onPress={() => voltar()} desabilitado={enviando} />
     </Tela>
   );
 }

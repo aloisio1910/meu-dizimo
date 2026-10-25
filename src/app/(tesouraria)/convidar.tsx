@@ -1,4 +1,4 @@
-import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
+import { Redirect, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -7,6 +7,7 @@ import { CampoTexto } from '@/components/ui/campo-texto';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useVoltar } from '@/hooks/use-voltar';
 import { partesDaDataHora } from '@/lib/data';
 import { validarConvite, type DadosDoConvite, type ErrosDoConvite } from '@/lib/membros';
 import { convidarMembro } from '@/services/supabase/membros-da-igreja';
@@ -18,7 +19,7 @@ const SETE_DIAS_MS = 7 * 24 * 60 * 60 * 1000;
 // o Pastor de Governo convida já como tesoureiro (P-01).
 export default function Convidar() {
   const { t } = useTranslation();
-  const router = useRouter();
+  const voltar = useVoltar('/membros');
   const { perfil: perfilPedido } = useLocalSearchParams<{ perfil?: string }>();
   const { ficha, carregando, ehTesouraria, ehAdministrador } = useFichaAtiva();
   const comoTesoureiro = perfilPedido === 'tesoureiro' && ehAdministrador;
@@ -75,7 +76,7 @@ export default function Convidar() {
           })}
         </Texto>
         <Botao titulo={t('tesouraria.convidar.outro')} onPress={convidarOutra} />
-        <Botao titulo={t('tesouraria.convidar.verLista')} variante="secundario" onPress={() => router.back()} />
+        <Botao titulo={t('tesouraria.convidar.verLista')} variante="secundario" onPress={() => voltar()} />
       </Tela>
     );
   }
@@ -113,7 +114,7 @@ export default function Convidar() {
       />
       {!!erroGeral && <Texto variante="erro">{erroGeral}</Texto>}
       <Botao titulo={t('tesouraria.convidar.enviar')} onPress={aoConvidar} carregando={enviando} />
-      <Botao titulo={t('tesouraria.convidar.cancelar')} variante="secundario" onPress={() => router.back()} desabilitado={enviando} />
+      <Botao titulo={t('tesouraria.convidar.cancelar')} variante="secundario" onPress={() => voltar()} desabilitado={enviando} />
     </Tela>
   );
 }

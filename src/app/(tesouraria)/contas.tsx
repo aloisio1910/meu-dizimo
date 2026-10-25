@@ -7,6 +7,7 @@ import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useVoltar } from '@/hooks/use-voltar';
 import { LIMITE_DE_CONTAS } from '@/lib/conta';
 import { listarTodasAsContas, type ContaCompleta } from '@/services/supabase/contas-da-igreja';
 import { cores, espacos, raio } from '@/theme';
@@ -15,6 +16,7 @@ import { cores, espacos, raio } from '@/theme';
 export default function Contas() {
   const { t } = useTranslation();
   const router = useRouter();
+  const voltar = useVoltar('/configuracoes');
   const { ficha, carregando, ehAdministrador } = useFichaAtiva();
   const [contas, setContas] = useState<ContaCompleta[] | null>(null);
   const [falhou, setFalhou] = useState(false);
@@ -96,7 +98,7 @@ export default function Contas() {
         </Pressable>
       ))}
 
-      <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => router.back()} />
+      <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => voltar()} />
     </Tela>
   );
 }

@@ -1,4 +1,3 @@
-import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
@@ -6,20 +5,21 @@ import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useMinhasFichas } from '@/hooks/use-minhas-fichas';
+import { useVoltar } from '@/hooks/use-voltar';
 import { termos } from '@/i18n/termos/pt-BR';
 import { espacos } from '@/theme';
 
 // Texto completo dos Termos de Uso e da Política de Privacidade.
 export default function Termos() {
   const { t } = useTranslation();
-  const router = useRouter();
+  const voltar = useVoltar('/');
   const { fichas } = useMinhasFichas();
   const igreja = fichas.find((f) => f.status === 'convidado')?.igrejas?.nome ?? t('termos.suaIgreja');
   const comIgreja = (texto: string) => texto.replaceAll('{{igreja}}', igreja);
 
   return (
     <Tela>
-      <Botao titulo={t('comum.voltar')} variante="secundario" onPress={() => router.back()} />
+      <Botao titulo={t('comum.voltar')} variante="secundario" onPress={() => voltar()} />
       <Texto variante="titulo">{termos.titulo}</Texto>
       <Texto variante="apoio">{termos.atualizadoEm}</Texto>
       {termos.secoes.map((secao) => (
@@ -32,7 +32,7 @@ export default function Termos() {
           ))}
         </View>
       ))}
-      <Botao titulo={t('comum.voltar')} onPress={() => router.back()} />
+      <Botao titulo={t('comum.voltar')} onPress={() => voltar()} />
     </Tela>
   );
 }

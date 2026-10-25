@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { Redirect, useRouter } from 'expo-router';
+import { Redirect } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -11,6 +11,7 @@ import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
 import { useImagensDaIgreja } from '@/hooks/use-imagens-da-igreja';
 import { useMinhasFichas } from '@/hooks/use-minhas-fichas';
+import { useVoltar } from '@/hooks/use-voltar';
 import { corSegura, PALETA } from '@/lib/paleta';
 import { escolherFoto } from '@/services/dispositivo/arquivos';
 import {
@@ -27,7 +28,7 @@ type Secao = ImagemDaIgreja | 'cor';
 // de 7:1 com o branco, para os botões continuarem legíveis.
 export default function Aparencia() {
   const { t } = useTranslation();
-  const router = useRouter();
+  const voltar = useVoltar('/configuracoes');
   const { ficha, carregando, ehAdministrador } = useFichaAtiva();
   const { recarregar } = useMinhasFichas();
   const imagens = useImagensDaIgreja();
@@ -167,7 +168,7 @@ export default function Aparencia() {
         {retornoDe('cor')}
       </View>
 
-      <Botao titulo={t(`${a}.voltar`)} variante="secundario" onPress={() => router.back()} desabilitado={!!enviando} />
+      <Botao titulo={t(`${a}.voltar`)} variante="secundario" onPress={() => voltar()} desabilitado={!!enviando} />
     </Tela>
   );
 }

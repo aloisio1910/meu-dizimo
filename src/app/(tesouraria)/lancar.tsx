@@ -1,4 +1,4 @@
-import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
+import { Redirect, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
@@ -10,6 +10,7 @@ import { Opcoes } from '@/components/ui/opcoes';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useVoltar } from '@/hooks/use-voltar';
 import { hojeIso, isoParaData } from '@/lib/data';
 import { formatarMoeda } from '@/lib/dinheiro';
 import { ehFormaConhecida } from '@/lib/formas';
@@ -30,7 +31,7 @@ const LIMITE_DA_BUSCA = 20;
 // membro pelos dados do envelope e lança. O banco grava já como Confirmado.
 export default function LancarParaMembro() {
   const { t } = useTranslation();
-  const router = useRouter();
+  const voltar = useVoltar('/fila');
   const { membro: membroDaFicha } = useLocalSearchParams<{ membro?: string }>();
   const { ficha, carregando, ehTesouraria } = useFichaAtiva();
 
@@ -157,7 +158,7 @@ export default function LancarParaMembro() {
     return (
       <Tela>
         <Texto variante="erro">{t('tesouraria.lancar.falhaAoCarregar')}</Texto>
-        <Botao titulo={t('tesouraria.lancar.voltar')} onPress={() => router.back()} />
+        <Botao titulo={t('tesouraria.lancar.voltar')} onPress={() => voltar()} />
       </Tela>
     );
   }
@@ -183,7 +184,7 @@ export default function LancarParaMembro() {
         </Texto>
         <Botao titulo={t('tesouraria.lancar.outroParaMesmo', { nome: escolhido.nome })} onPress={() => recomecar(true)} />
         <Botao titulo={t('tesouraria.lancar.outroMembro')} variante="secundario" onPress={() => recomecar(false)} />
-        <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => router.back()} />
+        <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => voltar()} />
       </Tela>
     );
   }
@@ -302,7 +303,7 @@ export default function LancarParaMembro() {
           </Texto>
         </Pressable>
       ))}
-      <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => router.back()} />
+      <Botao titulo={t('tesouraria.lancar.voltar')} variante="secundario" onPress={() => voltar()} />
     </Tela>
   );
 }

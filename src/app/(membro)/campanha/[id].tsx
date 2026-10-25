@@ -8,6 +8,7 @@ import { VideoDaCampanha } from '@/components/video-da-campanha';
 import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
+import { useVoltar } from '@/hooks/use-voltar';
 import { buscarCampanha } from '@/services/supabase/ofertas';
 import { raio } from '@/theme';
 
@@ -17,6 +18,7 @@ type CampanhaDaTela = Awaited<ReturnType<typeof buscarCampanha>>;
 export default function TelaDaCampanha() {
   const { t } = useTranslation();
   const router = useRouter();
+  const voltar = useVoltar('/ofertas');
   const { id } = useLocalSearchParams<{ id: string }>();
   const [campanha, setCampanha] = useState<CampanhaDaTela>();
 
@@ -42,7 +44,7 @@ export default function TelaDaCampanha() {
     return (
       <Tela>
         <Texto>{t('ofertas.campanha.naoEncontrada')}</Texto>
-        <Botao titulo={t('ofertas.campanha.voltar')} onPress={() => router.back()} />
+        <Botao titulo={t('ofertas.campanha.voltar')} onPress={() => voltar()} />
       </Tela>
     );
   }
@@ -69,7 +71,7 @@ export default function TelaDaCampanha() {
       ) : (
         <Texto variante="destaque">{t('ofertas.campanha.encerrada')}</Texto>
       )}
-      <Botao titulo={t('ofertas.campanha.voltar')} variante="secundario" onPress={() => router.back()} />
+      <Botao titulo={t('ofertas.campanha.voltar')} variante="secundario" onPress={() => voltar()} />
     </Tela>
   );
 }

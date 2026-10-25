@@ -9,6 +9,7 @@ import { CampoTexto } from '@/components/ui/campo-texto';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useVoltar } from '@/hooks/use-voltar';
 import { familiaresIniciais, valoresIniciais } from '@/lib/cadastro';
 import { isoParaData, partesDaDataHora } from '@/lib/data';
 import { formatarMoeda } from '@/lib/dinheiro';
@@ -36,6 +37,7 @@ type Ficha = { membro: MembroDaLista; campos: CampoDoCadastro[] };
 export default function CartaoDoMembro() {
   const { t } = useTranslation();
   const router = useRouter();
+  const voltar = useVoltar('/membros');
   const { id } = useLocalSearchParams<{ id: string }>();
   const { ficha, carregando, ehTesouraria, ehAdministrador } = useFichaAtiva();
 
@@ -87,7 +89,7 @@ export default function CartaoDoMembro() {
     return (
       <Tela>
         <Texto>{t('tesouraria.membro.naoEncontrado')}</Texto>
-        <Botao titulo={t('tesouraria.membro.voltar')} onPress={() => router.back()} />
+        <Botao titulo={t('tesouraria.membro.voltar')} onPress={() => voltar()} />
       </Tela>
     );
   }
@@ -320,7 +322,7 @@ export default function CartaoDoMembro() {
         );
       })}
 
-      <Botao titulo={t('tesouraria.membro.voltar')} variante="secundario" onPress={() => router.back()} />
+      <Botao titulo={t('tesouraria.membro.voltar')} variante="secundario" onPress={() => voltar()} />
     </Tela>
   );
 }
