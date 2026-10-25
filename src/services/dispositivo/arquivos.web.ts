@@ -36,3 +36,30 @@ export async function escolherFoto(_origem: 'camera' | 'galeria'): Promise<Resul
 export async function escolherPdf(): Promise<ResultadoDaEscolha> {
   return escolher('application/pdf');
 }
+
+export type ImagemParaRecortar = { uri: string; largura: number; altura: number };
+
+function medir(uri: string): Promise<{ largura: number; altura: number }> {
+  return new Promise((resolver, rejeitar) => {
+    const imagem = new window.Image();
+    imagem.onload = () => resolver({ largura: imagem.naturalWidth, altura: imagem.naturalHeight });
+    imagem.onerror = () => rejeitar(new Error('imagem ilegível'));
+    imagem.src = uri;
+  });
+}
+
+// No computador, a imagem vem do seletor do navegador; o endereço temporário
+// (blob) serve para mostrar na moldura e para recortar.
+export async function escolherImagemParaRecortar(): Promise<
+  { ok: true; imagem: ImagemParaRecortar } | { ok: false; motivo: 'cancelado' | 'permissao_negada' }
+> {
+  const resultado = await DocumentPicker.getDocumentAsync({ type: ['image/jpeg', 'image/png', 'image/webp'] });
+  const documento = resultado.assets?.[0];
+  if (resultado.canceled || !documento?.file) return { ok: false, motivo: 'cancelado' };
+  const uri = URL.createObjectURL(documento.file);
+  try {
+    return { ok: true, imagem: { uri, ...(await medir(uri)) } };
+  } catch {
+    return { ok: false, motivo: 'cancelado' };
+  }
+}

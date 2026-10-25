@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { RecorteDeImagem } from '@/components/recorte-de-imagem';
 import { Retorno } from '@/components/retorno';
 import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
@@ -13,7 +14,8 @@ import { useImagensDaIgreja } from '@/hooks/use-imagens-da-igreja';
 import { useMinhasFichas } from '@/hooks/use-minhas-fichas';
 import { useVoltar } from '@/hooks/use-voltar';
 import { corSegura, PALETA } from '@/lib/paleta';
-import { escolherFoto } from '@/services/dispositivo/arquivos';
+import { escolherImagemParaRecortar, type ImagemParaRecortar } from '@/services/dispositivo/arquivos';
+import { recortarImagem, type RetanguloDoRecorte } from '@/services/dispositivo/recorte';
 import {
   enviarImagemDaIgreja,
   retirarImagemDaIgreja,
@@ -23,6 +25,16 @@ import {
 import { alturaBotao, corPrincipalPadrao, cores, espacos, fontes, raio, tamanhos } from '@/theme';
 
 type Secao = ImagemDaIgreja | 'cor';
+
+// Moldura e tamanho final de cada imagem. O logo fica em PNG para manter o
+// fundo transparente; a capa, em JPEG, mais leve para foto.
+const FORMATO: Record<
+  ImagemDaIgreja,
+  { proporcao: number; larguraNaTela: number; larguraFinal: number; arquivo: 'png' | 'jpg' }
+> = {
+  logo: { proporcao: 1, larguraNaTela: 300, larguraFinal: 512, arquivo: 'png' },
+  capa: { proporcao: 16 / 9, larguraNaTela: 640, larguraFinal: 1600, arquivo: 'jpg' },
+};
 
 // P-03 Logo, capa e cor (seção 17). A cor sai de uma paleta com contraste
 // de 7:1 com o branco, para os botões continuarem legíveis.
@@ -36,6 +48,7 @@ export default function Aparencia() {
   const [corEscolhida, setCorEscolhida] = useState<string>();
   const [enviando, setEnviando] = useState<Secao>();
   const [retorno, setRetorno] = useState<{ secao: Secao; aviso?: string; erro?: string }>();
+  const [recortando, setRecortando] = useState<{ tipo: ImagemDaIgreja; imagem: ImagemParaRecortar }>();
 
   if (!carregando && (!ficha || !ehAdministrador)) return <Redirect href="/" />;
   if (!ficha) return null;
@@ -43,16 +56,38 @@ export default function Aparencia() {
   const a = 'tesouraria.aparencia';
   const cor = corEscolhida ?? corAtual;
 
-  async function aoEnviar(tipo: ImagemDaIgreja) {
+  // Escolher a imagem abre a moldura; só o que ficar dentro dela é enviado.
+  async function aoEscolher(tipo: ImagemDaIgreja) {
     setRetorno(undefined);
-    const escolha = await escolherFoto('galeria');
+    const escolha = await escolherImagemParaRecortar();
     if (!escolha.ok) {
       if (escolha.motivo === 'permissao_negada') setRetorno({ secao: tipo, erro: t(`${a}.erros.permissao_negada`) });
       return;
     }
+    setRecortando({ tipo, imagem: escolha.imagem });
+  }
+
+  async function aoUsarRecorte(retangulo: RetanguloDoRecorte) {
+    if (!recortando) return;
+    const { tipo, imagem } = recortando;
+    const formato = FORMATO[tipo];
     setEnviando(tipo);
-    const falha = await enviarImagemDaIgreja(ficha!.igreja_id, tipo, escolha.arquivo);
-    if (!falha) await recarregar();
+    let falha: Awaited<ReturnType<typeof enviarImagemDaIgreja>>;
+    try {
+      const bytes = await recortarImagem(imagem.uri, retangulo, formato.larguraFinal, formato.arquivo);
+      falha = await enviarImagemDaIgreja(ficha!.igreja_id, tipo, {
+        tipo: formato.arquivo === 'png' ? 'image/png' : 'image/jpeg',
+        nome: null,
+        tamanho: bytes.byteLength,
+        ler: async () => bytes,
+      });
+    } catch {
+      falha = 'envio_falhou';
+    }
+    if (!falha) {
+      await recarregar();
+      setRecortando(undefined);
+    }
     setEnviando(undefined);
     setRetorno(falha ? { secao: tipo, erro: t(`${a}.erros.${falha}`) } : { secao: tipo, aviso: t(`${a}.enviada`) });
   }
@@ -76,8 +111,7 @@ export default function Aparencia() {
     if (salvou) setCorEscolhida(undefined);
   }
 
-  const retornoDe = (secao: Secao) =>
-    retorno?.secao === secao && <Retorno aviso={retorno.aviso} erro={retorno.erro} />;
+  const retornoDe = (secao: Secao) => retorno?.secao === secao && <Retorno aviso={retorno.aviso} erro={retorno.erro} />;
 
   const blocoDeImagem = (tipo: ImagemDaIgreja) => {
     const link = imagens[tipo];
@@ -89,30 +123,44 @@ export default function Aparencia() {
           {t(`${a}.${tipo}`)}
         </Texto>
         <Texto variante="apoio">{t(`${a}.dica${Tipo}`)}</Texto>
-        {temImagem && !!link ? (
-          <Image
-            source={{ uri: link }}
-            style={tipo === 'logo' ? estilos.logo : estilos.capa}
-            contentFit={tipo === 'logo' ? 'contain' : 'cover'}
-            accessibilityLabel={t(`${a}.descricao${Tipo}`)}
+        {recortando?.tipo === tipo ? (
+          <RecorteDeImagem
+            imagem={recortando.imagem}
+            proporcao={FORMATO[tipo].proporcao}
+            larguraMaxima={FORMATO[tipo].larguraNaTela}
+            larguraRecomendada={FORMATO[tipo].larguraFinal}
+            enviando={enviando === tipo}
+            aoConfirmar={aoUsarRecorte}
+            aoCancelar={() => setRecortando(undefined)}
           />
         ) : (
-          !temImagem && <Texto>{t(`${a}.sem${Tipo}`)}</Texto>
-        )}
-        <Botao
-          titulo={temImagem ? t(`${a}.trocar${Tipo}`) : t(`${a}.enviar${Tipo}`)}
-          variante="secundario"
-          onPress={() => aoEnviar(tipo)}
-          carregando={enviando === tipo}
-          desabilitado={!!enviando}
-        />
-        {temImagem && (
-          <Botao
-            titulo={t(`${a}.retirar${Tipo}`)}
-            variante="secundario"
-            onPress={() => aoRetirar(tipo)}
-            desabilitado={!!enviando}
-          />
+          <>
+            {temImagem && !!link ? (
+              <Image
+                source={{ uri: link }}
+                style={tipo === 'logo' ? estilos.logo : estilos.capa}
+                contentFit={tipo === 'logo' ? 'contain' : 'cover'}
+                accessibilityLabel={t(`${a}.descricao${Tipo}`)}
+              />
+            ) : (
+              !temImagem && <Texto>{t(`${a}.sem${Tipo}`)}</Texto>
+            )}
+            <Botao
+              titulo={temImagem ? t(`${a}.trocar${Tipo}`) : t(`${a}.enviar${Tipo}`)}
+              variante="secundario"
+              onPress={() => aoEscolher(tipo)}
+              carregando={enviando === tipo}
+              desabilitado={!!enviando || !!recortando}
+            />
+            {temImagem && (
+              <Botao
+                titulo={t(`${a}.retirar${Tipo}`)}
+                variante="secundario"
+                onPress={() => aoRetirar(tipo)}
+                desabilitado={!!enviando}
+              />
+            )}
+          </>
         )}
         {retornoDe(tipo)}
       </View>

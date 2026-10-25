@@ -222,6 +222,21 @@
       "campanha": "Campanha: {{nome}}"
     }
   },
+  "recorte": {
+    "explicacao": "Ajuste a imagem dentro da moldura: arraste, aproxime ou afaste. O que ficar dentro dela é o que aparece no app.",
+    "moldura": "Moldura do recorte. Arraste a imagem ou use os botões abaixo.",
+    "aproximar": "Aproximar (+)",
+    "afastar": "Afastar (−)",
+    "mover": {
+      "esquerda": "← Esquerda",
+      "direita": "Direita →",
+      "cima": "↑ Para cima",
+      "baixo": "↓ Para baixo"
+    },
+    "poucaNitidez": "A área escolhida é pequena e pode ficar sem nitidez. Se puder, use uma imagem maior ou afaste um pouco.",
+    "usar": "Usar esta área",
+    "cancelar": "Cancelar"
+  },
   "igreja": {
     "titulo": "Minha igreja",
     "endereco": "Endereço",
@@ -400,15 +415,15 @@
     },
     "aparencia": {
       "titulo": "Logo, capa e cor",
-      "explicacao": "As imagens aparecem para todos os membros. JPG, PNG ou WebP, até 5 MB.",
+      "explicacao": "As imagens aparecem para todos os membros. Use JPG, PNG ou WebP. O app grava só o que estiver dentro da moldura, já no tamanho certo.",
       "logo": "Logo",
-      "dicaLogo": "Imagem quadrada. Aparece no Cartão de Dízimo, na aba Igreja e no painel da tesouraria.",
+      "dicaLogo": "Formato quadrado. Recomendado: pelo menos 512 × 512 pixels. Depois de escolher, ajuste a imagem na moldura. Aparece no Cartão de Dízimo, na aba Igreja e no painel da tesouraria.",
       "semLogo": "Nenhum logo ainda.",
       "enviarLogo": "Enviar logo",
       "trocarLogo": "Trocar logo",
       "retirarLogo": "Retirar logo",
       "capa": "Foto de capa",
-      "dicaCapa": "Imagem horizontal, no topo da aba Igreja.",
+      "dicaCapa": "Formato retangular deitado (16:9). Recomendado: pelo menos 1600 × 900 pixels. Depois de escolher, ajuste a imagem na moldura. Aparece no topo da aba Igreja.",
       "semCapa": "Nenhuma capa ainda.",
       "enviarCapa": "Enviar capa",
       "trocarCapa": "Trocar capa",

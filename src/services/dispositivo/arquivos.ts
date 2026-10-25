@@ -84,3 +84,22 @@ export async function escolherPdf(): Promise<ResultadoDaEscolha> {
     arquivo: deArquivoLocal(documento.uri, documento.mimeType ?? null, documento.name, documento.size ?? null),
   };
 }
+
+export type ImagemParaRecortar = { uri: string; largura: number; altura: number };
+
+// Imagem da galeria em qualidade cheia, para recortar depois na moldura
+// (logo e capa da igreja). O recorte reduz o tamanho do arquivo.
+export async function escolherImagemParaRecortar(): Promise<
+  { ok: true; imagem: ImagemParaRecortar } | { ok: false; motivo: 'cancelado' | 'permissao_negada' }
+> {
+  const permissao = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  if (!permissao.granted) return { ok: false, motivo: 'permissao_negada' };
+  const resultado = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ['images'],
+    quality: 1,
+    preferredAssetRepresentationMode: ImagePicker.UIImagePickerPreferredAssetRepresentationMode.Compatible,
+  });
+  const foto = resultado.assets?.[0];
+  if (resultado.canceled || !foto) return { ok: false, motivo: 'cancelado' };
+  return { ok: true, imagem: { uri: foto.uri, largura: foto.width, altura: foto.height } };
+}
