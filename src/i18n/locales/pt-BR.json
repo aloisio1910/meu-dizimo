@@ -222,6 +222,11 @@
       "campanha": "Campanha: {{nome}}"
     }
   },
+  "filtroPorCampo": {
+    "rotulo": "Filtrar por campo do cadastro",
+    "nenhum": "Sem filtro",
+    "dicaTexto": "Digite um trecho. Exemplo: o nome do líder."
+  },
   "recorte": {
     "explicacao": "Ajuste a imagem dentro da moldura: arraste, aproxime ou afaste. O que ficar dentro dela é o que aparece no app.",
     "moldura": "Moldura do recorte. Arraste a imagem ou use os botões abaixo.",

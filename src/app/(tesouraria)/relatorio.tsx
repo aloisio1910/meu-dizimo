@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View } from 'react-native';
 
+import { SeletorDeFiltroPorCampo, useCamposFiltraveis } from '@/components/seletor-de-filtro-por-campo';
 import { Botao } from '@/components/ui/botao';
 import { CampoTexto } from '@/components/ui/campo-texto';
 import { Opcoes } from '@/components/ui/opcoes';
@@ -12,6 +13,7 @@ import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
 import { useVoltar } from '@/hooks/use-voltar';
 import { hojeIso, isoParaData, mascararData, partesDaDataHora } from '@/lib/data';
 import { formatarMoeda } from '@/lib/dinheiro';
+import { atendeAoFiltro, type FiltroPorCampo } from '@/lib/filtro-por-campo';
 import { ehFormaConhecida } from '@/lib/formas';
 import { abasDoRelatorio, gerarPlanilhaEmBase64 } from '@/lib/planilha-xlsx';
 import {
@@ -63,6 +65,8 @@ export default function Relatorio() {
   const [tipo, setTipo] = useState<FiltroDeTipo>('todos');
   const [campanhaId, setCampanhaId] = useState<string>('todas');
   const [status, setStatus] = useState<FiltroDeStatus>('todos');
+  const [filtroPorCampo, setFiltroPorCampo] = useState<FiltroPorCampo>();
+  const camposFiltraveis = useCamposFiltraveis(ficha?.igreja_id);
   const [campanhas, setCampanhas] = useState<CampanhaDoFiltro[]>([]);
   const [camposDoCadastro, setCamposDoCadastro] = useState<CampoDaPlanilha[]>([]);
   const [errosDoPeriodo, setErrosDoPeriodo] = useState<ErrosDoPeriodo>({});
@@ -137,10 +141,15 @@ export default function Relatorio() {
       tipo: tipo === 'todos' ? undefined : tipo,
       campanhaId: tipo === 'oferta' && campanhaId !== 'todas' ? campanhaId : undefined,
       status: status === 'todos' ? undefined : status,
+      porCampo: filtroPorCampo?.valor.trim() ? filtroPorCampo : undefined,
     };
     setGerando(true);
     try {
-      const linhas = await buscarLancamentosDoRelatorio(ficha!.igreja_id, filtros);
+      // O filtro por campo (ex.: Célula Norte) é aplicado aqui, nos dados do
+      // membro que já vêm com cada lançamento.
+      const linhas = (await buscarLancamentosDoRelatorio(ficha!.igreja_id, filtros)).filter(
+        (l) => !l.membros || atendeAoFiltro(l.membros, filtros.porCampo, camposFiltraveis),
+      );
       setResultado({ filtros, linhas, totais: totalizar(linhas) });
     } catch {
       setErro(t('tesouraria.relatorio.falhaAoGerar'));
@@ -155,12 +164,18 @@ export default function Relatorio() {
     });
   }
 
+  function descreverFiltroPorCampo(filtro: FiltroPorCampo | undefined): string {
+    const campo = camposFiltraveis.find((c) => c.chave === filtro?.chave);
+    return campo && filtro ? `${campo.rotulo}: ${filtro.valor}` : t('filtroPorCampo.nenhum');
+  }
+
   function descreverFiltros(filtros: FiltrosDoRelatorio): string[] {
     const campanha = campanhas.find((c) => c.id === filtros.campanhaId);
     return [
       filtros.tipo ? t(`tesouraria.item.${filtros.tipo}`) : t('tesouraria.relatorio.todos'),
       campanha ? nomeDaCampanha(campanha) : t('tesouraria.relatorio.todasCampanhas'),
       filtros.status ? t(`status.${filtros.status}`) : t('tesouraria.relatorio.todos'),
+      descreverFiltroPorCampo(filtros.porCampo),
     ];
   }
 
@@ -208,7 +223,7 @@ export default function Relatorio() {
         s.quantidade,
         centavosParaPlanilha(s.centavos),
       ];
-      const [rotuloTipo, rotuloCampanha, rotuloStatus] = descreverFiltros(filtros);
+      const [rotuloTipo, rotuloCampanha, rotuloStatus, rotuloDoCampo] = descreverFiltros(filtros);
       const agora = partesDaDataHora(new Date().toISOString(), idioma);
       const linhasDosTotais: Celula[][] = [
         [t(`${p}.planilha.igreja`), igreja?.nome ?? ''],
@@ -216,6 +231,7 @@ export default function Relatorio() {
         [t(`${p}.tipo`), rotuloTipo],
         [t(`${p}.campanha`), rotuloCampanha],
         [t(`${p}.status`), rotuloStatus],
+        [t('filtroPorCampo.rotulo'), rotuloDoCampo],
         [t(`${p}.planilha.geradoEm`), t('lancamento.dataHora', agora)],
         [],
         ['', t(`${p}.planilha.quantidade`), t(`${p}.planilha.valor`, { moeda })],
@@ -328,6 +344,7 @@ export default function Relatorio() {
         selecionada={status}
         onSelecionar={mudar(setStatus)}
       />
+      <SeletorDeFiltroPorCampo campos={camposFiltraveis} filtro={filtroPorCampo} aoMudar={mudar(setFiltroPorCampo)} />
 
       <Botao titulo={t('tesouraria.relatorio.gerar')} onPress={aoGerar} carregando={gerando} />
       {!!erro && <Texto variante="erro">{erro}</Texto>}

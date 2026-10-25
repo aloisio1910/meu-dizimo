@@ -1,3 +1,4 @@
+import type { FiltroPorCampo } from '@/lib/filtro-por-campo';
 import type { LinhaDoRelatorio, Periodo, StatusDoLancamento } from '@/lib/relatorio';
 
 import { supabase } from './cliente';
@@ -11,6 +12,8 @@ export type FiltrosDoRelatorio = {
   tipo?: 'dizimo' | 'oferta';
   campanhaId?: string;
   status?: StatusDoLancamento;
+  // Aplicado no app, sobre os dados do membro de cada lançamento.
+  porCampo?: FiltroPorCampo;
 };
 
 const COLUNAS =

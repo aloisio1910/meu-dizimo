@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
 import { MenuDaTesouraria } from '@/components/menu-da-tesouraria';
+import { SeletorDeFiltroPorCampo, useCamposFiltraveis } from '@/components/seletor-de-filtro-por-campo';
 import { Botao } from '@/components/ui/botao';
 import { CampoTexto } from '@/components/ui/campo-texto';
 import { Opcoes } from '@/components/ui/opcoes';
@@ -11,6 +12,7 @@ import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
 import { useSessao } from '@/hooks/use-sessao';
+import { atendeAoFiltro, type FiltroPorCampo } from '@/lib/filtro-por-campo';
 import { filtrarMembros, situacaoDoMembro, type StatusDoMembro } from '@/lib/membros';
 import { listarMembrosDaIgreja, type MembroDaLista } from '@/services/supabase/membros-da-igreja';
 import { cores, espacos, raio } from '@/theme';
@@ -27,6 +29,8 @@ export default function Membros() {
   const [falhou, setFalhou] = useState(false);
   const [busca, setBusca] = useState('');
   const [filtro, setFiltro] = useState<FiltroDeSituacao>('todos');
+  const [filtroPorCampo, setFiltroPorCampo] = useState<FiltroPorCampo>();
+  const camposFiltraveis = useCamposFiltraveis(ficha?.igreja_id);
 
   useFocusEffect(
     useCallback(() => {
@@ -59,7 +63,9 @@ export default function Membros() {
   }
 
   const agora = new Date();
-  const visiveis = filtrarMembros(membros ?? [], busca).filter((m) => filtro === 'todos' || m.status === filtro);
+  const visiveis = filtrarMembros(membros ?? [], busca)
+    .filter((m) => filtro === 'todos' || m.status === filtro)
+    .filter((m) => atendeAoFiltro(m, filtroPorCampo, camposFiltraveis));
 
   return (
     <Tela larga>
@@ -87,6 +93,7 @@ export default function Membros() {
         selecionada={filtro}
         onSelecionar={setFiltro}
       />
+      <SeletorDeFiltroPorCampo campos={camposFiltraveis} filtro={filtroPorCampo} aoMudar={setFiltroPorCampo} />
 
       {falhou && <Texto variante="erro">{t('tesouraria.membros.falhaAoCarregar')}</Texto>}
       {!membros && !falhou && <ActivityIndicator size="large" accessibilityLabel={t('comum.carregando')} />}
@@ -120,7 +127,6 @@ export default function Membros() {
           })}
         </>
       )}
-
     </Tela>
   );
 }
