@@ -63,9 +63,9 @@ Os originais ficam no Claude Docs (links em `docs/README.md`); `docs/requisitos.
 - Alteração de conta ou chave Pix gera log e notifica os tesoureiros.
 - Aceite dos termos registrado com data e versão (LGPD: vínculo religioso é dado sensível).
 
-## Modelo de dados (12 tabelas)
+## Modelo de dados (13 tabelas)
 
-`igrejas` (inclui país, idioma, moeda, personalização: logo, cor, capa, versículo, mensagem de confirmação, endereço, horários, site e redes, WhatsApp, formas de devolução aceitas, status, plano) · `contas` · `membros` (número sequencial por igreja, perfil, status convidado/ativo/inativo, campos extras em JSON) · `campos_cadastro` · `convites` · `lancamentos` (tipo dízimo/oferta, campanha_id, conta_id, valor informado e conferido em centavos, moeda, datas, forma, status, criado_por, em conferência por/desde, confirmado por/em, observação, motivo de cancelamento, resposta do membro) · `comprovantes` · `campanhas` (permanente, link de vídeo, conta_id) · `campanha_midias` · `dispositivos` (tokens de push) · `aceites_termos` · `auditoria`. Login fica no Supabase Auth.
+`igrejas` (inclui país, idioma, moeda, personalização: logo, cor, capa, versículo, mensagem de confirmação, endereço, horários, site e redes, WhatsApp, formas de devolução aceitas, status, plano) · `contas` · `membros` (número sequencial por igreja, perfil, status convidado/ativo/inativo, campos extras em JSON) · `campos_cadastro` · `convites` · `lancamentos` (tipo dízimo/oferta, campanha_id, conta_id, valor informado e conferido em centavos, moeda, datas, forma, status, criado_por, em conferência por/desde, confirmado por/em, observação, motivo de cancelamento, resposta do membro) · `comprovantes` · `campanhas` (permanente, link de vídeo, conta_id) · `campanha_midias` · `dispositivos` (tokens de push) · `aceites_termos` · `auditoria` · `notificacoes` (avisos do sino e do push, criados por triggers, D-096). Login fica no Supabase Auth.
 
 ## Escopo
 
@@ -109,5 +109,6 @@ Os originais ficam no Claude Docs (links em `docs/README.md`); `docs/requisitos.
   - Na web, o endereço do Supabase local segue o da própria página, e toda chamada tem limite de espera (`fetch-com-limite`): se o IP do computador mudar, nada fica girando para sempre.
   - Vídeo da campanha: YouTube toca no app por `react-native-webview` (na web, iframe em `video-da-campanha.web.tsx`); outros links abrem fora. **A classe `URL` do React Native é incompleta**: leia links com expressão regular (`src/lib/video.ts`).
   - No modo de desenvolvimento as telas carregam sob demanda; para conferir se todas compilam, peça o pacote com `&lazy=false&transform.routerRoot=src%2Fapp`.
-- **Próximo passo:** notificações push, e-mail de convite (Resend), seletor de igreja (D-061), telas do Admin Master (A-01, A-02) e o envio do banco para o Supabase na nuvem (pedir confirmação).
+- Avisos (D-096): o banco cria os avisos por trigger (`notificacoes`) e o app mostra na aba Avisos, com as preferências no Meu perfil. Falta o envio do push (Edge Function + build de desenvolvimento).
+- **Próximo passo:** envio das notificações push (conta Expo, Firebase, build de desenvolvimento), e-mail de convite (Resend), seletor de igreja (D-061), telas do Admin Master (A-01, A-02) e o envio do banco para o Supabase na nuvem (pedir confirmação).
 - Atualize esta seção ao fim de cada etapa importante.
