@@ -9,9 +9,12 @@
     "scheme": "meudizimo",
     "userInterfaceStyle": "automatic",
     "ios": {
+      "bundleIdentifier": "app.meudizimo",
       "icon": "./assets/expo.icon"
     },
     "android": {
+      "package": "app.meudizimo",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
