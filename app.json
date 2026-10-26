@@ -63,7 +63,8 @@
           "faceIDPermission": "O Meu Dízimo usa o Face ID para proteger o acesso ao seu Cartão de Dízimo."
         }
       ],
-      "expo-sharing"
+      "expo-sharing",
+      "expo-notifications"
     ],
     "experiments": {
       "typedRoutes": true,
