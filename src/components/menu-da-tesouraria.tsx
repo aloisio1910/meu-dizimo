@@ -32,6 +32,7 @@ export function MenuDaTesouraria({ atual }: { atual: Pagina }) {
     ehAdministrador && { titulo: t('tesouraria.menu.campanhas'), ir: () => router.push('/campanhas') },
     ehAdministrador && { titulo: t('tesouraria.menu.tesoureiros'), ir: () => router.push('/tesoureiros') },
     ehAdministrador && { titulo: t('tesouraria.menu.configuracoes'), ir: () => router.push('/configuracoes') },
+    ehAdministrador && { titulo: t('tesouraria.menu.log'), ir: () => router.push('/log') },
     { titulo: t('tesouraria.meuCartao'), ir: () => router.push('/cartao') },
   ].filter((item) => !!item);
 
