@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { Paginacao } from '@/components/paginacao';
 import { Retorno } from '@/components/retorno';
 import { Botao } from '@/components/ui/botao';
 import { CampoTexto } from '@/components/ui/campo-texto';
@@ -14,16 +15,16 @@ import { useVoltar } from '@/hooks/use-voltar';
 import { hojeIso, isoParaData, mascararData, partesDaDataHora } from '@/lib/data';
 import { formatarMoeda } from '@/lib/dinheiro';
 import {
-  camposAlterados,
   descreverRegistro,
-  ehSoTecnico,
   limitesDoPeriodo,
+  mudancasDoRegistro,
   TABELAS_DO_ASSUNTO,
   temNome,
   valorLegivel,
   type Assunto,
   type RegistroDoLog,
 } from '@/lib/log';
+import { listarTodosOsCampos } from '@/services/supabase/campos-da-igreja';
 import { periodoDoMes, validarPeriodo, type ErrosDoPeriodo } from '@/lib/relatorio';
 import {
   listarPessoasDaIgreja,
@@ -52,7 +53,8 @@ export default function LogDaIgreja() {
   const [registros, setRegistros] = useState<RegistroDoLog[]>();
   const [filtrosUsados, setFiltrosUsados] = useState<FiltrosDoLog>();
   const [pagina, setPagina] = useState(0);
-  const [temMais, setTemMais] = useState(false);
+  const [totalDeRegistros, setTotalDeRegistros] = useState(0);
+  const [rotulosDosCampos, setRotulosDosCampos] = useState<Record<string, string>>({});
   const [abertos, setAbertos] = useState<number[]>([]);
   const [carregandoLog, setCarregandoLog] = useState(false);
   const [erro, setErro] = useState<string>();
@@ -64,6 +66,10 @@ export default function LogDaIgreja() {
     listarPessoasDaIgreja(igrejaId)
       .then((lista) => ativo && setPessoas(lista))
       .catch(() => ativo && setPessoas([]));
+    // Nomes que a igreja deu aos campos do cadastro, para "Ver o que mudou".
+    listarTodosOsCampos(igrejaId)
+      .then((campos) => ativo && setRotulosDosCampos(Object.fromEntries(campos.map((c) => [c.chave, c.rotulo]))))
+      .catch(() => ativo && setRotulosDosCampos({}));
     return () => {
       ativo = false;
     };
@@ -113,12 +119,12 @@ export default function LogDaIgreja() {
     setErro(undefined);
     setCarregandoLog(true);
     try {
-      const pagina = await listarRegistrosDoLog(ficha!.igreja_id, filtros, numero);
-      // Avisos internos (ex.: "ainda conferindo") ficam no banco, não na tela.
-      const relevantes = pagina.filter((r) => !ehSoTecnico(r));
-      setRegistros((atuais) => (numero === 0 ? relevantes : [...(atuais ?? []), ...relevantes]));
+      // O banco já tira os avisos internos (ex.: "ainda conferindo") e conta o total.
+      const { registros: daPagina, total } = await listarRegistrosDoLog(ficha!.igreja_id, filtros, numero);
+      setRegistros(daPagina);
+      setTotalDeRegistros(total);
       setPagina(numero);
-      setTemMais(pagina.length === TAMANHO_DA_PAGINA_DO_LOG);
+      setAbertos([]);
     } catch {
       setErro(t('log.falhaAoCarregar'));
     }
@@ -208,14 +214,23 @@ export default function LogDaIgreja() {
         selecionada={quem}
         onSelecionar={mudar(setQuem)}
       />
-      <Botao titulo={t('log.ver')} onPress={aoVer} carregando={carregandoLog && pagina === 0} />
+      <Botao titulo={t('log.ver')} onPress={aoVer} carregando={carregandoLog} />
       <Retorno erro={erro} />
 
       {registros?.length === 0 && <Texto>{t('log.nenhum')}</Texto>}
+      {!!registros && registros.length > 0 && !!filtrosUsados && (
+        <Paginacao
+          pagina={pagina}
+          totalDeRegistros={totalDeRegistros}
+          tamanhoDaPagina={TAMANHO_DA_PAGINA_DO_LOG}
+          aoMudar={(nova) => buscar(filtrosUsados, nova)}
+          desabilitado={carregandoLog}
+        />
+      )}
       {registros?.map((r) => {
         const momento = partesDaDataHora(r.criado_em, idioma);
         const aberto = abertos.includes(r.id);
-        const mudancas = r.acao === 'update' ? camposAlterados(r) : [];
+        const mudancas = r.acao === 'update' ? mudancasDoRegistro(r, rotulosDosCampos) : [];
         return (
           <View key={r.id} style={estilos.registro}>
             <Texto variante="apoio">{t('log.quando', { quem: quemFez(r), ...momento })}</Texto>
@@ -229,12 +244,12 @@ export default function LogDaIgreja() {
                   onPress={() => alternar(r.id)}
                 />
                 {aberto &&
-                  mudancas.map((campo) => (
-                    <Texto key={campo} variante="apoio">
+                  mudancas.map((m) => (
+                    <Texto key={m.campo} variante="apoio">
                       {t('log.mudanca', {
-                        campo: temNome(campo) ? t(`log.campos.${campo}`) : campo,
-                        de: legivel(campo, r.antes?.[campo]) || t('log.vazio'),
-                        para: legivel(campo, r.depois?.[campo]) || t('log.vazio'),
+                        campo: m.rotuloDaIgreja ?? (temNome(m.campo) ? t(`log.campos.${m.campo}`) : m.campo),
+                        de: legivel(m.campo, m.de) || t('log.vazio'),
+                        para: legivel(m.campo, m.para) || t('log.vazio'),
                       })}
                     </Texto>
                   ))}
@@ -243,12 +258,13 @@ export default function LogDaIgreja() {
           </View>
         );
       })}
-      {!!registros && temMais && !!filtrosUsados && (
-        <Botao
-          titulo={t('log.carregarMais')}
-          variante="secundario"
-          onPress={() => buscar(filtrosUsados, pagina + 1)}
-          carregando={carregandoLog}
+      {!!registros && registros.length > 0 && !!filtrosUsados && (
+        <Paginacao
+          pagina={pagina}
+          totalDeRegistros={totalDeRegistros}
+          tamanhoDaPagina={TAMANHO_DA_PAGINA_DO_LOG}
+          aoMudar={(nova) => buscar(filtrosUsados, nova)}
+          desabilitado={carregandoLog}
         />
       )}
 

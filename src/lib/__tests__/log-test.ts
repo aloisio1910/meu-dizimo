@@ -5,6 +5,7 @@ import {
   descreverRegistro,
   ehSoTecnico,
   limitesDoPeriodo,
+  mudancasDoRegistro,
   temNome,
   valorLegivel,
   type RegistroDoLog,
@@ -199,5 +200,39 @@ describe('temNome', () => {
   it('reconhece os campos com nome legível', () => {
     expect(temNome('chave_pix')).toBe(true);
     expect(temNome('coluna_nova')).toBe(false);
+  });
+});
+
+describe('mudancasDoRegistro', () => {
+  const rotulos = { celula: 'Célula', batismo: 'Data de batismo' };
+
+  it('abre as respostas do cadastro com o nome que a igreja deu', () => {
+    expect(
+      mudancasDoRegistro(
+        { antes: { campos_internos: {} }, depois: { campos_internos: { celula: 'José' } } },
+        rotulos,
+      ),
+    ).toEqual([{ campo: 'celula', rotuloDaIgreja: 'Célula', de: undefined, para: 'José' }]);
+  });
+
+  it('só as respostas que mudaram; campo sem nome conhecido fica com a chave', () => {
+    expect(
+      mudancasDoRegistro(
+        {
+          antes: { campos_extras: { batismo: '2010-05-17', lider: 'Carlos' } },
+          depois: { campos_extras: { batismo: '2011-06-01', lider: 'Carlos', antigo: 'x' } },
+        },
+        rotulos,
+      ),
+    ).toEqual([
+      { campo: 'batismo', rotuloDaIgreja: 'Data de batismo', de: '2010-05-17', para: '2011-06-01' },
+      { campo: 'antigo', rotuloDaIgreja: 'antigo', de: undefined, para: 'x' },
+    ]);
+  });
+
+  it('os outros campos continuam como estão', () => {
+    expect(mudancasDoRegistro({ antes: { principal: false }, depois: { principal: true } }, rotulos)).toEqual([
+      { campo: 'principal', de: false, para: true },
+    ]);
   });
 });

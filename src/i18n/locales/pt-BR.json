@@ -249,7 +249,6 @@
     "esconderDetalhes": "Esconder detalhes",
     "mudanca": "{{campo}}: {{de}} → {{para}}",
     "vazio": "(vazio)",
-    "carregarMais": "Carregar mais",
     "tipos": {
       "dizimo": "dízimo",
       "oferta": "oferta"
@@ -364,6 +363,12 @@
       "preenchido_por": "Quem preenche",
       "aceito_em": "Aceito em"
     }
+  },
+  "paginacao": {
+    "resumo_one": "Página {{atual}} de {{total}} · {{count}} registro",
+    "resumo_other": "Página {{atual}} de {{total}} · {{count}} registros",
+    "anterior": "← Anterior",
+    "proxima": "Próxima →"
   },
   "filtroPorCampo": {
     "rotulo": "Filtrar por campo do cadastro",

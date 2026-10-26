@@ -532,6 +532,11 @@ isOneToOne: false
 "registrar_divergencia":
 { Args: { "p_lancamento_id": string,"p_observacao": string,"p_valor_conferido_centavos": number }; Returns: undefined
                            },
+"registros_do_log":
+{ Args: { "p_antes_de": string,"p_desde": string,"p_igreja_id": string,"p_pagina"?: number,"p_quem"?: string,"p_tabelas"?: (string)[],"p_tamanho"?: number }; Returns: {
+              "acao": string,"antes": Json,"criado_em": string,"depois": Json,"id": number,"motivo": string,"perfil": string,"registro_id": string,"tabela": string,"total": number,"usuario_id": string
+            }[]
+                           },
 "responder_divergencia":
 { Args: { "p_aceitar": boolean,"p_lancamento_id": string,"p_mensagem"?: string }; Returns: undefined
                            },

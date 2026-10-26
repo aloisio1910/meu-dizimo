@@ -321,3 +321,38 @@ export function valorLegivel(
   const texto = String(valor);
   return /^\d{4}-\d{2}-\d{2}$/.test(texto) ? texto.split('-').reverse().join('/') : texto;
 }
+
+export type Mudanca = {
+  campo: string; // nome técnico (para valorLegivel)
+  rotuloDaIgreja?: string; // nome dado pela igreja, nos campos do cadastro
+  de: unknown;
+  para: unknown;
+};
+
+// Campos que guardam as respostas do cadastro: em vez de mostrar o objeto
+// inteiro ({"celula": "José"}), cada resposta aparece com o nome que a igreja
+// deu ao campo ("Célula: (vazio) → José").
+const CAMPOS_COM_RESPOSTAS = new Set(['campos_extras', 'campos_internos']);
+
+export function mudancasDoRegistro(
+  registro: Pick<RegistroDoLog, 'antes' | 'depois'>,
+  rotulosDosCampos: Record<string, string>,
+): Mudanca[] {
+  const objeto = (valor: unknown) =>
+    valor && typeof valor === 'object' && !Array.isArray(valor) ? (valor as Record<string, unknown>) : {};
+  return camposAlterados(registro).flatMap((campo) => {
+    const de = registro.antes?.[campo];
+    const para = registro.depois?.[campo];
+    if (!CAMPOS_COM_RESPOSTAS.has(campo)) return [{ campo, de, para }];
+    const antes = objeto(de);
+    const depois = objeto(para);
+    return [...new Set([...Object.keys(antes), ...Object.keys(depois)])]
+      .filter((chave) => JSON.stringify(antes[chave]) !== JSON.stringify(depois[chave]))
+      .map((chave) => ({
+        campo: chave,
+        rotuloDaIgreja: rotulosDosCampos[chave] ?? chave,
+        de: antes[chave],
+        para: depois[chave],
+      }));
+  });
+}

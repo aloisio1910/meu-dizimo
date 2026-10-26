@@ -5,7 +5,8 @@ import { supabase } from './cliente';
 // P-04 Log da igreja. A RLS só deixa o Pastor de Governo da igreja (e o Admin
 // Master) ler a auditoria; ninguém altera nem apaga.
 
-export const TAMANHO_DA_PAGINA_DO_LOG = 50;
+// 20 por página, como uma página de resultados de pesquisa.
+export const TAMANHO_DA_PAGINA_DO_LOG = 20;
 
 export type FiltrosDoLog = {
   desde: string; // momento ISO
@@ -15,27 +16,28 @@ export type FiltrosDoLog = {
   quem?: string;
 };
 
+// Uma página do log e o total de registros, contados pelo banco já sem os
+// avisos internos (função registros_do_log). A página começa em 0.
 export async function listarRegistrosDoLog(
   igrejaId: string,
   filtros: FiltrosDoLog,
   pagina: number,
-): Promise<RegistroDoLog[]> {
-  const inicio = pagina * TAMANHO_DA_PAGINA_DO_LOG;
-  let consulta = supabase
-    .from('auditoria')
-    .select('id, usuario_id, perfil, acao, tabela, registro_id, antes, depois, motivo, criado_em')
-    .eq('igreja_id', igrejaId)
-    .gte('criado_em', filtros.desde)
-    .lt('criado_em', filtros.antesDe)
-    .order('criado_em', { ascending: false })
-    .order('id', { ascending: false })
-    .range(inicio, inicio + TAMANHO_DA_PAGINA_DO_LOG - 1);
-  if (filtros.tabelas?.length) consulta = consulta.in('tabela', filtros.tabelas);
-  if (filtros.quem === 'sistema') consulta = consulta.is('usuario_id', null);
-  else if (filtros.quem) consulta = consulta.eq('usuario_id', filtros.quem);
-  const { data, error } = await consulta;
+): Promise<{ registros: RegistroDoLog[]; total: number }> {
+  const { data, error } = await supabase.rpc('registros_do_log', {
+    p_igreja_id: igrejaId,
+    p_desde: filtros.desde,
+    p_antes_de: filtros.antesDe,
+    p_tabelas: filtros.tabelas,
+    p_quem: filtros.quem,
+    p_pagina: pagina,
+    p_tamanho: TAMANHO_DA_PAGINA_DO_LOG,
+  });
   if (error) throw error;
-  return data as RegistroDoLog[];
+  const linhas = data ?? [];
+  return {
+    registros: linhas.map(({ total: _total, ...registro }) => registro) as RegistroDoLog[],
+    total: Number(linhas[0]?.total ?? 0),
+  };
 }
 
 export type PessoaDaIgreja = {
