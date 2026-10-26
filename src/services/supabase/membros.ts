@@ -19,6 +19,7 @@ export type MinhaFicha = {
   familiares: Json;
   campos_extras: Json;
   campos_internos: Json;
+  avisos_desligados: string[];
   igrejas: {
     nome: string;
     titulo_administrador: string;
@@ -48,7 +49,7 @@ export async function buscarMinhasFichas(usuarioId: string): Promise<MinhaFicha[
   const { data, error } = await supabase
     .from('membros')
     .select(
-      'id, igreja_id, nome, celular, email, numero, perfil, status, tipo_dizimo, familiares, campos_extras, campos_internos, igrejas(nome, titulo_administrador, moeda, idioma, formas_devolucao, versiculo_referencia, versiculo_texto, mensagem_confirmacao, cor_principal, logo_path, capa_path)',
+      'id, igreja_id, nome, celular, email, numero, perfil, status, tipo_dizimo, familiares, campos_extras, campos_internos, avisos_desligados, igrejas(nome, titulo_administrador, moeda, idioma, formas_devolucao, versiculo_referencia, versiculo_texto, mensagem_confirmacao, cor_principal, logo_path, capa_path)',
     )
     .eq('usuario_id', usuarioId)
     .order('criado_em');

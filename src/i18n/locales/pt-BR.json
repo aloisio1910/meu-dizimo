@@ -184,7 +184,8 @@
     "cartao": "Cartão",
     "ofertas": "Ofertas",
     "igreja": "Igreja",
-    "perfil": "Perfil"
+    "perfil": "Perfil",
+    "avisos": "Avisos"
   },
   "ofertas": {
     "titulo": "Ofertas",
@@ -467,7 +468,18 @@
     "sair": "Sair da conta",
     "confirmarSaida": "Sair da conta? Na próxima vez, você vai precisar do código enviado ao seu e-mail, e a entrada pela digital será desligada neste celular.",
     "simSair": "Sim, sair",
-    "naoSair": "Não, continuar"
+    "naoSair": "Não, continuar",
+    "avisos": {
+      "titulo": "Avisos",
+      "explicacao": "Escolha quais avisos quer receber. Confirmações, divergências e trocas de chave Pix sempre chegam.",
+      "tipos": {
+        "nova_campanha": "Novas campanhas de oferta",
+        "novo_lancamento": "Novos lançamentos para conferir",
+        "novo_comprovante": "Novos comprovantes"
+      },
+      "salvo": "Preferência salva.",
+      "falhou": "Não conseguimos salvar. Tente de novo."
+    }
   },
   "tesouraria": {
     "abrirPainel": "Abrir painel da tesouraria",
@@ -583,7 +595,9 @@
       "log": "Log da igreja",
       "conectadoComo": "Você entrou como {{nome}} ({{perfil}})",
       "sair": "Sair da conta",
-      "confirmarSaida": "Sair da conta? Para entrar de novo, você vai precisar do código enviado ao seu e-mail."
+      "confirmarSaida": "Sair da conta? Para entrar de novo, você vai precisar do código enviado ao seu e-mail.",
+      "avisos": "Avisos",
+      "avisosComNaoLidos": "Avisos ({{count}})"
     },
     "configuracoes": {
       "titulo": "Configurações da igreja",
@@ -1273,5 +1287,27 @@
     "entrarComDigital": "Entrar com a digital",
     "entrarComCodigo": "Entrar com código por e-mail",
     "indisponivel": "A digital não está disponível neste celular. Entre com o código por e-mail."
+  },
+  "avisos": {
+    "titulo": "Avisos",
+    "explicacao": "Confirmações, divergências e novidades da igreja. Toque num aviso para abrir.",
+    "falhaAoCarregar": "Não conseguimos carregar os avisos.",
+    "nenhum": "Nenhum aviso por enquanto.",
+    "marcarTodos": "Marcar todos como lidos",
+    "novo": "Novo",
+    "quando": "{{dia}} às {{hora}}",
+    "naTesouraria": "a tesouraria",
+    "rotuloDaAba_one": "Avisos, {{count}} não lido",
+    "rotuloDaAba_other": "Avisos, {{count}} não lidos",
+    "textos": {
+      "lancamento_confirmado": "Seu {{tipo}} de {{valor}} foi confirmado por {{quem}}.",
+      "divergencia_registrada": "A tesouraria conferiu o seu {{tipo}} de {{valorInformado}} e encontrou {{valor}}. Toque para ver e responder.",
+      "lancamento_reaberto": "Seu {{tipo}} de {{valor}} voltou para conferência.",
+      "nova_campanha": "Nova campanha de oferta: {{campanha}}.",
+      "novo_lancamento": "{{membro}} registrou {{tipo}} de {{valor}}.",
+      "novo_comprovante": "{{membro}} anexou comprovante ao {{tipo}} de {{valor}}.",
+      "divergencia_contestada": "{{membro}} contestou a divergência do {{tipo}} de {{valor}}.",
+      "pix_alterado": "A chave Pix da conta {{conta}} foi alterada. Se não foi você nem alguém da tesouraria, avise o {{titulo}} agora."
+    }
   }
 }

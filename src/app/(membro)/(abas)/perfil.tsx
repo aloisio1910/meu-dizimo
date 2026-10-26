@@ -5,6 +5,7 @@ import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 
 import { CamposDoCadastro } from '@/components/campos-do-cadastro';
 import { InformacoesDaTesouraria } from '@/components/informacoes-da-tesouraria';
+import { PreferenciasDeAvisos } from '@/components/preferencias-de-avisos';
 import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
@@ -126,6 +127,12 @@ function ConteudoDoPerfil({ ficha }: { ficha: MinhaFicha }) {
       )}
 
       {!editando && <InformacoesDaTesouraria ficha={ficha} />}
+      {!editando && (
+        <PreferenciasDeAvisos
+          ficha={ficha}
+          ehTesouraria={ficha.perfil === 'tesoureiro' || ficha.perfil === 'administrador'}
+        />
+      )}
 
       {ehCelular && (
         <View style={estilos.cartao}>

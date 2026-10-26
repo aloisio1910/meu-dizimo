@@ -6,6 +6,7 @@ import { StyleSheet, View } from 'react-native';
 import { LogoDaIgreja } from '@/components/logo-da-igreja';
 import { Botao } from '@/components/ui/botao';
 import { Texto } from '@/components/ui/texto';
+import { useAvisosNaoLidos } from '@/hooks/use-avisos-nao-lidos';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
 import { sair } from '@/services/supabase/auth';
 import { espacos } from '@/theme';
@@ -21,6 +22,7 @@ export function MenuDaTesouraria({ atual }: { atual: Pagina }) {
   const { t } = useTranslation();
   const router = useRouter();
   const { ficha, ehAdministrador } = useFichaAtiva();
+  const { naoLidos } = useAvisosNaoLidos();
   const [confirmandoSaida, setConfirmandoSaida] = useState(false);
 
   const itens = [
@@ -33,6 +35,10 @@ export function MenuDaTesouraria({ atual }: { atual: Pagina }) {
     ehAdministrador && { titulo: t('tesouraria.menu.tesoureiros'), ir: () => router.push('/tesoureiros') },
     ehAdministrador && { titulo: t('tesouraria.menu.configuracoes'), ir: () => router.push('/configuracoes') },
     ehAdministrador && { titulo: t('tesouraria.menu.log'), ir: () => router.push('/log') },
+    {
+      titulo: naoLidos > 0 ? t('tesouraria.menu.avisosComNaoLidos', { count: naoLidos }) : t('tesouraria.menu.avisos'),
+      ir: () => router.push('/avisos'),
+    },
     { titulo: t('tesouraria.meuCartao'), ir: () => router.push('/cartao') },
   ].filter((item) => !!item);
 
