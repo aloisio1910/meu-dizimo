@@ -96,7 +96,7 @@ Tesoureiro e Pastor de Governo também têm as telas de membro, para o próprio 
 
 ## 4. Modelo de dados
 
-São 12 tabelas no PostgreSQL do Supabase, e quase todas carregam o igreja\_id, que é o que permite ao banco isolar cada igreja (Row Level Security). Dízimo e oferta ficam na mesma tabela de lançamentos.
+São 13 tabelas no PostgreSQL do Supabase, e quase todas carregam o igreja\_id, que é o que permite ao banco isolar cada igreja (Row Level Security). Dízimo e oferta ficam na mesma tabela de lançamentos.
 
 &#91;embedded content: modelo de dados · 9 das 12 tabelas\]
 
@@ -116,6 +116,7 @@ As tabelas usuarios, dispositivos e aceites\_termos ficam fora do desenho: ligam
 | dispositivos | usuario\_id, token de notificação, plataforma, ativo | Um usuário pode ter mais de um aparelho; se o aparelho trocar de conta, o token passa para o novo usuário |
 | aceites\_termos | usuario\_id, versão do termo, aceito em | Prova do consentimento (LGPD); um registro por versão aceita, sem alteração |
 | auditoria | igreja\_id, usuario\_id, perfil, ação, tabela, registro\_id, antes, depois, motivo, data e hora | Gravada por gatilhos do banco; sem permissão de alterar ou apagar |
+| notificacoes | igreja_id, usuario_id, tipo, dados, criado_em, lida_em, push_enviado_em, tentativas e erro do push | Avisos do app e do push, criados por gatilhos do banco; cada pessoa vê só os próprios (D-096) |
 
 Login, e-mail confirmado e códigos ficam no módulo de autenticação do Supabase (usuarios). Uma mesma pessoa em duas igrejas tem um usuário e dois registros em membros, um por igreja.
 

@@ -232,6 +232,8 @@ Só o Pastor de Governo reabre um lançamento confirmado, com justificativa obri
 | Divergência contestada | Tesoureiros | Não |
 | Dados bancários ou Pix alterados | Tesoureiros e Pastor de Governo | Não |
 
+Os avisos também ficam guardados no app, numa aba Avisos com os não lidos; quem causou o evento não é avisado. O push chega primeiro no Android, e no iPhone quando houver a conta Apple Developer (D-096).
+
 O serviço de notificações fica preparado para outros canais no futuro (e-mail, WhatsApp).
 
 **Relatório Excel**
@@ -386,6 +388,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-093 | Campos do cadastro podem ser "Preenchidos pela tesouraria": tesoureiro e Pastor de Governo preenchem na ficha do membro; o membro vê no perfil, sem editar (LGPD, direito de acesso). O tesoureiro continua sem editar os dados que o membro informa. Trocar quem preenche um campo leva as respostas junto | Definido |
 | D-094 | Relatórios de Membros (por situação) e de Participação no período (quantos devolveram dízimo e ofertaram, por campanha e por grupo), com filtro por campo do cadastro. Conta como "devolveu" quem registrou no período, mesmo sem conferência; os valores somam só o confirmado. A lista de membros ativos sem dízimo no período é só do Pastor de Governo, sem valores, como cuidado pastoral | Definido |
 | D-095 | O Log da igreja tem pesquisa (pessoa, conta, campanha, campo, motivo e valor) e download em planilha com os filtros aplicados. O download fica registrado no próprio log, com quem baixou, período, quantidade e pesquisa; só o Pastor de Governo baixa, até 5.000 registros por arquivo | Definido |
+| D-096 | Avisos: o banco cria um aviso para cada evento da seção 9 (tabela notificacoes, a 13ª), que aparece no app numa aba Avisos com os não lidos, além do push. A pessoa desliga só os avisos que podem ser desligados (nova campanha; novo lançamento e comprovante para a tesouraria); o resumo diário fica para depois. Push primeiro no Android; iPhone quando houver a conta Apple Developer | Definido |
 
 ## 14. Questões abertas e próximos passos
 
