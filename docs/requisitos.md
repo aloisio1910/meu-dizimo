@@ -245,6 +245,7 @@ O serviço de notificações fica preparado para outros canais no futuro (e-mail
 
 - Cada igreja tem o próprio log. Cada registro guarda: quem, perfil, data e hora, ação, registro afetado, situação anterior e posterior, motivo.
 - O log é gravado pelo próprio banco de dados (não depende do app lembrar de registrar) numa tabela sem permissão de edição ou exclusão.
+- O Pastor de Governo consulta o log com filtros, pesquisa e páginas numeradas, e pode baixá-lo em planilha; o próprio download fica registrado no log (D-095).
 - Nenhum registro relevante é apagado fisicamente: muda de status (Ativo, Suspenso, Cancelado, Inativo).
 
 ## 10. Privacidade e LGPD
@@ -384,6 +385,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-092 | País, idioma e moeda da igreja são alterados só pelo Admin Master; o Pastor de Governo ajusta dados, contato, versículo, mensagem de confirmação e formas de devolução | Definido |
 | D-093 | Campos do cadastro podem ser "Preenchidos pela tesouraria": tesoureiro e Pastor de Governo preenchem na ficha do membro; o membro vê no perfil, sem editar (LGPD, direito de acesso). O tesoureiro continua sem editar os dados que o membro informa. Trocar quem preenche um campo leva as respostas junto | Definido |
 | D-094 | Relatórios de Membros (por situação) e de Participação no período (quantos devolveram dízimo e ofertaram, por campanha e por grupo), com filtro por campo do cadastro. Conta como "devolveu" quem registrou no período, mesmo sem conferência; os valores somam só o confirmado. A lista de membros ativos sem dízimo no período é só do Pastor de Governo, sem valores, como cuidado pastoral | Definido |
+| D-095 | O Log da igreja tem pesquisa (pessoa, conta, campanha, campo, motivo e valor) e download em planilha com os filtros aplicados. O download fica registrado no próprio log, com quem baixou, período, quantidade e pesquisa; só o Pastor de Governo baixa, até 5.000 registros por arquivo | Definido |
 
 ## 14. Questões abertas e próximos passos
 
