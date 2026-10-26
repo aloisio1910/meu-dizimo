@@ -219,9 +219,9 @@ isOneToOne: false
                   ]
                 },"lancamentos": {
                   Row: {
-                    "atualizado_em": string,"campanha_id": string | null,"cancelado_em": string | null,"confirmado_em": string | null,"confirmado_por": string | null,"confirmado_por_nome": string | null,"conta_id": string | null,"criado_por": string | null,"data_contribuicao": string,"divergencia_em": string | null,"divergencia_por": string | null,"divergencia_por_nome": string | null,"em_conferencia_desde": string | null,"em_conferencia_por": string | null,"forma": string,"id": string,"igreja_id": string,"membro_id": string,"mensagem_membro": string | null,"moeda": string,"motivo_cancelamento": string | null,"observacao_tesouraria": string | null,"registrado_em": string,"registrado_pela_tesouraria": boolean,"respondido_em": string | null,"resposta_membro": Database["public"]['Enums']["resposta_divergencia"] | null,"status": Database["public"]['Enums']["status_lancamento"],"tipo": Database["public"]['Enums']["tipo_lancamento"],"valor_conferido_centavos": number | null,"valor_informado_centavos": number,"exigir_conferencia_aberta": undefined | null
+                    "atualizado_em": string,"campanha_id": string | null,"cancelado_em": string | null,"confirmado_em": string | null,"confirmado_por": string | null,"confirmado_por_nome": string | null,"conta_id": string | null,"criado_por": string | null,"data_contribuicao": string,"divergencia_em": string | null,"divergencia_por": string | null,"divergencia_por_nome": string | null,"em_conferencia_desde": string | null,"em_conferencia_por": string | null,"forma": string,"id": string,"igreja_id": string,"membro_id": string,"mensagem_membro": string | null,"moeda": string,"motivo_cancelamento": string | null,"observacao_tesouraria": string | null,"registrado_em": string,"registrado_pela_tesouraria": boolean,"respondido_em": string | null,"resposta_membro": Database["public"]['Enums']["resposta_divergencia"] | null,"status": Database["public"]['Enums']["status_lancamento"],"tipo": Database["public"]['Enums']["tipo_lancamento"],"valor_conferido_centavos": number | null,"valor_informado_centavos": number,"dados_do_lancamento": Json | null,"exigir_conferencia_aberta": undefined | null
                   }
-                  ComputedFields: "exigir_conferencia_aberta"
+                  ComputedFields: "dados_do_lancamento" | "exigir_conferencia_aberta"
                   Insert: {
                     "atualizado_em"?: string,"campanha_id"?: string | null,"cancelado_em"?: string | null,"confirmado_em"?: string | null,"confirmado_por"?: string | null,"confirmado_por_nome"?: string | null,"conta_id"?: string | null,"criado_por"?: string | null,"data_contribuicao": string,"divergencia_em"?: string | null,"divergencia_por"?: string | null,"divergencia_por_nome"?: string | null,"em_conferencia_desde"?: string | null,"em_conferencia_por"?: string | null,"forma": string,"id"?: string,"igreja_id": string,"membro_id": string,"mensagem_membro"?: string | null,"moeda": string,"motivo_cancelamento"?: string | null,"observacao_tesouraria"?: string | null,"registrado_em"?: string,"registrado_pela_tesouraria"?: boolean,"respondido_em"?: string | null,"resposta_membro"?: Database["public"]['Enums']["resposta_divergencia"] | null,"status"?: Database["public"]['Enums']["status_lancamento"],"tipo": Database["public"]['Enums']["tipo_lancamento"],"valor_conferido_centavos"?: number | null,"valor_informado_centavos": number
                   }
@@ -257,18 +257,38 @@ isOneToOne: false
                   ]
                 },"membros": {
                   Row: {
-                    "atualizado_em": string,"cadastro_concluido_em": string | null,"campos_extras": NonNullable<Json>,"campos_internos": NonNullable<Json>,"celular": string,"criado_em": string,"email": string,"familiares": NonNullable<Json>,"id": string,"igreja_id": string,"nome": string,"numero": number,"perfil": Database["public"]['Enums']["perfil_membro"],"status": Database["public"]['Enums']["status_membro"],"tipo_dizimo": Database["public"]['Enums']["tipo_dizimo"],"usuario_id": string | null
+                    "atualizado_em": string,"avisos_desligados": (string)[],"cadastro_concluido_em": string | null,"campos_extras": NonNullable<Json>,"campos_internos": NonNullable<Json>,"celular": string,"criado_em": string,"email": string,"familiares": NonNullable<Json>,"id": string,"igreja_id": string,"nome": string,"numero": number,"perfil": Database["public"]['Enums']["perfil_membro"],"status": Database["public"]['Enums']["status_membro"],"tipo_dizimo": Database["public"]['Enums']["tipo_dizimo"],"usuario_id": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "atualizado_em"?: string,"cadastro_concluido_em"?: string | null,"campos_extras"?: NonNullable<Json>,"campos_internos"?: NonNullable<Json>,"celular": string,"criado_em"?: string,"email": string,"familiares"?: NonNullable<Json>,"id"?: string,"igreja_id": string,"nome": string,"numero": number,"perfil"?: Database["public"]['Enums']["perfil_membro"],"status"?: Database["public"]['Enums']["status_membro"],"tipo_dizimo"?: Database["public"]['Enums']["tipo_dizimo"],"usuario_id"?: string | null
+                    "atualizado_em"?: string,"avisos_desligados"?: (string)[],"cadastro_concluido_em"?: string | null,"campos_extras"?: NonNullable<Json>,"campos_internos"?: NonNullable<Json>,"celular": string,"criado_em"?: string,"email": string,"familiares"?: NonNullable<Json>,"id"?: string,"igreja_id": string,"nome": string,"numero": number,"perfil"?: Database["public"]['Enums']["perfil_membro"],"status"?: Database["public"]['Enums']["status_membro"],"tipo_dizimo"?: Database["public"]['Enums']["tipo_dizimo"],"usuario_id"?: string | null
                   }
                   Update: {
-                    "atualizado_em"?: string,"cadastro_concluido_em"?: string | null,"campos_extras"?: NonNullable<Json>,"campos_internos"?: NonNullable<Json>,"celular"?: string,"criado_em"?: string,"email"?: string,"familiares"?: NonNullable<Json>,"id"?: string,"igreja_id"?: string,"nome"?: string,"numero"?: number,"perfil"?: Database["public"]['Enums']["perfil_membro"],"status"?: Database["public"]['Enums']["status_membro"],"tipo_dizimo"?: Database["public"]['Enums']["tipo_dizimo"],"usuario_id"?: string | null
+                    "atualizado_em"?: string,"avisos_desligados"?: (string)[],"cadastro_concluido_em"?: string | null,"campos_extras"?: NonNullable<Json>,"campos_internos"?: NonNullable<Json>,"celular"?: string,"criado_em"?: string,"email"?: string,"familiares"?: NonNullable<Json>,"id"?: string,"igreja_id"?: string,"nome"?: string,"numero"?: number,"perfil"?: Database["public"]['Enums']["perfil_membro"],"status"?: Database["public"]['Enums']["status_membro"],"tipo_dizimo"?: Database["public"]['Enums']["tipo_dizimo"],"usuario_id"?: string | null
                   }
                   Relationships: [
                     {
       foreignKeyName: "membros_igreja_id_fkey"
+      columns: ["igreja_id"]
+isOneToOne: false
+      referencedRelation: "igrejas"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"notificacoes": {
+                  Row: {
+                    "criado_em": string,"dados": NonNullable<Json>,"id": string,"igreja_id": string,"lida_em": string | null,"push_enviado_em": string | null,"push_erro": string | null,"push_tentativas": number,"tipo": string,"usuario_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "criado_em"?: string,"dados"?: NonNullable<Json>,"id"?: string,"igreja_id": string,"lida_em"?: string | null,"push_enviado_em"?: string | null,"push_erro"?: string | null,"push_tentativas"?: number,"tipo": string,"usuario_id": string
+                  }
+                  Update: {
+                    "criado_em"?: string,"dados"?: NonNullable<Json>,"id"?: string,"igreja_id"?: string,"lida_em"?: string | null,"push_enviado_em"?: string | null,"push_erro"?: string | null,"push_tentativas"?: number,"tipo"?: string,"usuario_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "notificacoes_igreja_id_fkey"
       columns: ["igreja_id"]
 isOneToOne: false
       referencedRelation: "igrejas"
@@ -394,6 +414,15 @@ isOneToOne: false
 "aceitar_convites":
 { Args: Record<PropertyKey, never>; Returns: string[]
                            },
+"avisar_ficha":
+{ Args: { "p_dados": Json,"p_membro_id": string,"p_tipo": string }; Returns: undefined
+                           },
+"avisar_tesouraria":
+{ Args: { "p_dados": Json,"p_exceto": string,"p_igreja_id": string,"p_tipo": string }; Returns: undefined
+                           },
+"aviso_pode_desligar":
+{ Args: { "p_tipo": string }; Returns: boolean
+                           },
 "bloqueio_vencido":
 { Args: { "p_desde": string }; Returns: boolean
                            },
@@ -411,6 +440,9 @@ isOneToOne: false
                            },
 "convidar_membro":
 { Args: { "p_celular": string,"p_email": string,"p_igreja_id": string,"p_nome": string,"p_perfil"?: Database["public"]['Enums']["perfil_membro"] }; Returns: string
+                           },
+"dados_do_lancamento":
+{ Args: { "l": Omit<Database["public"]['Tables']["lancamentos"]['Row'], Database["public"]['Tables']["lancamentos"]['ComputedFields']> }; Returns: Json
                            },
 "definir_conta_principal":
 { Args: { "p_conta_id": string }; Returns: undefined
@@ -504,6 +536,9 @@ isOneToOne: false
                            },
 "manter_conferencia":
 { Args: { "p_lancamento_id": string }; Returns: undefined
+                           },
+"marcar_avisos_como_lidos":
+{ Args: { "p_ids"?: (string)[] }; Returns: undefined
                            },
 "meu_nome_na_igreja":
 { Args: { "p_igreja_id": string }; Returns: string
