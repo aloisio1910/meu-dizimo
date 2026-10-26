@@ -3,6 +3,7 @@ import { AuthError } from '@supabase/supabase-js';
 import { normalizarEmail } from '@/lib/email';
 
 import { supabase } from './cliente';
+import { desativarEsteAparelho } from './dispositivos';
 
 // Erros que a tela de entrada sabe explicar (cada um tem texto no i18n).
 export type ErroDeAcesso =
@@ -47,6 +48,8 @@ export function entrarComCodigo(email: string, codigo: string): Promise<Resultad
   return executar(() => supabase.auth.verifyOtp({ email: normalizarEmail(email), token: codigo, type: 'email' }));
 }
 
-export function sair(): Promise<Resultado> {
+export async function sair(): Promise<Resultado> {
+  // Antes de perder o login: depois dele o banco já não deixa desligar.
+  await desativarEsteAparelho().catch(() => {});
   return executar(() => supabase.auth.signOut());
 }

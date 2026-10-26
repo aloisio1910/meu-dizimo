@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { Desbloqueio } from '@/components/desbloqueio';
 import { ProvedorDeBloqueio, useBloqueio } from '@/hooks/use-bloqueio';
 import { ProvedorDeFichas } from '@/hooks/use-minhas-fichas';
+import { usePush } from '@/hooks/use-push';
 import { ProvedorDeSessao, useSessao } from '@/hooks/use-sessao';
 import { autotesteDoArmazenamento } from '@/services/supabase/armazenamento';
 
@@ -30,6 +31,7 @@ function Navegacao() {
   const { carregando } = useSessao();
   const { estado: bloqueio } = useBloqueio();
   const pronto = (fontesCarregadas || !!erroNasFontes) && !carregando && bloqueio !== 'verificando';
+  usePush(pronto && bloqueio !== 'bloqueado');
 
   useEffect(() => {
     if (pronto) SplashScreen.hideAsync();
