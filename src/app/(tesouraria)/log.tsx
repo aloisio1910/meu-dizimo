@@ -1,7 +1,7 @@
 import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import { Paginacao } from '@/components/paginacao';
 import { Retorno } from '@/components/retorno';
@@ -16,7 +16,9 @@ import { hojeIso, isoParaData, mascararData, partesDaDataHora } from '@/lib/data
 import { formatarMoeda } from '@/lib/dinheiro';
 import {
   descreverRegistro,
+  LIMITE_DO_DOWNLOAD,
   limitesDoPeriodo,
+  linhasDaPlanilhaDoLog,
   mudancasDoRegistro,
   TABELAS_DO_ASSUNTO,
   temNome,
@@ -24,18 +26,22 @@ import {
   type Assunto,
   type RegistroDoLog,
 } from '@/lib/log';
+import { entregarPlanilha } from '@/services/dispositivo/planilha';
 import { listarTodosOsCampos } from '@/services/supabase/campos-da-igreja';
+import { gerarPlanilhaEmBase64 } from '@/lib/planilha-xlsx';
 import { periodoDoMes, validarPeriodo, type ErrosDoPeriodo } from '@/lib/relatorio';
 import {
   listarPessoasDaIgreja,
+  buscarTodosOsRegistros,
   listarRegistrosDoLog,
+  registrarDownloadDoLog,
   TAMANHO_DA_PAGINA_DO_LOG,
   type FiltrosDoLog,
   type PessoaDaIgreja,
 } from '@/services/supabase/log';
 import { cores, espacos, raio } from '@/theme';
 
-const ASSUNTOS: Assunto[] = ['lancamentos', 'membros', 'contas', 'campanhas', 'igreja', 'comprovantes'];
+const ASSUNTOS: Assunto[] = ['lancamentos', 'membros', 'contas', 'campanhas', 'igreja', 'comprovantes', 'downloads'];
 const TODOS = 'todos';
 
 // P-04 Log da igreja: o histórico de ações gravado pelo banco (auditoria),
@@ -49,6 +55,9 @@ export default function LogDaIgreja() {
   const [errosDoPeriodo, setErrosDoPeriodo] = useState<ErrosDoPeriodo>({});
   const [assunto, setAssunto] = useState<string>(TODOS);
   const [quem, setQuem] = useState<string>(TODOS);
+  const [busca, setBusca] = useState('');
+  const [baixando, setBaixando] = useState(false);
+  const [retornoDoDownload, setRetornoDoDownload] = useState<{ aviso?: string; erro?: string }>();
   const [pessoas, setPessoas] = useState<PessoaDaIgreja[]>([]);
   const [registros, setRegistros] = useState<RegistroDoLog[]>();
   const [filtrosUsados, setFiltrosUsados] = useState<FiltrosDoLog>();
@@ -139,10 +148,78 @@ export default function LogDaIgreja() {
       ...limitesDoPeriodo(validado.periodo),
       tabelas: assunto === TODOS ? undefined : TABELAS_DO_ASSUNTO[assunto as Assunto],
       quem: quem === TODOS ? undefined : quem,
+      busca: busca.trim() || undefined,
     };
+    setRetornoDoDownload(undefined);
     setFiltrosUsados(filtros);
     setAbertos([]);
     buscar(filtros, 0);
+  }
+
+  const perfilDe = (r: RegistroDoLog) => {
+    if (!r.usuario_id) return t('log.perfis.sistema');
+    if (r.perfil === 'administrador') return titulo ?? r.perfil;
+    if (r.perfil === 'tesoureiro' || r.perfil === 'membro' || r.perfil === 'admin_master')
+      return t(`log.perfis.${r.perfil}`);
+    return t('log.perfis.usuario');
+  };
+
+  const descreverMudancas = (r: RegistroDoLog) =>
+    r.acao === 'update'
+      ? mudancasDoRegistro(r, rotulosDosCampos).map((m) =>
+          t('log.mudanca', {
+            campo: m.rotuloDaIgreja ?? (temNome(m.campo) ? t(`log.campos.${m.campo}`) : m.campo),
+            de: legivel(m.campo, m.de) || t('log.vazio'),
+            para: legivel(m.campo, m.para) || t('log.vazio'),
+          }),
+        )
+      : [];
+
+  // D-095: limite de 5.000 por arquivo e o download registrado no log antes
+  // de os dados saírem do banco.
+  async function aoBaixar() {
+    if (!filtrosUsados) return;
+    setRetornoDoDownload(undefined);
+    if (totalDeRegistros > LIMITE_DO_DOWNLOAD) {
+      setRetornoDoDownload({
+        erro: t('log.acimaDoLimite', { total: totalDeRegistros, limite: LIMITE_DO_DOWNLOAD }),
+      });
+      return;
+    }
+    setBaixando(true);
+    try {
+      await registrarDownloadDoLog(ficha!.igreja_id, filtrosUsados, totalDeRegistros);
+      const todos = await buscarTodosOsRegistros(ficha!.igreja_id, filtrosUsados);
+      const c = 'log.colunas';
+      const linhas = linhasDaPlanilhaDoLog(todos, {
+        colunas: [
+          t(`${c}.data`),
+          t(`${c}.hora`),
+          t(`${c}.quem`),
+          t(`${c}.perfil`),
+          t(`${c}.acao`),
+          t(`${c}.motivo`),
+          t(`${c}.mudancas`),
+        ],
+        dataHora: (momento) => partesDaDataHora(momento, idioma),
+        quemFez,
+        perfil: perfilDe,
+        frase,
+        mudancas: descreverMudancas,
+      });
+      const arquivo = `${t('log.arquivo')}-${hojeIso()}.xlsx`;
+      await entregarPlanilha(
+        arquivo,
+        gerarPlanilhaEmBase64([{ nome: t('log.aba'), linhas, colunasDeValor: [] }]),
+        t('log.compartilhar'),
+      );
+      setRetornoDoDownload({ aviso: t('log.baixado', { arquivo }) });
+      // O registro do download aparece no topo da primeira página.
+      await buscar(filtrosUsados, 0);
+    } catch {
+      setRetornoDoDownload({ erro: t('log.falhaAoBaixar') });
+    }
+    setBaixando(false);
   }
 
   const frase = (r: RegistroDoLog) => {
@@ -214,10 +291,32 @@ export default function LogDaIgreja() {
         selecionada={quem}
         onSelecionar={mudar(setQuem)}
       />
+      <CampoTexto
+        rotulo={t('log.pesquisar')}
+        dica={t('log.dicaPesquisar')}
+        value={busca}
+        onChangeText={mudar(setBusca)}
+        onSubmitEditing={aoVer}
+        autoCorrect={false}
+        returnKeyType="search"
+      />
       <Botao titulo={t('log.ver')} onPress={aoVer} carregando={carregandoLog} />
       <Retorno erro={erro} />
 
       {registros?.length === 0 && <Texto>{t('log.nenhum')}</Texto>}
+      {!!registros && registros.length > 0 && (
+        <>
+          <Botao
+            titulo={Platform.OS === 'web' ? t('log.baixar') : t('log.compartilhar')}
+            variante="secundario"
+            onPress={aoBaixar}
+            carregando={baixando}
+            desabilitado={carregandoLog}
+          />
+          <Texto variante="apoio">{t('log.avisoDownload')}</Texto>
+          {!!retornoDoDownload && <Retorno aviso={retornoDoDownload.aviso} erro={retornoDoDownload.erro} />}
+        </>
+      )}
       {!!registros && registros.length > 0 && !!filtrosUsados && (
         <Paginacao
           pagina={pagina}
@@ -230,7 +329,7 @@ export default function LogDaIgreja() {
       {registros?.map((r) => {
         const momento = partesDaDataHora(r.criado_em, idioma);
         const aberto = abertos.includes(r.id);
-        const mudancas = r.acao === 'update' ? mudancasDoRegistro(r, rotulosDosCampos) : [];
+        const mudancas = descreverMudancas(r);
         return (
           <View key={r.id} style={estilos.registro}>
             <Texto variante="apoio">{t('log.quando', { quem: quemFez(r), ...momento })}</Texto>
@@ -244,13 +343,9 @@ export default function LogDaIgreja() {
                   onPress={() => alternar(r.id)}
                 />
                 {aberto &&
-                  mudancas.map((m) => (
-                    <Texto key={m.campo} variante="apoio">
-                      {t('log.mudanca', {
-                        campo: m.rotuloDaIgreja ?? (temNome(m.campo) ? t(`log.campos.${m.campo}`) : m.campo),
-                        de: legivel(m.campo, m.de) || t('log.vazio'),
-                        para: legivel(m.campo, m.para) || t('log.vazio'),
-                      })}
+                  mudancas.map((mudanca) => (
+                    <Texto key={mudanca} variante="apoio">
+                      {mudanca}
                     </Texto>
                   ))}
               </>

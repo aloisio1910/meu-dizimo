@@ -532,8 +532,11 @@ isOneToOne: false
 "registrar_divergencia":
 { Args: { "p_lancamento_id": string,"p_observacao": string,"p_valor_conferido_centavos": number }; Returns: undefined
                            },
+"registrar_download_do_log":
+{ Args: { "p_antes_de": string,"p_busca"?: string,"p_desde": string,"p_igreja_id": string,"p_quantidade": number }; Returns: undefined
+                           },
 "registros_do_log":
-{ Args: { "p_antes_de": string,"p_desde": string,"p_igreja_id": string,"p_pagina"?: number,"p_quem"?: string,"p_tabelas"?: (string)[],"p_tamanho"?: number }; Returns: {
+{ Args: { "p_antes_de": string,"p_busca"?: string,"p_desde": string,"p_igreja_id": string,"p_pagina"?: number,"p_quem"?: string,"p_tabelas"?: (string)[],"p_tamanho"?: number }; Returns: {
               "acao": string,"antes": Json,"criado_em": string,"depois": Json,"id": number,"motivo": string,"perfil": string,"registro_id": string,"tabela": string,"total": number,"usuario_id": string
             }[]
                            },
@@ -542,6 +545,9 @@ isOneToOne: false
                            },
 "retirar_comprovante":
 { Args: { "p_comprovante_id": string }; Returns: undefined
+                           },
+"simplificar":
+{ Args: { "p_texto": string }; Returns: string
                            },
 "status_ao_liberar":
 { Args: { "p_resposta": Database["public"]['Enums']["resposta_divergencia"] }; Returns: Database["public"]['Enums']["status_lancamento"]

@@ -15,7 +15,7 @@ export type RegistroDoLog = {
   criado_em: string;
 };
 
-export type Assunto = 'lancamentos' | 'membros' | 'contas' | 'campanhas' | 'igreja' | 'comprovantes';
+export type Assunto = 'lancamentos' | 'membros' | 'contas' | 'campanhas' | 'igreja' | 'comprovantes' | 'downloads';
 
 // Tabelas de cada assunto do filtro.
 export const TABELAS_DO_ASSUNTO: Record<Assunto, string[]> = {
@@ -25,6 +25,8 @@ export const TABELAS_DO_ASSUNTO: Record<Assunto, string[]> = {
   campanhas: ['campanhas', 'campanha_midias'],
   igreja: ['igrejas', 'campos_cadastro'],
   comprovantes: ['comprovantes'],
+  // Quem baixou o próprio log (D-095).
+  downloads: ['auditoria'],
 };
 
 // Campos de controle interno: mudar só eles não é uma ação de ninguém (ex.:
@@ -91,6 +93,7 @@ export type CodigoDaAcao =
   | 'lancamentoPresencial'
   | 'lancamentoReaberto'
   | 'lancamentoRegistrado'
+  | 'logBaixado'
   | 'membroConvidado'
   | 'membroInativado'
   | 'membroReativado'
@@ -222,6 +225,8 @@ export function descreverRegistro(r: RegistroDoLog, ctx: Contexto): Descricao {
       return { codigo: r.acao === 'insert' ? 'campoCriado' : 'campoEditado', valores: { campo: texto(atual.rotulo) } };
     case 'igrejas':
       return { codigo: 'igrejaAtualizada', valores: {} };
+    case 'auditoria':
+      return { codigo: 'logBaixado', valores: periodoDoDownload(atual) };
     default:
       return { codigo: 'registroAlterado', valores: { tabela: r.tabela } };
   }
@@ -355,4 +360,55 @@ export function mudancasDoRegistro(
         para: depois[chave],
       }));
   });
+}
+
+// Dia no horário de Brasília (DD/MM/AAAA) de um momento ISO.
+function diaNoBrasil(momento: unknown): string {
+  const data = new Date(String(momento));
+  if (Number.isNaN(data.getTime())) return '';
+  const noBrasil = new Date(data.getTime() - 3 * 60 * 60 * 1000);
+  return noBrasil.toISOString().slice(0, 10).split('-').reverse().join('/');
+}
+
+// O download guarda o período como [desde, antes_de): o último dia é o
+// anterior a antes_de.
+function periodoDoDownload(depois: Record<string, unknown>): Record<string, string> {
+  const antesDe = new Date(String(depois.antes_de));
+  const ultimoDia = Number.isNaN(antesDe.getTime()) ? '' : new Date(antesDe.getTime() - 1).toISOString();
+  return { de: diaNoBrasil(depois.desde), ate: diaNoBrasil(ultimoDia), quantidade: String(depois.quantidade ?? '') };
+}
+
+// Até 5.000 registros por arquivo (D-095): mais que isso pede um período menor.
+export const LIMITE_DO_DOWNLOAD = 5000;
+
+export type LinhaDaPlanilhaDoLog = (string | number)[];
+
+// Linhas da planilha do log: as mesmas frases da tela, com quem fez, perfil,
+// motivo e o que mudou numa coluna só.
+export function linhasDaPlanilhaDoLog(
+  registros: RegistroDoLog[],
+  textos: {
+    colunas: string[]; // Data, Hora, Quem fez, Perfil, O que aconteceu, Motivo, O que mudou
+    dataHora: (momento: string) => { dia: string; hora: string };
+    quemFez: (r: RegistroDoLog) => string;
+    perfil: (r: RegistroDoLog) => string;
+    frase: (r: RegistroDoLog) => string;
+    mudancas: (r: RegistroDoLog) => string[];
+  },
+): LinhaDaPlanilhaDoLog[] {
+  return [
+    textos.colunas,
+    ...registros.map((r) => {
+      const { dia, hora } = textos.dataHora(r.criado_em);
+      return [
+        dia,
+        hora,
+        textos.quemFez(r),
+        textos.perfil(r),
+        textos.frase(r),
+        r.motivo ?? '',
+        textos.mudancas(r).join('; '),
+      ];
+    }),
+  ];
 }

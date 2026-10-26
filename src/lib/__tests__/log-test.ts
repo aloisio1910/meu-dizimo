@@ -5,6 +5,7 @@ import {
   descreverRegistro,
   ehSoTecnico,
   limitesDoPeriodo,
+  linhasDaPlanilhaDoLog,
   mudancasDoRegistro,
   temNome,
   valorLegivel,
@@ -208,10 +209,7 @@ describe('mudancasDoRegistro', () => {
 
   it('abre as respostas do cadastro com o nome que a igreja deu', () => {
     expect(
-      mudancasDoRegistro(
-        { antes: { campos_internos: {} }, depois: { campos_internos: { celula: 'José' } } },
-        rotulos,
-      ),
+      mudancasDoRegistro({ antes: { campos_internos: {} }, depois: { campos_internos: { celula: 'José' } } }, rotulos),
     ).toEqual([{ campo: 'celula', rotuloDaIgreja: 'Célula', de: undefined, para: 'José' }]);
   });
 
@@ -233,6 +231,42 @@ describe('mudancasDoRegistro', () => {
   it('os outros campos continuam como estão', () => {
     expect(mudancasDoRegistro({ antes: { principal: false }, depois: { principal: true } }, rotulos)).toEqual([
       { campo: 'principal', de: false, para: true },
+    ]);
+  });
+});
+
+describe('download do log (D-095)', () => {
+  it('a frase traz o período e a quantidade, no horário de Brasília', () => {
+    expect(
+      descreverRegistro(
+        registro({
+          tabela: 'auditoria',
+          acao: 'download',
+          depois: { desde: '2026-10-01T03:00:00.000Z', antes_de: '2026-11-01T03:00:00.000Z', quantidade: 150 },
+        }),
+        ctx,
+      ),
+    ).toEqual({ codigo: 'logBaixado', valores: { de: '01/10/2026', ate: '31/10/2026', quantidade: '150' } });
+  });
+
+  it('monta a planilha com as frases da tela', () => {
+    const [cabecalho, primeira] = linhasDaPlanilhaDoLog([registro({ motivo: 'Engano' })], {
+      colunas: ['Data', 'Hora', 'Quem', 'Perfil', 'O quê', 'Motivo', 'Mudou'],
+      dataHora: () => ({ dia: '25/10/2026', hora: '09:00' }),
+      quemFez: () => 'Tiago',
+      perfil: () => 'Tesoureiro',
+      frase: () => 'Confirmou o dízimo.',
+      mudancas: () => ['Situação: aguardando → confirmado', 'Valor: R$ 1 → R$ 2'],
+    });
+    expect(cabecalho).toEqual(['Data', 'Hora', 'Quem', 'Perfil', 'O quê', 'Motivo', 'Mudou']);
+    expect(primeira).toEqual([
+      '25/10/2026',
+      '09:00',
+      'Tiago',
+      'Tesoureiro',
+      'Confirmou o dízimo.',
+      'Engano',
+      'Situação: aguardando → confirmado; Valor: R$ 1 → R$ 2',
     ]);
   });
 });

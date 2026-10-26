@@ -135,6 +135,11 @@ select is(pg_temp.status_de('Missões'), 'ativa', 'Administrador de outra igreja
 -- Encerramento automático (D-089)
 -- -----------------------------------------------------------------------------
 
+-- O banco local pode ter campanhas vencidas de verdade (de madrugada, com o
+-- computador desligado, a rotina não roda): encerra antes, para contar só
+-- as deste cenário.
+select public.encerrar_campanhas_vencidas();
+
 insert into public.campanhas (igreja_id, nome, status, fim) values
   ('1a000000-0000-0000-0000-000000000000', 'Acabou ontem', 'ativa', public.hoje_na_igreja() - 1),
   ('1a000000-0000-0000-0000-000000000000', 'Acaba hoje', 'ativa', public.hoje_na_igreja()),

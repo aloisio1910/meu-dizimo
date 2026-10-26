@@ -235,7 +235,8 @@
       "contas": "Contas e Pix",
       "campanhas": "Campanhas",
       "igreja": "Dados e configurações",
-      "comprovantes": "Comprovantes"
+      "comprovantes": "Comprovantes",
+      "downloads": "Downloads do log"
     },
     "sistema": "Sistema (rotinas automáticas)",
     "equipe": "Equipe Meu Dízimo",
@@ -300,7 +301,8 @@
       "campoCriado": "Criou o campo do cadastro {{campo}}.",
       "campoEditado": "Editou o campo do cadastro {{campo}}.",
       "igrejaAtualizada": "Atualizou os dados ou a aparência da igreja.",
-      "registroAlterado": "Alterou um registro ({{tabela}})."
+      "registroAlterado": "Alterou um registro ({{tabela}}).",
+      "logBaixado": "Baixou o log de {{de}} a {{ate}} ({{quantidade}} registros)."
     },
     "periodo": "Período (data em que a ação foi feita)",
     "sim": "Sim",
@@ -362,6 +364,32 @@
       "ordem": "Ordem",
       "preenchido_por": "Quem preenche",
       "aceito_em": "Aceito em"
+    },
+    "pesquisar": "Pesquisar",
+    "dicaPesquisar": "Nome de uma pessoa, conta, campanha, valor (ex.: 150,00) ou parte do motivo.",
+    "baixar": "Baixar planilha do log",
+    "compartilhar": "Compartilhar planilha do log",
+    "avisoDownload": "O download fica registrado no próprio log, com o seu nome.",
+    "acimaDoLimite": "São {{total}} registros; o limite por arquivo é {{limite}}. Escolha um período menor ou use a pesquisa.",
+    "baixado": "Planilha gerada: {{arquivo}}. O download foi registrado no log.",
+    "falhaAoBaixar": "Não conseguimos gerar a planilha. Tente de novo.",
+    "arquivo": "log",
+    "aba": "Log",
+    "colunas": {
+      "data": "Data",
+      "hora": "Hora",
+      "quem": "Quem fez",
+      "perfil": "Perfil",
+      "acao": "O que aconteceu",
+      "motivo": "Motivo",
+      "mudancas": "O que mudou"
+    },
+    "perfis": {
+      "membro": "Membro",
+      "tesoureiro": "Tesoureiro",
+      "admin_master": "Equipe Meu Dízimo",
+      "sistema": "Sistema",
+      "usuario": "Usuário"
     }
   },
   "paginacao": {
