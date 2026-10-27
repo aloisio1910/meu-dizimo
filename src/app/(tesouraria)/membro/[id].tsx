@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { AnotacoesDaTesouraria } from '@/components/anotacoes-da-tesouraria';
+import { Retorno } from '@/components/retorno';
 import { SeloDeStatus } from '@/components/selo-de-status';
 import { Botao } from '@/components/ui/botao';
 import { CampoTexto } from '@/components/ui/campo-texto';
@@ -15,21 +16,22 @@ import { familiaresIniciais, valoresIniciais } from '@/lib/cadastro';
 import { isoParaData, partesDaDataHora } from '@/lib/data';
 import { formatarMoeda } from '@/lib/dinheiro';
 import { ehFormaConhecida } from '@/lib/formas';
-import { acaoDeStatus, emailValido, normalizarEmail, situacaoDoMembro } from '@/lib/membros';
+import { acaoDeStatus, emailValido, normalizarEmail, situacaoDoMembro, trocaDeEmail } from '@/lib/membros';
 import { buscarCamposDoCadastro, type CampoDoCadastro } from '@/services/supabase/membros';
 import {
   buscarMembroDaIgreja,
-  corrigirEmailDoConvidado,
   listarLancamentosDoMembro,
   mudarStatusDoMembro,
   reenviarConvite,
+  trocarEmailDoMembro,
+  type ErroDaTroca,
   type ErroDoConvite,
   type LancamentoDoMembro,
   type MembroDaLista,
 } from '@/services/supabase/membros-da-igreja';
 import { cores, espacos, raio } from '@/theme';
 
-type Modo = 'ver' | 'corrigirEmail' | 'confirmarStatus';
+type Modo = 'ver' | 'trocarEmail' | 'confirmarStatus';
 
 type Ficha = { membro: MembroDaLista; campos: CampoDoCadastro[] };
 
@@ -47,6 +49,7 @@ export default function CartaoDoMembro() {
   const [falhouHistorico, setFalhouHistorico] = useState(false);
   const [modo, setModo] = useState<Modo>('ver');
   const [novoEmail, setNovoEmail] = useState('');
+  const [motivo, setMotivo] = useState('');
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string>();
   const [aviso, setAviso] = useState<string>();
@@ -106,16 +109,25 @@ export default function CartaoDoMembro() {
   const valores = valoresIniciais(membro.campos_extras);
   const familiares = familiaresIniciais(membro.familiares);
   const mudanca = acaoDeStatus(membro, { ehAdministrador, ehEuMesmo: membro.id === ficha.id });
+  const troca = trocaDeEmail(membro, { ehEuMesmo: membro.id === ficha.id });
 
   const mensagemDoErro = (codigo: ErroDoConvite) =>
     codigo === 'sem_conexao' || codigo === 'erro_inesperado'
       ? t(`comum.erros.${codigo}`)
       : t(`tesouraria.membros.erros.${codigo}`, { titulo });
 
+  const mensagemDaTroca = (codigo: ErroDaTroca) =>
+    codigo === 'sem_conexao' || codigo === 'erro_inesperado'
+      ? t(`comum.erros.${codigo}`)
+      : t(`tesouraria.membro.errosDaTroca.${codigo}`, { titulo });
+
   function irPara(novoModo: Modo) {
     setErro(undefined);
     setAviso(undefined);
-    if (novoModo === 'corrigirEmail') setNovoEmail(membro.email);
+    if (novoModo === 'trocarEmail') {
+      setNovoEmail('');
+      setMotivo('');
+    }
     setModo(novoModo);
   }
 
@@ -135,12 +147,27 @@ export default function CartaoDoMembro() {
     setAviso(sucesso);
   }
 
-  function aoSalvarEmail() {
+  async function aoTrocarEmail() {
+    setErro(undefined);
+    setAviso(undefined);
     if (!emailValido(novoEmail)) {
-      setErro(t('tesouraria.convidar.erros.emailInvalido'));
+      setErro(t('tesouraria.membro.errosDaTroca.email_invalido'));
       return;
     }
-    executar(() => corrigirEmailDoConvidado(membro.id, normalizarEmail(novoEmail)), t('tesouraria.membro.emailCorrigido'));
+    if (motivo.trim().length < 5) {
+      setErro(t('tesouraria.membro.errosDaTroca.motivo_obrigatorio'));
+      return;
+    }
+    setEnviando(true);
+    const resultado = await trocarEmailDoMembro(membro.id, normalizarEmail(novoEmail), motivo.trim());
+    await recarregar();
+    setEnviando(false);
+    if (!resultado.ok) {
+      setErro(mensagemDaTroca(resultado.erro));
+      return;
+    }
+    setModo('ver');
+    setAviso(t(resultado.avisoPorEmail ? 'tesouraria.membro.emailTrocado' : 'tesouraria.membro.emailTrocadoSemAviso'));
   }
 
   function aoReenviar() {
@@ -148,29 +175,31 @@ export default function CartaoDoMembro() {
     executar(() => reenviarConvite(membro.id), t('tesouraria.membro.reenviado', { data: validoAte }));
   }
 
-  const textosDaMudanca = mudanca && {
-    cancelar_convite: {
-      botao: t('tesouraria.membro.cancelarConvite'),
-      pergunta: t('tesouraria.membro.confirmarCancelarConvite', { nome: membro.nome, titulo }),
-      sim: t('tesouraria.membro.simCancelar'),
-      feito: t('tesouraria.membro.conviteCancelado'),
-    },
-    inativar: {
-      botao: t('tesouraria.membro.inativar'),
-      pergunta: t('tesouraria.membro.confirmarInativar', { nome: membro.nome }),
-      sim: t('tesouraria.membro.simInativar'),
-      feito: t('tesouraria.membro.inativado'),
-    },
-    reativar: {
-      botao: t('tesouraria.membro.reativar'),
-      pergunta:
-        mudanca.para === 'ativo'
-          ? t('tesouraria.membro.confirmarReativarAtivo', { nome: membro.nome })
-          : t('tesouraria.membro.confirmarReativarConvidado', { nome: membro.nome }),
-      sim: t('tesouraria.membro.simReativar'),
-      feito: t('tesouraria.membro.reativado'),
-    },
-  }[mudanca.acao];
+  const textosDaMudanca =
+    mudanca &&
+    {
+      cancelar_convite: {
+        botao: t('tesouraria.membro.cancelarConvite'),
+        pergunta: t('tesouraria.membro.confirmarCancelarConvite', { nome: membro.nome, titulo }),
+        sim: t('tesouraria.membro.simCancelar'),
+        feito: t('tesouraria.membro.conviteCancelado'),
+      },
+      inativar: {
+        botao: t('tesouraria.membro.inativar'),
+        pergunta: t('tesouraria.membro.confirmarInativar', { nome: membro.nome }),
+        sim: t('tesouraria.membro.simInativar'),
+        feito: t('tesouraria.membro.inativado'),
+      },
+      reativar: {
+        botao: t('tesouraria.membro.reativar'),
+        pergunta:
+          mudanca.para === 'ativo'
+            ? t('tesouraria.membro.confirmarReativarAtivo', { nome: membro.nome })
+            : t('tesouraria.membro.confirmarReativarConvidado', { nome: membro.nome }),
+        sim: t('tesouraria.membro.simReativar'),
+        feito: t('tesouraria.membro.reativado'),
+      },
+    }[mudanca.acao];
 
   return (
     <Tela larga>
@@ -196,7 +225,9 @@ export default function CartaoDoMembro() {
             <Texto>
               {t(membro.tipo_dizimo === 'familiar' ? 'tesouraria.membro.familiar' : 'tesouraria.membro.individual')}
             </Texto>
-            {familiares.length > 0 && <Texto>{t('tesouraria.membro.familiares', { nomes: familiares.join(', ') })}</Texto>}
+            {familiares.length > 0 && (
+              <Texto>{t('tesouraria.membro.familiares', { nomes: familiares.join(', ') })}</Texto>
+            )}
             {campos.map((campo) => (
               <View key={campo.chave} style={estilos.campo}>
                 <Texto variante="apoio">{campo.rotulo}</Texto>
@@ -222,26 +253,23 @@ export default function CartaoDoMembro() {
         </View>
       )}
 
-      {!!aviso && (
-        <Texto variante="destaque" accessibilityLiveRegion="polite">
-          {aviso}
-        </Texto>
-      )}
-      {!!erro && <Texto variante="erro">{erro}</Texto>}
-
       {modo === 'ver' && (
         <>
           {ehConvidado && (
             <>
               <Botao titulo={t('tesouraria.membro.reenviar')} onPress={aoReenviar} carregando={enviando} />
-              <Botao
-                titulo={t('tesouraria.membro.corrigirEmail')}
-                variante="secundario"
-                onPress={() => irPara('corrigirEmail')}
-                desabilitado={enviando}
-              />
             </>
           )}
+          {troca === 'pode' && (
+            <Botao
+              titulo={t('tesouraria.membro.trocarEmail')}
+              variante="secundario"
+              onPress={() => irPara('trocarEmail')}
+              desabilitado={enviando}
+            />
+          )}
+          {troca === 'pastor' && <Texto variante="apoio">{t('tesouraria.membro.emailDoPastor', { titulo })}</Texto>}
+          {troca === 'proprio' && <Texto variante="apoio">{t('tesouraria.membro.emailProprio', { titulo })}</Texto>}
           {membro.status !== 'inativo' && membro.id !== ficha.id && (
             <Botao
               titulo={t('tesouraria.membro.lancar')}
@@ -261,11 +289,16 @@ export default function CartaoDoMembro() {
           {!mudanca && !ehConvidado && !ehAdministrador && (
             <Texto variante="apoio">{t('tesouraria.membro.statusSoPastor', { titulo })}</Texto>
           )}
+          <Retorno aviso={aviso} erro={erro} />
         </>
       )}
 
-      {modo === 'corrigirEmail' && (
-        <>
+      {modo === 'trocarEmail' && (
+        <View style={estilos.cartao}>
+          <Texto variante="destaque" accessibilityRole="header">
+            {t('tesouraria.membro.trocarEmail')}
+          </Texto>
+          <Texto>{t('tesouraria.membro.explicacaoDaTroca')}</Texto>
           <CampoTexto
             rotulo={t('tesouraria.membro.novoEmail')}
             value={novoEmail}
@@ -274,9 +307,21 @@ export default function CartaoDoMembro() {
             autoCapitalize="none"
             autoCorrect={false}
           />
-          <Botao titulo={t('tesouraria.membro.salvarEmail')} onPress={aoSalvarEmail} carregando={enviando} />
-          <Botao titulo={t('tesouraria.membro.voltar')} variante="secundario" onPress={() => irPara('ver')} desabilitado={enviando} />
-        </>
+          <CampoTexto
+            rotulo={t('tesouraria.membro.motivoDaTroca')}
+            placeholder={t('tesouraria.membro.motivoDica')}
+            value={motivo}
+            onChangeText={setMotivo}
+          />
+          <Botao titulo={t('tesouraria.membro.salvarEmail')} onPress={aoTrocarEmail} carregando={enviando} />
+          <Retorno erro={erro} />
+          <Botao
+            titulo={t('tesouraria.membro.voltar')}
+            variante="secundario"
+            onPress={() => irPara('ver')}
+            desabilitado={enviando}
+          />
+        </View>
       )}
 
       {/* Mudança de status pede confirmação antes. */}
@@ -285,10 +330,18 @@ export default function CartaoDoMembro() {
           <Texto variante="destaque">{textosDaMudanca.pergunta}</Texto>
           <Botao
             titulo={textosDaMudanca.sim}
-            onPress={() => executar(() => mudarStatusDoMembro(membro.id, membro.status, mudanca.para), textosDaMudanca.feito)}
+            onPress={() =>
+              executar(() => mudarStatusDoMembro(membro.id, membro.status, mudanca.para), textosDaMudanca.feito)
+            }
             carregando={enviando}
           />
-          <Botao titulo={t('tesouraria.membro.naoVoltar')} variante="secundario" onPress={() => irPara('ver')} desabilitado={enviando} />
+          <Retorno erro={erro} />
+          <Botao
+            titulo={t('tesouraria.membro.naoVoltar')}
+            variante="secundario"
+            onPress={() => irPara('ver')}
+            desabilitado={enviando}
+          />
         </>
       )}
 
@@ -296,7 +349,9 @@ export default function CartaoDoMembro() {
         {t('tesouraria.membro.historico')}
       </Texto>
       {falhouHistorico && <Texto variante="erro">{t('tesouraria.membro.falhaHistorico')}</Texto>}
-      {!lancamentos && !falhouHistorico && <ActivityIndicator size="large" accessibilityLabel={t('comum.carregando')} />}
+      {!lancamentos && !falhouHistorico && (
+        <ActivityIndicator size="large" accessibilityLabel={t('comum.carregando')} />
+      )}
       {lancamentos?.length === 0 && <Texto>{t('tesouraria.membro.nenhumLancamento')}</Texto>}
       {lancamentos?.map((lancamento) => {
         const emMoeda = (centavos: number) => formatarMoeda(centavos, lancamento.moeda, idioma);
@@ -316,7 +371,9 @@ export default function CartaoDoMembro() {
             <SeloDeStatus status={lancamento.status} />
             {lancamento.valor_conferido_centavos !== null &&
               lancamento.valor_conferido_centavos !== lancamento.valor_informado_centavos && (
-                <Texto>{t('tesouraria.membro.valorConferido', { valor: emMoeda(lancamento.valor_conferido_centavos) })}</Texto>
+                <Texto>
+                  {t('tesouraria.membro.valorConferido', { valor: emMoeda(lancamento.valor_conferido_centavos) })}
+                </Texto>
               )}
             {lancamento.status === 'confirmado' && !!lancamento.confirmado_por_nome && (
               <Texto variante="apoio">{t('cartao.confirmadoPor', { nome: lancamento.confirmado_por_nome })}</Texto>

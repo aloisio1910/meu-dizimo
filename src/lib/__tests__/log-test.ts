@@ -129,7 +129,7 @@ describe('descreverRegistro: membros', () => {
   });
 
   it('e-mail, anotações da tesouraria e dados', () => {
-    expect(membro({ email: 'a@x' }, { email: 'b@x' }).codigo).toBe('emailCorrigido');
+    expect(membro({ email: 'a@x' }, { email: 'b@x' }).codigo).toBe('emailTrocado');
     expect(membro({ campos_internos: {} }, { campos_internos: { celula: 'Norte' } }).codigo).toBe(
       'anotacoesDaTesouraria',
     );

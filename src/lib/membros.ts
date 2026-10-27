@@ -100,3 +100,22 @@ export function acaoDeStatus(
   if (membro.status === 'ativo') return { acao: 'inativar', para: 'inativo' };
   return { acao: 'reativar', para: membro.cadastro_concluido_em ? 'ativo' : 'convidado' };
 }
+
+// Troca de e-mail (D-097): o que a ficha oferece. Espelha o banco
+// (trocar_email_do_membro), que confere de novo, inclusive a regra de quem
+// também está em outra igreja, que só o banco sabe.
+// - pode: tesoureiro ou Pastor troca o de membros e de outros tesoureiros;
+// - pastor: o do Pastor de Governo só pelo suporte;
+// - proprio: ninguém troca o próprio;
+// - inativo: reativar antes.
+export type TrocaDeEmail = 'pode' | 'pastor' | 'proprio' | 'inativo';
+
+export function trocaDeEmail(
+  membro: { status: StatusDoMembro; perfil: 'membro' | 'tesoureiro' | 'administrador' },
+  quemVe: { ehEuMesmo: boolean },
+): TrocaDeEmail {
+  if (quemVe.ehEuMesmo) return 'proprio';
+  if (membro.perfil === 'administrador') return 'pastor';
+  if (membro.status === 'inativo') return 'inativo';
+  return 'pode';
+}

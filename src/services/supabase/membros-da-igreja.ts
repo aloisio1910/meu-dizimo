@@ -87,7 +87,8 @@ function traduzir(erro: PostgrestError | Error): ErroDoConvite {
   // "23505" também é o índice único de e-mail por igreja (RN-028).
   if (ERROS_DE_STATUS.includes(erro.message)) return erro.message as ErroDoConvite;
   if (erro.message === 'email_ja_cadastrado' || ('code' in erro && erro.code === '23505')) return 'email_ja_cadastrado';
-  if (erro.message === 'convite_indisponivel' || ('code' in erro && erro.code === '42501')) return 'convite_indisponivel';
+  if (erro.message === 'convite_indisponivel' || ('code' in erro && erro.code === '42501'))
+    return 'convite_indisponivel';
   return erro instanceof TypeError ? 'sem_conexao' : 'erro_inesperado';
 }
 
@@ -136,15 +137,41 @@ export function reenviarConvite(membroId: string) {
   return executar(() => supabase.rpc('reenviar_convite', { p_membro_id: membroId }));
 }
 
-// D-069: a tesouraria corrige o e-mail só enquanto o membro é convidado.
-// A trigger de membros recusa nos outros casos.
-export async function corrigirEmailDoConvidado(membroId: string, email: string): Promise<Resultado<null>> {
-  const resultado = await executar(() =>
-    supabase.from('membros').update({ email }).eq('id', membroId).eq('status', 'convidado').select('id'),
-  );
-  if (!resultado.ok) return resultado;
-  // Nenhuma linha alterada: a pessoa já entrou (deixou de ser convidada).
-  return resultado.dados?.length ? { ok: true, dados: null } : { ok: false, erro: 'convite_indisponivel' };
+// Troca de e-mail pela tesouraria (D-097). Passa pela Edge Function
+// trocar-email, que troca também o login: o banco recusa a troca direta na
+// tabela. As regras (quem pode, motivo, outra igreja) ficam no banco.
+export type ErroDaTroca =
+  | 'sem_permissao'
+  | 'email_proprio'
+  | 'pastor_pelo_suporte'
+  | 'membro_inativo'
+  | 'motivo_obrigatorio'
+  | 'email_invalido'
+  | 'email_igual'
+  | 'email_ja_cadastrado'
+  | 'email_ja_tem_login'
+  | 'esta_em_outra_igreja'
+  | 'sem_conexao'
+  | 'erro_inesperado';
+
+export async function trocarEmailDoMembro(
+  membroId: string,
+  email: string,
+  motivo: string,
+): Promise<{ ok: true; avisoPorEmail: boolean } | { ok: false; erro: ErroDaTroca }> {
+  try {
+    const { data, error } = await supabase.functions.invoke('trocar-email', {
+      body: { membro_id: membroId, email, motivo },
+    });
+    if (!error) return { ok: true, avisoPorEmail: !!data?.avisoPorEmail };
+    // Recusa da função: o código vem no corpo da resposta.
+    const resposta = (error as { context?: Response }).context;
+    const corpo = resposta && typeof resposta.json === 'function' ? await resposta.json().catch(() => null) : null;
+    if (corpo?.erro) return { ok: false, erro: corpo.erro as ErroDaTroca };
+    return { ok: false, erro: error.name === 'FunctionsFetchError' ? 'sem_conexao' : 'erro_inesperado' };
+  } catch {
+    return { ok: false, erro: 'sem_conexao' };
+  }
 }
 
 // Cancelar convite, inativar ou reativar (D-085). O filtro pelo status atual
@@ -191,9 +218,16 @@ export async function listarLancamentosDoMembro(igrejaId: string, membroId: stri
 
 // D-093: o tesoureiro e o Pastor anotam os campos da tesouraria na ficha. O
 // banco recusa quem não é da tesouraria e valores fora do tipo do campo.
-export async function salvarCamposInternos(membroId: string, valores: Record<string, unknown>): Promise<Resultado<null>> {
+export async function salvarCamposInternos(
+  membroId: string,
+  valores: Record<string, unknown>,
+): Promise<Resultado<null>> {
   const resultado = await executar(() =>
-    supabase.from('membros').update({ campos_internos: valores as NonNullable<Json> }).eq('id', membroId).select('id'),
+    supabase
+      .from('membros')
+      .update({ campos_internos: valores as NonNullable<Json> })
+      .eq('id', membroId)
+      .select('id'),
   );
   if (!resultado.ok) return resultado;
   return resultado.dados?.length ? { ok: true, dados: null } : { ok: false, erro: 'so_a_tesouraria_preenche' };

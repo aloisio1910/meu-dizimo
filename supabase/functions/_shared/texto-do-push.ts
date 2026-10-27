@@ -23,6 +23,8 @@ export const TEXTOS: Record<string, string> = {
   divergencia_contestada_oferta: '{{membro}} contestou a divergência da oferta de {{valor}}.',
   pix_alterado:
     'A chave Pix da conta {{conta}} foi alterada. Se não foi você nem alguém da tesouraria, avise o {{titulo}} agora.',
+  email_alterado:
+    'O seu e-mail de entrada no app foi trocado pela tesouraria para {{email}}. Se você não pediu, fale com o {{titulo}}.',
 };
 
 export const A_TESOURARIA = 'A tesouraria';
@@ -51,6 +53,7 @@ export function textoDoPush(
     quem: texto(d.confirmado_por) || A_TESOURARIA,
     campanha: texto(d.campanha_nome),
     conta: texto(d.conta_nome),
+    email: texto(d.email),
     titulo: texto(igreja.titulo_administrador),
   };
   return modelo.replace(/\{\{(\w+)\}\}/g, (_, chave: string) => valores[chave] ?? '');

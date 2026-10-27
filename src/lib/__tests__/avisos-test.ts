@@ -28,6 +28,7 @@ describe('valoresDoAviso', () => {
       quem: 'Tiago',
       campanha: '',
       conta: '',
+      email: '',
     });
   });
 
@@ -71,5 +72,13 @@ describe('avisosQueAPessoaPodeDesligar', () => {
   it('membro desliga só o de campanha; a tesouraria, também os dela', () => {
     expect(avisosQueAPessoaPodeDesligar(false)).toEqual(['nova_campanha']);
     expect(avisosQueAPessoaPodeDesligar(true)).toEqual(['nova_campanha', 'novo_lancamento', 'novo_comprovante']);
+  });
+});
+
+describe('aviso de troca de e-mail (D-097)', () => {
+  it('traz o novo e-mail e abre o Meu perfil', () => {
+    const aviso = { tipo: 'email_alterado' as const, dados: { email: 'maria.nova@gmail.com' } };
+    expect(valoresDoAviso(aviso, () => '').email).toBe('maria.nova@gmail.com');
+    expect(destinoDoAviso(aviso, false)).toEqual({ pathname: '/perfil' });
   });
 });

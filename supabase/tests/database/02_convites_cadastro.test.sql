@@ -106,24 +106,23 @@ select throws_ok(
   'Tesoureiro não altera um convite registrado'
 );
 select public.convidar_membro('1a000000-0000-0000-0000-000000000000', 'Rita', 'rita@errado.test', '11900000007');
-select lives_ok(
+-- D-097 (substitui a D-069): a correção passou para a troca de e-mail, com
+-- motivo (18_troca_de_email). Direto na tabela, nem a de convidado.
+select throws_ok(
   $$ update public.membros set email = 'rita@a.test' where email = 'rita@errado.test' $$,
-  'Tesoureiro corrige o e-mail de quem ainda é convidado (D-069)'
+  '42501', 'use_a_troca_de_email',
+  'Tesoureiro não corrige e-mail direto na tabela, nem de convidado (D-097)'
 );
 select is(
-  (select count(*) from public.membros where email = 'rita@a.test' and status = 'convidado'),
+  (select count(*) from public.membros where email = 'rita@errado.test' and status = 'convidado'),
   1::bigint,
-  'A ficha convidada fica com o e-mail corrigido'
+  'A ficha convidada continua com o e-mail de antes'
 );
-select throws_ok(
-  $$ update public.membros set email = 'lucas@a.test' where email = 'rita@a.test' $$,
-  '23505', null,
-  'Correção não aceita e-mail de outra ficha da igreja (RN-028)'
-);
+select pass('A recusa de e-mail repetido na igreja (RN-028) está em 18_troca_de_email');
 select throws_ok(
   $$ update public.membros set email = 'ana.nova@a.test' where email = 'ana@a.test' $$,
   '42501', null,
-  'Tesoureiro não troca o e-mail de membro ativo (D-069)'
+  'Tesoureiro não troca o e-mail de membro ativo direto na tabela (D-097)'
 );
 select throws_ok(
   $$ insert into public.campos_cadastro (igreja_id, chave, rotulo, tipo)

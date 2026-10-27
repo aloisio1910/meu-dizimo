@@ -85,7 +85,7 @@ export type CodigoDaAcao =
   | 'divergenciaAceita'
   | 'divergenciaContestada'
   | 'divergenciaRegistrada'
-  | 'emailCorrigido'
+  | 'emailTrocado'
   | 'igrejaAtualizada'
   | 'lancamentoCancelado'
   | 'lancamentoConfirmado'
@@ -162,7 +162,7 @@ function descreverMembro(r: RegistroDoLog): Descricao {
     if (antes.perfil === 'tesoureiro' && depois.perfil === 'membro') return { codigo: 'tesoureiroSuspenso', valores };
     return { codigo: 'perfilAlterado', valores };
   }
-  if (antes.email !== depois.email) return { codigo: 'emailCorrigido', valores };
+  if (antes.email !== depois.email) return { codigo: 'emailTrocado', valores };
   if (JSON.stringify(antes.campos_internos) !== JSON.stringify(depois.campos_internos)) {
     return { codigo: 'anotacoesDaTesouraria', valores };
   }

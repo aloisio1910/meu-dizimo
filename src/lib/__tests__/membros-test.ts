@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { acaoDeStatus, emailValido, filtrarMembros, situacaoDoMembro, validarConvite } from '../membros';
+import { acaoDeStatus, emailValido, filtrarMembros, situacaoDoMembro, trocaDeEmail, validarConvite } from '../membros';
 
 describe('validarConvite', () => {
   it('aceita e normaliza o e-mail', () => {
@@ -118,6 +118,34 @@ describe('acaoDeStatus (D-085)', () => {
   });
 
   it('ninguém muda o próprio status', () => {
-    expect(acaoDeStatus({ status: 'ativo', cadastro_concluido_em: concluido }, { ...pastor, ehEuMesmo: true })).toBeNull();
+    expect(
+      acaoDeStatus({ status: 'ativo', cadastro_concluido_em: concluido }, { ...pastor, ehEuMesmo: true }),
+    ).toBeNull();
+  });
+});
+
+describe('trocaDeEmail (D-097)', () => {
+  const ficha = (status: 'convidado' | 'ativo' | 'inativo', perfil: 'membro' | 'tesoureiro' | 'administrador') => ({
+    status,
+    perfil,
+  });
+
+  it('a tesouraria troca o de membros, convidados ou ativos, e o de outros tesoureiros', () => {
+    expect(trocaDeEmail(ficha('convidado', 'membro'), { ehEuMesmo: false })).toBe('pode');
+    expect(trocaDeEmail(ficha('ativo', 'membro'), { ehEuMesmo: false })).toBe('pode');
+    expect(trocaDeEmail(ficha('ativo', 'tesoureiro'), { ehEuMesmo: false })).toBe('pode');
+  });
+
+  it('o do Pastor de Governo só pelo suporte', () => {
+    expect(trocaDeEmail(ficha('ativo', 'administrador'), { ehEuMesmo: false })).toBe('pastor');
+  });
+
+  it('ninguém troca o próprio, nem o Pastor', () => {
+    expect(trocaDeEmail(ficha('ativo', 'tesoureiro'), { ehEuMesmo: true })).toBe('proprio');
+    expect(trocaDeEmail(ficha('ativo', 'administrador'), { ehEuMesmo: true })).toBe('proprio');
+  });
+
+  it('inativo precisa ser reativado antes', () => {
+    expect(trocaDeEmail(ficha('inativo', 'membro'), { ehEuMesmo: false })).toBe('inativo');
   });
 });

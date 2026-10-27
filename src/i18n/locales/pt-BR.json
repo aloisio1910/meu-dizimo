@@ -277,7 +277,6 @@
       "tesoureiroAutorizado": "Autorizou {{membro}} como tesoureiro.",
       "tesoureiroSuspenso": "Suspendeu {{membro}} da tesouraria.",
       "perfilAlterado": "Alterou o perfil de {{membro}}.",
-      "emailCorrigido": "Corrigiu o e-mail do convite de {{membro}}.",
       "anotacoesDaTesouraria": "Atualizou as informações da tesouraria de {{membro}}.",
       "cadastroAtualizado": "Atualizou os dados de {{membro}}.",
       "conviteEnviado": "Enviou convite para {{membro}}.",
@@ -303,7 +302,8 @@
       "campoEditado": "Editou o campo do cadastro {{campo}}.",
       "igrejaAtualizada": "Atualizou os dados ou a aparência da igreja.",
       "registroAlterado": "Alterou um registro ({{tabela}}).",
-      "logBaixado": "Baixou o log de {{de}} a {{ate}} ({{quantidade}} registros)."
+      "logBaixado": "Baixou o log de {{de}} a {{ate}} ({{quantidade}} registros).",
+      "emailTrocado": "Trocou o e-mail de {{membro}}."
     },
     "periodo": "Período (data em que a ação foi feita)",
     "sim": "Sim",
@@ -1187,10 +1187,8 @@
       "convitesEnviados_other": "{{count}} convites enviados",
       "reenviar": "Reenviar convite",
       "reenviado": "Convite reenviado. Vale até {{data}}.",
-      "corrigirEmail": "Corrigir e-mail",
-      "novoEmail": "E-mail correto",
-      "salvarEmail": "Salvar e-mail",
-      "emailCorrigido": "E-mail corrigido. A pessoa deve entrar com o novo e-mail.",
+      "novoEmail": "Novo e-mail",
+      "salvarEmail": "Trocar o e-mail",
       "voltar": "Voltar",
       "dadosCadastrais": "Dados cadastrais",
       "dizimo": "Dízimo",
@@ -1227,6 +1225,26 @@
         "salvar": "Salvar informações",
         "cancelar": "Cancelar",
         "salvas": "Informações salvas."
+      },
+      "trocarEmail": "Trocar e-mail",
+      "motivoDaTroca": "Motivo da troca",
+      "motivoDica": "Ex.: perdeu o acesso ao e-mail antigo.",
+      "explicacaoDaTroca": "A pessoa passa a entrar no app com o novo e-mail. Ela recebe um aviso no celular e no e-mail antigo, e a troca fica no log com o motivo.",
+      "emailTrocado": "E-mail trocado. A pessoa já pode entrar com o novo e-mail.",
+      "emailTrocadoSemAviso": "E-mail trocado. A pessoa já pode entrar com o novo e-mail, mas não conseguimos mandar o aviso para o e-mail antigo.",
+      "emailDoPastor": "O e-mail do {{titulo}} só é trocado pelo suporte do Meu Dízimo.",
+      "emailProprio": "Para trocar o seu e-mail, peça a outro tesoureiro ou ao {{titulo}}.",
+      "errosDaTroca": {
+        "sem_permissao": "Você não tem permissão para trocar este e-mail.",
+        "email_proprio": "Ninguém troca o próprio e-mail. Peça a outro tesoureiro ou ao {{titulo}}.",
+        "pastor_pelo_suporte": "O e-mail do {{titulo}} só é trocado pelo suporte do Meu Dízimo.",
+        "membro_inativo": "Esta pessoa está inativa. Reative antes de trocar o e-mail.",
+        "motivo_obrigatorio": "Escreva o motivo da troca (pelo menos 5 letras).",
+        "email_invalido": "Confira o e-mail: ele parece incompleto.",
+        "email_igual": "Este já é o e-mail da pessoa.",
+        "email_ja_cadastrado": "Este e-mail já é de outra pessoa da igreja.",
+        "email_ja_tem_login": "Este e-mail já é usado para entrar no app por outra pessoa. Fale com o suporte do Meu Dízimo.",
+        "esta_em_outra_igreja": "Esta pessoa também está em outra igreja no app. A troca do e-mail dela é feita pelo suporte do Meu Dízimo."
       }
     }
   },
@@ -1312,7 +1330,8 @@
       "novo_comprovante_oferta": "{{membro}} anexou comprovante à oferta de {{valor}}.",
       "divergencia_contestada": "{{membro}} contestou a divergência do dízimo de {{valor}}.",
       "divergencia_contestada_oferta": "{{membro}} contestou a divergência da oferta de {{valor}}.",
-      "pix_alterado": "A chave Pix da conta {{conta}} foi alterada. Se não foi você nem alguém da tesouraria, avise o {{titulo}} agora."
+      "pix_alterado": "A chave Pix da conta {{conta}} foi alterada. Se não foi você nem alguém da tesouraria, avise o {{titulo}} agora.",
+      "email_alterado": "O seu e-mail de entrada no app foi trocado pela tesouraria para {{email}}. Se você não pediu, fale com o {{titulo}}."
     },
     "aTesouraria": "A tesouraria"
   }

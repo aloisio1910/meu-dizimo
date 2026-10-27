@@ -10,7 +10,8 @@ export type TipoDeAviso =
   | 'novo_lancamento'
   | 'novo_comprovante'
   | 'divergencia_contestada'
-  | 'pix_alterado';
+  | 'pix_alterado'
+  | 'email_alterado';
 
 export type Aviso = {
   id: string;
@@ -46,6 +47,7 @@ export function valoresDoAviso(
     quem: texto(d.confirmado_por),
     campanha: texto(d.campanha_nome),
     conta: texto(d.conta_nome),
+    email: texto(d.email),
   };
 }
 
@@ -54,6 +56,7 @@ export type DestinoDoAviso =
   | { pathname: '/campanha/[id]'; params: { id: string } }
   | { pathname: '/fila' }
   | { pathname: '/contas' }
+  | { pathname: '/perfil' }
   | null;
 
 // Tela que o toque abre. A tesouraria confere pela fila; a troca de Pix
@@ -73,5 +76,7 @@ export function destinoDoAviso(aviso: Pick<Aviso, 'tipo' | 'dados'>, ehAdministr
       return { pathname: '/fila' };
     case 'pix_alterado':
       return ehAdministrador ? { pathname: '/contas' } : null;
+    case 'email_alterado':
+      return { pathname: '/perfil' };
   }
 }
