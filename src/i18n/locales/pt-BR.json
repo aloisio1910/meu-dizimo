@@ -1164,10 +1164,10 @@
       "email": "E-mail",
       "dicaEmail": "O mesmo e-mail que a pessoa usa no celular.",
       "celular": "Celular com DDD",
-      "enviar": "Criar convite",
+      "enviar": "Enviar convite",
       "cancelar": "Voltar",
-      "criado": "Convite criado!",
-      "criadoDetalhe": "{{nome}} já pode instalar o app e entrar com {{email}}. O convite vale até {{data}}.",
+      "criado": "Convite enviado!",
+      "criadoDetalhe": "{{nome}} vai receber o convite por e-mail em {{email}}, com o passo a passo para entrar no app. O convite vale até {{data}}.",
       "outro": "Convidar outra pessoa",
       "verLista": "Ver a lista de membros",
       "erros": {
@@ -1186,7 +1186,7 @@
       "convitesEnviados_one": "{{count}} convite enviado",
       "convitesEnviados_other": "{{count}} convites enviados",
       "reenviar": "Reenviar convite",
-      "reenviado": "Convite reenviado. Vale até {{data}}.",
+      "reenviado": "Convite reenviado por e-mail. Vale até {{data}}.",
       "novoEmail": "Novo e-mail",
       "salvarEmail": "Trocar o e-mail",
       "voltar": "Voltar",
@@ -1245,6 +1245,11 @@
         "email_ja_cadastrado": "Este e-mail já é de outra pessoa da igreja.",
         "email_ja_tem_login": "Este e-mail já é usado para entrar no app por outra pessoa. Fale com o suporte do Meu Dízimo.",
         "esta_em_outra_igreja": "Esta pessoa também está em outra igreja no app. A troca do e-mail dela é feita pelo suporte do Meu Dízimo."
+      },
+      "emailDoConvite": {
+        "enviado": "E-mail do convite enviado para {{email}} em {{data}}.",
+        "enviando": "Enviando o e-mail do convite para {{email}}…",
+        "falhou": "Não conseguimos enviar o e-mail do convite para {{email}}. Confira o endereço e toque em Reenviar convite."
       }
     }
   },

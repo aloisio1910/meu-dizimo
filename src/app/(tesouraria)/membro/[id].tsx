@@ -16,7 +16,14 @@ import { familiaresIniciais, valoresIniciais } from '@/lib/cadastro';
 import { isoParaData, partesDaDataHora } from '@/lib/data';
 import { formatarMoeda } from '@/lib/dinheiro';
 import { ehFormaConhecida } from '@/lib/formas';
-import { acaoDeStatus, emailValido, normalizarEmail, situacaoDoMembro, trocaDeEmail } from '@/lib/membros';
+import {
+  acaoDeStatus,
+  emailDoConvite,
+  emailValido,
+  normalizarEmail,
+  situacaoDoMembro,
+  trocaDeEmail,
+} from '@/lib/membros';
 import { buscarCamposDoCadastro, type CampoDoCadastro } from '@/services/supabase/membros';
 import {
   buscarMembroDaIgreja,
@@ -247,6 +254,14 @@ export default function CartaoDoMembro() {
               {situacao === 'convite_vencido'
                 ? t('tesouraria.membro.conviteVenceu', { data: dia(ultimoConvite.expira_em) })
                 : t('tesouraria.membro.conviteAte', { data: dia(ultimoConvite.expira_em) })}
+            </Texto>
+          )}
+          {!!ultimoConvite && (
+            <Texto variante={emailDoConvite(ultimoConvite) === 'falhou' ? 'erro' : undefined}>
+              {t(`tesouraria.membro.emailDoConvite.${emailDoConvite(ultimoConvite)}`, {
+                email: membro.email,
+                data: ultimoConvite.email_enviado_em ? dia(ultimoConvite.email_enviado_em) : '',
+              })}
             </Texto>
           )}
           <Texto variante="apoio">{t('tesouraria.membro.convitesEnviados', { count: membro.convites.length })}</Texto>

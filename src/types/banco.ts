@@ -165,14 +165,14 @@ isOneToOne: false
                   ]
                 },"convites": {
                   Row: {
-                    "aceito_em": string | null,"enviado_em": string,"enviado_por": string | null,"expira_em": string,"id": string,"igreja_id": string,"membro_id": string
+                    "aceito_em": string | null,"email_enviado_em": string | null,"email_erro": string | null,"email_tentado_em": string | null,"email_tentativas": number,"enviado_em": string,"enviado_por": string | null,"expira_em": string,"id": string,"igreja_id": string,"membro_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "aceito_em"?: string | null,"enviado_em"?: string,"enviado_por"?: string | null,"expira_em"?: string,"id"?: string,"igreja_id": string,"membro_id": string
+                    "aceito_em"?: string | null,"email_enviado_em"?: string | null,"email_erro"?: string | null,"email_tentado_em"?: string | null,"email_tentativas"?: number,"enviado_em"?: string,"enviado_por"?: string | null,"expira_em"?: string,"id"?: string,"igreja_id": string,"membro_id": string
                   }
                   Update: {
-                    "aceito_em"?: string | null,"enviado_em"?: string,"enviado_por"?: string | null,"expira_em"?: string,"id"?: string,"igreja_id"?: string,"membro_id"?: string
+                    "aceito_em"?: string | null,"email_enviado_em"?: string | null,"email_erro"?: string | null,"email_tentado_em"?: string | null,"email_tentativas"?: number,"enviado_em"?: string,"enviado_por"?: string | null,"expira_em"?: string,"id"?: string,"igreja_id"?: string,"membro_id"?: string
                   }
                   Relationships: [
                     {
@@ -277,14 +277,14 @@ isOneToOne: false
                   ]
                 },"notificacoes": {
                   Row: {
-                    "criado_em": string,"dados": NonNullable<Json>,"id": string,"igreja_id": string,"lida_em": string | null,"push_enviado_em": string | null,"push_erro": string | null,"push_tentativas": number,"tipo": string,"usuario_id": string
+                    "criado_em": string,"dados": NonNullable<Json>,"id": string,"igreja_id": string,"lida_em": string | null,"push_enviado_em": string | null,"push_erro": string | null,"push_tentado_em": string | null,"push_tentativas": number,"tipo": string,"usuario_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "criado_em"?: string,"dados"?: NonNullable<Json>,"id"?: string,"igreja_id": string,"lida_em"?: string | null,"push_enviado_em"?: string | null,"push_erro"?: string | null,"push_tentativas"?: number,"tipo": string,"usuario_id": string
+                    "criado_em"?: string,"dados"?: NonNullable<Json>,"id"?: string,"igreja_id": string,"lida_em"?: string | null,"push_enviado_em"?: string | null,"push_erro"?: string | null,"push_tentado_em"?: string | null,"push_tentativas"?: number,"tipo": string,"usuario_id": string
                   }
                   Update: {
-                    "criado_em"?: string,"dados"?: NonNullable<Json>,"id"?: string,"igreja_id"?: string,"lida_em"?: string | null,"push_enviado_em"?: string | null,"push_erro"?: string | null,"push_tentativas"?: number,"tipo"?: string,"usuario_id"?: string
+                    "criado_em"?: string,"dados"?: NonNullable<Json>,"id"?: string,"igreja_id"?: string,"lida_em"?: string | null,"push_enviado_em"?: string | null,"push_erro"?: string | null,"push_tentado_em"?: string | null,"push_tentativas"?: number,"tipo"?: string,"usuario_id"?: string
                   }
                   Relationships: [
                     {
@@ -414,11 +414,17 @@ isOneToOne: false
 "aceitar_convites":
 { Args: Record<PropertyKey, never>; Returns: string[]
                            },
+"agir_como":
+{ Args: { "p_usuario": string }; Returns: undefined
+                           },
 "avisar_ficha":
 { Args: { "p_dados": Json,"p_membro_id": string,"p_tipo": string }; Returns: undefined
                            },
 "avisar_tesouraria":
 { Args: { "p_dados": Json,"p_exceto": string,"p_igreja_id": string,"p_tipo": string }; Returns: undefined
+                           },
+"avisar_troca_de_email":
+{ Args: { "p_membro_id": string }; Returns: undefined
                            },
 "aviso_pode_desligar":
 { Args: { "p_tipo": string }; Returns: boolean
@@ -429,8 +435,17 @@ isOneToOne: false
 "cancelar_lancamento":
 { Args: { "p_lancamento_id": string,"p_motivo": string }; Returns: undefined
                            },
+"chamar_funcao_interna":
+{ Args: { "p_nome_da_url": string }; Returns: undefined
+                           },
 "concluir_cadastro":
 { Args: { "p_campos_extras": Json,"p_celular": string,"p_familiares": Json,"p_membro_id": string,"p_nome": string,"p_tipo_dizimo": Database["public"]['Enums']["tipo_dizimo"],"p_versao_termos": string }; Returns: undefined
+                           },
+"concluir_envio_de_convites":
+{ Args: { "p_resultados": Json }; Returns: undefined
+                           },
+"concluir_envio_de_push":
+{ Args: { "p_resultados": Json,"p_tokens_invalidos"?: (string)[] }; Returns: undefined
                            },
 "confirmar_lancamento":
 { Args: { "p_lancamento_id": string,"p_valor_conferido_centavos"?: number }; Returns: undefined
@@ -452,6 +467,12 @@ isOneToOne: false
                            },
 "desfazer_confirmacao":
 { Args: { "p_lancamento_id": string,"p_motivo": string }; Returns: undefined
+                           },
+"desfazer_troca_de_email":
+{ Args: { "p_autor": string,"p_email_antigo": string,"p_membro_id": string }; Returns: undefined
+                           },
+"disparar_envio_de_push":
+{ Args: Record<PropertyKey, never>; Returns: undefined
                            },
 "eh_admin_master":
 { Args: Record<PropertyKey, never>; Returns: boolean
@@ -575,6 +596,16 @@ isOneToOne: false
               "acao": string,"antes": Json,"criado_em": string,"depois": Json,"id": number,"motivo": string,"perfil": string,"registro_id": string,"tabela": string,"total": number,"usuario_id": string
             }[]
                            },
+"reservar_avisos_para_push":
+{ Args: { "p_limite"?: number }; Returns: {
+              "dados": Json,"id": string,"idioma": string,"igreja_id": string,"igreja_nome": string,"tipo": string,"titulo_administrador": string,"tokens": (string)[]
+            }[]
+                           },
+"reservar_convites_para_email":
+{ Args: { "p_limite"?: number }; Returns: {
+              "email": string,"expira_em": string,"id": string,"igreja_nome": string,"nome": string
+            }[]
+                           },
 "responder_divergencia":
 { Args: { "p_aceitar": boolean,"p_lancamento_id": string,"p_mensagem"?: string }; Returns: undefined
                            },
@@ -586,6 +617,9 @@ isOneToOne: false
                            },
 "status_ao_liberar":
 { Args: { "p_resposta": Database["public"]['Enums']["resposta_divergencia"] }; Returns: Database["public"]['Enums']["status_lancamento"]
+                           },
+"trocar_email_do_membro":
+{ Args: { "p_autor": string,"p_email": string,"p_membro_id": string,"p_motivo": string }; Returns: Json
                            },
 "uuid_ou_nulo":
 { Args: { "p_texto": string }; Returns: string

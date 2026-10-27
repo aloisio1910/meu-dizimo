@@ -1,6 +1,14 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { acaoDeStatus, emailValido, filtrarMembros, situacaoDoMembro, trocaDeEmail, validarConvite } from '../membros';
+import {
+  acaoDeStatus,
+  emailDoConvite,
+  emailValido,
+  filtrarMembros,
+  situacaoDoMembro,
+  trocaDeEmail,
+  validarConvite,
+} from '../membros';
 
 describe('validarConvite', () => {
   it('aceita e normaliza o e-mail', () => {
@@ -147,5 +155,20 @@ describe('trocaDeEmail (D-097)', () => {
 
   it('inativo precisa ser reativado antes', () => {
     expect(trocaDeEmail(ficha('inativo', 'membro'), { ehEuMesmo: false })).toBe('inativo');
+  });
+});
+
+describe('emailDoConvite', () => {
+  it('enviado quando o envio deu certo', () => {
+    expect(emailDoConvite({ email_enviado_em: '2026-10-27T10:00:00Z', email_tentativas: 1 })).toBe('enviado');
+  });
+
+  it('enviando enquanto ainda há tentativas', () => {
+    expect(emailDoConvite({ email_enviado_em: null, email_tentativas: 0 })).toBe('enviando');
+    expect(emailDoConvite({ email_enviado_em: null, email_tentativas: 2 })).toBe('enviando');
+  });
+
+  it('falhou depois de 3 tentativas', () => {
+    expect(emailDoConvite({ email_enviado_em: null, email_tentativas: 3 })).toBe('falhou');
   });
 });

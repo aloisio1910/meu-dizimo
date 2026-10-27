@@ -24,11 +24,18 @@ export type MembroDaLista = {
   familiares: Json;
   campos_extras: Json;
   campos_internos: Json;
-  convites: { enviado_em: string; expira_em: string; aceito_em: string | null }[];
+  convites: {
+    enviado_em: string;
+    expira_em: string;
+    aceito_em: string | null;
+    email_enviado_em: string | null;
+    email_tentativas: number;
+    email_erro: string | null;
+  }[];
 };
 
 const COLUNAS =
-  'id, numero, nome, email, celular, status, perfil, cadastro_concluido_em, tipo_dizimo, familiares, campos_extras, campos_internos, convites(enviado_em, expira_em, aceito_em)';
+  'id, numero, nome, email, celular, status, perfil, cadastro_concluido_em, tipo_dizimo, familiares, campos_extras, campos_internos, convites(enviado_em, expira_em, aceito_em, email_enviado_em, email_tentativas, email_erro)';
 
 export async function listarMembrosDaIgreja(igrejaId: string): Promise<MembroDaLista[]> {
   const { data, error } = await supabase

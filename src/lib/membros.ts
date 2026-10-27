@@ -119,3 +119,12 @@ export function trocaDeEmail(
   if (membro.status === 'inativo') return 'inativo';
   return 'pode';
 }
+
+// Como está o e-mail do convite mais recente, para a tesouraria saber se a
+// pessoa recebeu. Até 3 tentativas, de 2 em 2 minutos; depois, desiste.
+export type EmailDoConvite = 'enviado' | 'enviando' | 'falhou';
+
+export function emailDoConvite(convite: { email_enviado_em: string | null; email_tentativas: number }): EmailDoConvite {
+  if (convite.email_enviado_em) return 'enviado';
+  return convite.email_tentativas >= 3 ? 'falhou' : 'enviando';
+}

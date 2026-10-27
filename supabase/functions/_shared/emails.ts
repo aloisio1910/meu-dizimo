@@ -19,7 +19,10 @@ function montar(para: string, assunto: string, paragrafos: string[]): Email {
     para,
     assunto,
     texto: paragrafos.join('\n\n'),
-    html: paragrafos.map((p) => `<p style="font-family:Arial,sans-serif;font-size:16px">${escapar(p)}</p>`).join(''),
+    // Quebra de linha dentro de um parágrafo (ex.: lista de lojas) vira <br>.
+    html: paragrafos
+      .map((p) => `<p style="font-family:Arial,sans-serif;font-size:16px">${escapar(p).split('\n').join('<br>')}</p>`)
+      .join(''),
   };
 }
 
@@ -39,5 +42,38 @@ export function emailDeTrocaDeEmail(dados: {
     `Motivo informado: ${dados.motivo}`,
     'A partir de agora, este endereço não serve mais para entrar no app.',
     `Se você não pediu essa troca, fale com o ${titulo} da sua igreja.`,
+  ]);
+}
+
+// Data em que o convite vence, no horário de Brasília (o país do piloto).
+export function dataDoConvite(expiraEm: string): string {
+  return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long', timeZone: 'America/Sao_Paulo' }).format(
+    new Date(expiraEm),
+  );
+}
+
+// Passo 2 do fluxo principal: vai para o e-mail da pessoa convidada.
+// Enquanto o app não está nas lojas, sem links: a tesouraria diz onde baixar.
+export function emailDeConvite(dados: {
+  para: string;
+  nome: string;
+  igreja: string;
+  expiraEm: string;
+  links: { android?: string; iphone?: string };
+}): Email {
+  const lojas = [
+    dados.links.android && `Android (Google Play): ${dados.links.android}`,
+    dados.links.iphone && `iPhone (App Store): ${dados.links.iphone}`,
+  ].filter((linha): linha is string => !!linha);
+  const instalar = lojas.length
+    ? `1. Instale o app Meu Dízimo no celular:\n${lojas.join('\n')}`
+    : '1. Instale o app Meu Dízimo no celular. A tesouraria da igreja informa onde baixar.';
+  return montar(dados.para, `Convite da ${dados.igreja} para o Meu Dízimo`, [
+    `Olá, ${dados.nome}.`,
+    `A ${dados.igreja} convidou você para usar o Meu Dízimo, o Cartão de Dízimo digital da igreja.`,
+    instalar,
+    `2. Abra o app e entre com este e-mail: ${dados.para}. Você vai receber um código de 6 números para confirmar.`,
+    `O convite vale até ${dataDoConvite(dados.expiraEm)}.`,
+    'Se você não esperava este convite, pode ignorar este e-mail.',
   ]);
 }

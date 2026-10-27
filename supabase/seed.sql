@@ -41,9 +41,11 @@ insert into public.membros (igreja_id, nome, email, celular, perfil) values
 insert into public.convites (igreja_id, membro_id)
 select igreja_id, id from public.membros where igreja_id = '00000000-0000-4000-8000-000000000001';
 
--- Envio do push (D-096): onde o banco encontra a Edge Function no Supabase
--- local (rede interna do Docker). O segredo daqui é só de desenvolvimento e
--- precisa ser igual ao de supabase/functions/.env (modelo em .env.example).
--- Na nuvem os dois são outros, gravados à parte no Vault e nos segredos.
+-- Edge Functions chamadas pelo banco (push, D-096; e-mail de convite): onde
+-- ficam no Supabase local (rede interna do Docker). O segredo daqui é só de
+-- desenvolvimento e precisa ser igual ao de supabase/functions/.env (modelo
+-- em .env.example). Na nuvem são outros, gravados à parte no Vault e nos
+-- segredos das funções.
 select vault.create_secret('http://supabase_kong_meu-dizimo:8000/functions/v1/enviar-push', 'url_do_envio_de_push');
-select vault.create_secret('segredo-local-do-envio-de-push', 'segredo_do_envio_de_push');
+select vault.create_secret('http://supabase_kong_meu-dizimo:8000/functions/v1/enviar-convites', 'url_do_envio_de_convites');
+select vault.create_secret('segredo-local-das-funcoes', 'segredo_das_funcoes');

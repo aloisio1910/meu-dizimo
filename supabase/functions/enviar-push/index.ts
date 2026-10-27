@@ -33,8 +33,8 @@ type Recibo = { status: 'ok' } | { status: 'error'; message?: string; details?: 
 
 Deno.serve(async (pedido) => {
   // Só o banco conhece o segredo (Vault); qualquer outro chamador é recusado.
-  const segredo = Deno.env.get('SEGREDO_DO_ENVIO_DE_PUSH');
-  if (!segredo || pedido.headers.get('x-segredo-do-envio') !== segredo) {
+  const segredo = Deno.env.get('SEGREDO_DAS_FUNCOES');
+  if (!segredo || pedido.headers.get('x-segredo-das-funcoes') !== segredo) {
     return new Response('nao_autorizado', { status: 401 });
   }
 
