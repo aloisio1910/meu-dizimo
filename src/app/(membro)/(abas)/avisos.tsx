@@ -54,10 +54,11 @@ export default function Avisos() {
 
   const textoDo = (aviso: Aviso) => {
     const valores = valoresDoAviso(aviso, (centavos, moeda) => formatarMoeda(centavos, moeda, idioma));
+    // Oferta é feminino: o context escolhe a frase "<tipo>_oferta", se houver.
     return t(`avisos.textos.${aviso.tipo}`, {
       ...valores,
-      tipo: t(`log.tipos.${valores.tipo === 'oferta' ? 'oferta' : 'dizimo'}`),
-      quem: valores.quem || t('avisos.naTesouraria'),
+      context: valores.tipo === 'oferta' ? 'oferta' : undefined,
+      quem: valores.quem || t('avisos.aTesouraria'),
       titulo: ficha.igrejas?.titulo_administrador,
     });
   };

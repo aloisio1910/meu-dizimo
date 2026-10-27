@@ -1296,18 +1296,24 @@
     "marcarTodos": "Marcar todos como lidos",
     "novo": "Novo",
     "quando": "{{dia}} às {{hora}}",
-    "naTesouraria": "a tesouraria",
     "rotuloDaAba_one": "Avisos, {{count}} não lido",
     "rotuloDaAba_other": "Avisos, {{count}} não lidos",
     "textos": {
-      "lancamento_confirmado": "Seu {{tipo}} de {{valor}} foi confirmado por {{quem}}.",
-      "divergencia_registrada": "A tesouraria conferiu o seu {{tipo}} de {{valorInformado}} e encontrou {{valor}}. Toque para ver e responder.",
-      "lancamento_reaberto": "Seu {{tipo}} de {{valor}} voltou para conferência.",
+      "lancamento_confirmado": "{{quem}} confirmou o seu dízimo de {{valor}}.",
+      "lancamento_confirmado_oferta": "{{quem}} confirmou a sua oferta de {{valor}}.",
+      "divergencia_registrada": "A tesouraria conferiu o seu dízimo de {{valorInformado}} e encontrou {{valor}}. Toque para ver e responder.",
+      "divergencia_registrada_oferta": "A tesouraria conferiu a sua oferta de {{valorInformado}} e encontrou {{valor}}. Toque para ver e responder.",
+      "lancamento_reaberto": "Seu dízimo de {{valor}} voltou para conferência.",
+      "lancamento_reaberto_oferta": "Sua oferta de {{valor}} voltou para conferência.",
       "nova_campanha": "Nova campanha de oferta: {{campanha}}.",
-      "novo_lancamento": "{{membro}} registrou {{tipo}} de {{valor}}.",
-      "novo_comprovante": "{{membro}} anexou comprovante ao {{tipo}} de {{valor}}.",
-      "divergencia_contestada": "{{membro}} contestou a divergência do {{tipo}} de {{valor}}.",
+      "novo_lancamento": "{{membro}} registrou dízimo de {{valor}}.",
+      "novo_lancamento_oferta": "{{membro}} registrou oferta de {{valor}}.",
+      "novo_comprovante": "{{membro}} anexou comprovante ao dízimo de {{valor}}.",
+      "novo_comprovante_oferta": "{{membro}} anexou comprovante à oferta de {{valor}}.",
+      "divergencia_contestada": "{{membro}} contestou a divergência do dízimo de {{valor}}.",
+      "divergencia_contestada_oferta": "{{membro}} contestou a divergência da oferta de {{valor}}.",
       "pix_alterado": "A chave Pix da conta {{conta}} foi alterada. Se não foi você nem alguém da tesouraria, avise o {{titulo}} agora."
-    }
+    },
+    "aTesouraria": "A tesouraria"
   }
 }
