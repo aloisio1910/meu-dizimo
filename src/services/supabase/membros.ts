@@ -54,7 +54,9 @@ export async function buscarMinhasFichas(usuarioId: string): Promise<MinhaFicha[
     .eq('usuario_id', usuarioId)
     .order('criado_em');
   if (error) throw error;
-  return data;
+  // Igreja inativa: o banco não mostra a igreja (igrejas vem vazio) e não
+  // deixa entrar; a ficha fica de fora, e o início explica por quê.
+  return data.filter((ficha) => ficha.igrejas);
 }
 
 // Campos ativos que o membro preenche, na ordem do formulário (RN-004).
@@ -147,6 +149,13 @@ export async function concluirCadastro(dados: DadosDoCadastro): Promise<ErroDoCa
 
 // Nomes das igrejas em que a própria ficha está inativa (RN-035). A RLS
 // esconde a ficha inativa da pessoa; isto só serve para explicar o motivo.
+// Igrejas que o Admin Master inativou (ex.: cancelaram o serviço).
+export async function buscarIgrejasInativasOndeEstou(): Promise<string[]> {
+  const { data, error } = await supabase.rpc('igrejas_inativas_onde_estou');
+  if (error) throw error;
+  return data;
+}
+
 export async function buscarIgrejasOndeEstouInativo(): Promise<string[]> {
   const { data, error } = await supabase.rpc('igrejas_onde_estou_inativo');
   if (error) throw error;

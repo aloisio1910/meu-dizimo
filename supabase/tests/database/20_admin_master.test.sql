@@ -10,7 +10,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(30);
+select plan(34);
 
 create function pg_temp.entrar(p_usuario uuid, p_admin_master boolean default false)
 returns void
@@ -180,6 +180,40 @@ select is(
 
 
 -- -----------------------------------------------------------------------------
+-- Convite do Pastor que ainda não entrou
+-- -----------------------------------------------------------------------------
+
+-- O Admin Master não lê as fichas: o id vem de antes de entrar como ele.
+create temporary table clara as select id from public.membros where email = 'clara@c.test';
+grant select on clara to authenticated, service_role;
+select pg_temp.entrar('f0000000-0000-0000-0000-000000000001', true);
+set local role authenticated;
+select public.admin_reenviar_convite((select id from clara));
+select throws_ok(
+  $$ select public.admin_reenviar_convite('2a000000-0000-0000-0000-000000000001') $$,
+  'P0002', 'convite_indisponivel', 'Quem já entrou não tem convite para reenviar'
+);
+reset role;
+select is(
+  (select count(*) from public.convites c join public.membros m on m.id = c.membro_id where m.email = 'clara@c.test'),
+  2::bigint,
+  'O suporte reenvia o convite do Pastor que ainda não entrou'
+);
+
+set local role service_role;
+select public.trocar_email_do_membro(
+  'f0000000-0000-0000-0000-000000000001', (select id from clara),
+  'clara.certa@c.test', 'Digitou o e-mail errado'
+);
+reset role;
+select is(
+  (select count(*) from public.convites c join public.membros m on m.id = c.membro_id where m.email = 'clara.certa@c.test'),
+  3::bigint,
+  'Trocar o e-mail de quem ainda é convidado manda um convite novo para o e-mail certo'
+);
+
+
+-- -----------------------------------------------------------------------------
 -- Troca de e-mail pelo suporte (D-097)
 -- -----------------------------------------------------------------------------
 
@@ -223,6 +257,12 @@ select ok(
 select ok(
   (select bool_and(igreja_nome is not null) from public.admin_logs_globais(1, 100) where igreja_id is not null),
   'Cada linha diz de que igreja é'
+);
+-- No teste tudo acontece no mesmo instante (uma transação só): vale a ordem de gravação.
+select is(
+  (select id from public.admin_logs_globais(1, 100) limit 1),
+  (select max(id) from public.admin_logs_globais(1, 100)),
+  'Ações do mesmo instante: a gravada por último aparece primeiro'
 );
 reset role;
 

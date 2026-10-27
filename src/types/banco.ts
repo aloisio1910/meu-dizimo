@@ -441,6 +441,9 @@ isOneToOne: false
               "acao": string,"antes": Json,"criado_em": string,"depois": Json,"id": number,"igreja_id": string,"igreja_nome": string,"motivo": string,"registro_id": string,"tabela": string,"total": number
             }[]
                            },
+"admin_reenviar_convite":
+{ Args: { "p_membro_id": string }; Returns: undefined
+                           },
 "admin_tirar_pastor_atual":
 { Args: { "p_exceto": string,"p_igreja_id": string }; Returns: undefined
                            },

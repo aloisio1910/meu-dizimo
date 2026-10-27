@@ -8,6 +8,7 @@ import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { useBloqueio } from '@/hooks/use-bloqueio';
 import { useMinhasFichas } from '@/hooks/use-minhas-fichas';
+import { ehAdminMaster } from '@/hooks/use-admin-master';
 import { useSessao } from '@/hooks/use-sessao';
 import { sair } from '@/services/supabase/auth';
 
@@ -20,6 +21,8 @@ export default function Inicio() {
   const { disponivel: temDigital, preferencia: escolhaDaDigital } = useBloqueio();
 
   if (!sessao) return <Redirect href="/entrar" />;
+  // O Admin Master administra a plataforma: vai para a lista de igrejas (A-01).
+  if (ehAdminMaster(sessao)) return <Redirect href="/igrejas" />;
 
   if (carregando) {
     return (

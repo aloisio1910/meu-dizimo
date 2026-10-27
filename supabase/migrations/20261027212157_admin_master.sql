@@ -468,11 +468,33 @@ begin
       from public.auditoria a
       left join public.igrejas i on i.id = a.igreja_id
      where a.perfil = 'admin_master'
-     order by a.criado_em desc, a.id
+     order by a.criado_em desc, a.id desc
      limit least(greatest(p_tamanho, 1), 100)
     offset (greatest(p_pagina, 1) - 1) * least(greatest(p_tamanho, 1), 100);
 end;
 $$;
+
+-- O Pastor que ainda não entrou pode pedir o convite de novo ao suporte.
+create function public.admin_reenviar_convite(p_membro_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_igreja_id uuid;
+begin
+  perform public.exigir_admin_master();
+  select m.igreja_id into v_igreja_id from public.membros m where m.id = p_membro_id and m.status = 'convidado';
+  if not found then
+    raise exception 'convite_indisponivel' using errcode = 'P0002';
+  end if;
+  insert into public.convites (igreja_id, membro_id, enviado_por) values (v_igreja_id, p_membro_id, (select auth.uid()));
+end;
+$$;
+
+revoke execute on function public.admin_reenviar_convite(uuid) from public, anon;
+grant execute on function public.admin_reenviar_convite(uuid) to authenticated;
 
 revoke execute on function public.igreja_ativa(uuid) from public, anon;
 revoke execute on function public.exigir_admin_master() from public, anon;
@@ -573,6 +595,12 @@ begin
    where id = p_membro_id
       or (v_membro.usuario_id is not null and usuario_id = v_membro.usuario_id);
   perform set_config('app.motivo', '', true);
+
+  -- Quem ainda não entrou: o convite vai de novo, agora para o e-mail certo.
+  if v_membro.status = 'convidado' then
+    insert into public.convites (igreja_id, membro_id, enviado_por)
+    values (v_membro.igreja_id, p_membro_id, p_autor);
+  end if;
 
   return jsonb_build_object(
     'usuario_id', v_membro.usuario_id,
