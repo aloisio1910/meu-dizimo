@@ -106,6 +106,7 @@ O membro só entra por convite da igreja e acessa sem senha, com um código de 6
 - Campos configuráveis por igreja: cada um pode ser obrigatório, opcional, preenchido pela tesouraria (o membro só vê, D-093) ou não usado. Tipos: texto, data, número, lista de opções.
 - Dízimo individual ou familiar; no familiar, o membro informa os nomes da família. Sem acesso compartilhado ao cartão.
 - O membro altera os próprios dados. Troca de e-mail exige código no novo e-mail; o anterior continua valendo até a confirmação.
+- Quem perdeu o acesso ao e-mail pede à tesouraria, que troca com motivo registrado no log; a pessoa é avisada no celular e no e-mail antigo. O e-mail do Pastor de Governo, e o de quem também está em outra igreja, só é trocado pelo suporte do app (D-097).
 
 **Ciclo de vida do membro**
 
@@ -361,7 +362,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-066 | Até 5 contas por igreja, com nome próprio e uma principal; cada campanha aponta para uma conta | Definido |
 | D-067 | Perfil técnico do Pastor de Governo é Administrador da Igreja; o Admin Master é identificado por uma marca no login que só o servidor grava | Definido |
 | D-068 | Só o Admin Master cadastra ou promove um Pastor de Governo; o Pastor de Governo autoriza e suspende tesoureiros | Definido |
-| D-069 | A tesouraria corrige o e-mail só enquanto o membro é convidado; depois, a troca é feita pelo próprio membro, com código no novo e-mail | Definido |
+| D-069 | A tesouraria corrige o e-mail só enquanto o membro é convidado; depois, a troca é feita pelo próprio membro, com código no novo e-mail. Substituída pela D-097 | Definido |
 | D-070 | O tesoureiro vê todos os dados cadastrais do membro, mas só o próprio membro os edita | Definido |
 | D-071 | Status da igreja: ativa ou inativa; a faixa do plano é um campo livre até a cobrança ser definida | Definido |
 | D-072 | A data do dízimo pode ser retroativa, nunca futura | Definido |
@@ -389,6 +390,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-094 | Relatórios de Membros (por situação) e de Participação no período (quantos devolveram dízimo e ofertaram, por campanha e por grupo), com filtro por campo do cadastro. Conta como "devolveu" quem registrou no período, mesmo sem conferência; os valores somam só o confirmado. A lista de membros ativos sem dízimo no período é só do Pastor de Governo, sem valores, como cuidado pastoral | Definido |
 | D-095 | O Log da igreja tem pesquisa (pessoa, conta, campanha, campo, motivo e valor) e download em planilha com os filtros aplicados. O download fica registrado no próprio log, com quem baixou, período, quantidade e pesquisa; só o Pastor de Governo baixa, até 5.000 registros por arquivo | Definido |
 | D-096 | Avisos: o banco cria um aviso para cada evento da seção 9 (tabela notificacoes, a 13ª), que aparece no app numa aba Avisos com os não lidos, além do push. A pessoa desliga só os avisos que podem ser desligados (nova campanha; novo lançamento e comprovante para a tesouraria); o resumo diário fica para depois. Push primeiro no Android; iPhone quando houver a conta Apple Developer | Definido |
+| D-097 | Troca de e-mail: a tesouraria (tesoureiro ou Pastor de Governo) troca o e-mail de membros, convidados ou ativos, e de outros tesoureiros, com motivo obrigatório registrado no log. Ninguém troca o próprio e-mail; o do Pastor de Governo, e o de quem também está em outra igreja, só pelo suporte do app. A pessoa é avisada no celular e no e-mail antigo. O novo e-mail não pode já ter login. Substitui a regra anterior de que a tesouraria só corrigia o e-mail de convidado (D-069) | Definido |
 
 ## 14. Questões abertas e próximos passos
 
