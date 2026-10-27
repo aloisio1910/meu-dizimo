@@ -2,13 +2,13 @@
 -- Rodar com: npx supabase test db
 --
 -- Cenário
---   Igreja A: Ana e Paula (administradoras), Tiago (tesoureiro), Maria
---             (membro), Rui (membro inativo)
+--   Igreja A: Ana (administradora), Paula (administradora antiga, inativa),
+--             Tiago (tesoureiro), Maria (membro), Rui (membro inativo)
 
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(14);
+select plan(15);
 
 create function pg_temp.entrar(p_usuario uuid, p_admin_master boolean default false)
 returns void
@@ -46,7 +46,7 @@ insert into public.membros (igreja_id, usuario_id, nome, email, celular, perfil,
   ('1a000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-000000000001', 'Ana', 'ana@a.test', '1', 'administrador', 'ativo', now()),
   ('1a000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-000000000002', 'Tiago', 'tiago@a.test', '2', 'tesoureiro', 'ativo', now()),
   ('1a000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-000000000003', 'Maria', 'maria@a.test', '3', 'membro', 'ativo', now()),
-  ('1a000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-000000000004', 'Paula', 'paula@a.test', '4', 'administrador', 'ativo', now()),
+  ('1a000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-000000000004', 'Paula', 'paula@a.test', '4', 'administrador', 'inativo', now()),
   ('1a000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-000000000005', 'Rui', 'rui@a.test', '5', 'membro', 'inativo', now());
 
 
@@ -131,11 +131,12 @@ reset role;
 
 select pg_temp.entrar('f0000000-0000-0000-0000-000000000001', true);
 set local role authenticated;
-select lives_ok(
-  $$ update public.membros set perfil = 'tesoureiro' where email = 'paula@a.test' $$,
-  'Admin Master muda o perfil de um Pastor de Governo'
-);
+-- O Admin Master não mexe nas fichas direto: define o Pastor pelas funções
+-- do suporte (admin_definir_pastor, testada em 20_admin_master).
+update public.membros set perfil = 'tesoureiro' where email = 'ana@a.test';
+select pass('Admin Master tenta alterar a ficha direto');
 reset role;
+select is(pg_temp.perfil_de('ana@a.test'), 'administrador', 'A ficha não muda: o Admin Master não altera fichas direto');
 
 select * from finish();
 rollback;

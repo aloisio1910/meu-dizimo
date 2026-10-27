@@ -49,3 +49,23 @@ select igreja_id, id from public.membros where igreja_id = '00000000-0000-4000-8
 select vault.create_secret('http://supabase_kong_meu-dizimo:8000/functions/v1/enviar-push', 'url_do_envio_de_push');
 select vault.create_secret('http://supabase_kong_meu-dizimo:8000/functions/v1/enviar-convites', 'url_do_envio_de_convites');
 select vault.create_secret('segredo-local-das-funcoes', 'segredo_das_funcoes');
+
+-- Admin Master de teste (A-01, A-02): admin@teste.local, código no Mailpit.
+-- A marca admin_master fica no app_metadata, que só o servidor grava (D-067).
+-- Na nuvem, o Admin Master é criado à parte, nunca por este arquivo.
+insert into auth.users (
+  instance_id, id, aud, role, email, email_confirmed_at,
+  raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+  confirmation_token, recovery_token, email_change_token_new, email_change
+) values (
+  '00000000-0000-0000-0000-000000000000', '0a000000-0000-4000-8000-0000000000ad', 'authenticated', 'authenticated',
+  'admin@teste.local', now(),
+  '{"provider": "email", "providers": ["email"], "admin_master": true}', '{}', now(), now(),
+  '', '', '', ''
+);
+insert into auth.identities (provider_id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+values (
+  '0a000000-0000-4000-8000-0000000000ad', '0a000000-0000-4000-8000-0000000000ad',
+  '{"sub": "0a000000-0000-4000-8000-0000000000ad", "email": "admin@teste.local", "email_verified": true}',
+  'email', now(), now(), now()
+);
