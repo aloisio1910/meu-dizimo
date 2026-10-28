@@ -12,11 +12,11 @@ Plataforma multi-igreja que substitui o envelope físico de dízimo por um Cart�
 
 ## Documentos de referência (o desenvolvedor tem acesso)
 
-- Documento de Requisitos v0.4: regras de negócio RN-001 a RN-041, decisões D-001 a D-101, escopo por fases, preços, LGPD.
+- Documento de Requisitos v0.4: regras de negócio RN-001 a RN-041, decisões D-001 a D-103, escopo por fases, preços, LGPD.
 - Fluxos, Telas e Modelo de Dados: fluxo principal em 9 passos, fluxos secundários, mapa de 22 telas (M-01 a M-10, T-01 a T-06, P-01 a P-04, A-01 a A-02), 13 tabelas.
 - Protótipo clicável: app do membro (celular) e painel da tesouraria (web).
 Se algo aqui parecer incompleto, pergunte ao desenvolvedor em vez de inventar regra de negócio.
-Os originais ficam no Claude Docs (links em `docs/README.md`); `docs/requisitos.md` e `docs/fluxos-telas-modelo-de-dados.md` são exportações em Markdown, legíveis direto. Ao tomar uma decisão nova, registre-a no original (seção 13 do Requisitos, a partir de D-102) e exporte de novo.
+Os originais ficam no Claude Docs (links em `docs/README.md`); `docs/requisitos.md` e `docs/fluxos-telas-modelo-de-dados.md` são exportações em Markdown, legíveis direto. Ao tomar uma decisão nova, registre-a no original (seção 13 do Requisitos, a partir de D-104) e exporte de novo.
 
 ## Tecnologia
 
@@ -120,5 +120,5 @@ Os originais ficam no Claude Docs (links em `docs/README.md`); `docs/requisitos.
 - **E-mail de convite:** cada convite novo (convidar ou reenviar) chama a Edge Function `enviar-convites` (mesmo caminho do push); o Cartão do membro mostra se o e-mail foi enviado. Sem links das lojas, o texto diz que a tesouraria informa onde baixar.
 - **Admin Master (A-01, A-02 e Atendimento):** telas em `src/app/(admin)` (`/igrejas`, `/nova-igreja`, `/gerenciar-igreja/[id]`, `/atendimento`, `/logs-globais`); a porta de entrada leva o Admin Master direto para `/igrejas`. No local, entra com `admin@teste.local` (criado pelo `seed.sql`). Ele **não lê as tabelas dos membros direto**: tudo passa por funções `admin_*`, que registram no log da igreja (a busca do Atendimento exige motivo). Um só Pastor por igreja (índice `membros_um_pastor_por_igreja`); igreja inativa tira todos do app sem apagar nada (`igreja_ativa`, e as funções de acesso só valem em igreja ativa). Trocar o e-mail de convidado reenvia o convite.
   - Para testar telas web logado: `scripts/navegar-na-web.mjs` entra pela própria tela de login (código do Mailpit) e segue passos (`ir:`, `tocar:`, `digitar:Rótulo=valor`, `ler`). Servidor web de teste com `CI=1 npx expo start --web --port 8090` **não recarrega o código**: reinicie após mudar telas e feche o processo (pela porta) ao terminar.
-- **Próximo passo:** seletor de igreja (D-061), resumo diário da tesouraria (D-096) e o envio do banco para o Supabase na nuvem (pedir confirmação; lá também gravar no Vault o endereço e o segredo das funções (Vault: `url_do_envio_de_push`, `url_do_envio_de_convites`, `segredo_das_funcoes`; `supabase secrets set` para `SEGREDO_DAS_FUNCOES`, `RESEND_API_KEY`, `EMAIL_REMETENTE` e, quando houver, `LINK_ANDROID`/`LINK_IPHONE`) e publicar as funções com `npx supabase functions deploy`).
+- **Próximo passo:** seletor de igreja (D-061), mensagens da igreja aos membros e avisos da plataforma (D-102; agendar é premium, D-103), resumo diário da tesouraria (D-096) e o envio do banco para o Supabase na nuvem (pedir confirmação; lá também gravar no Vault o endereço e o segredo das funções (Vault: `url_do_envio_de_push`, `url_do_envio_de_convites`, `segredo_das_funcoes`; `supabase secrets set` para `SEGREDO_DAS_FUNCOES`, `RESEND_API_KEY`, `EMAIL_REMETENTE` e, quando houver, `LINK_ANDROID`/`LINK_IPHONE`) e publicar as funções com `npx supabase functions deploy`).
 - Atualize esta seção ao fim de cada etapa importante.

@@ -395,6 +395,8 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-099 | Um só Pastor de Governo por igreja: definir um novo faz o anterior voltar a ser membro (ou cancela o convite, se ainda não entrou) | Definido |
 | D-100 | Igreja inativa: ninguém dela entra no app (membros e tesouraria veem uma explicação); nada é apagado, e reativar devolve tudo como estava | Definido |
 | D-101 | Igreja nova: o Admin Master preenche nome, país, idioma, moeda, faixa do plano e o Pastor de Governo; o Pastor recebe o convite por e-mail e completa o resto | Definido |
+| D-102 | Mensagens aos membros: o Pastor de Governo e os tesoureiros enviam mensagens (ex.: versículo sobre fidelidade ou sobre semear) para todos os membros ativos ou para um grupo do cadastro, nunca filtrados pelo que a pessoa deu ou deixou de dar. Até 1 mensagem por semana por igreja, com prévia antes de enviar e registro no log. O membro pode desligar "Mensagens da igreja" no perfil. O Admin Master envia avisos da plataforma (ex.: manutenção programada) para todas as igrejas ou uma só, sem limite e sem opção de desligar. Tudo chega por push e fica na aba Avisos. No MVP a mensagem sai na hora; agendar é do pacote premium (D-103) | Definido |
+| D-103 | Push programado previsto junto com o controle financeiro (seção 16), como recurso do pacote premium: lembretes de contas a pagar e de fechamento do mês, mensagem agendada aos membros e resumo periódico ao Pastor de Governo | Definido |
 
 ## 14. Questões abertas e próximos passos
 
@@ -496,6 +498,15 @@ Uma atualização futura dará a Tesoureiro e Pastor de Governo um controle fina
 | Exportação para o contador | Planilha no formato que o contador pedir, por período | Média |
 | Acompanhamento pastoral | Painel com novos dizimistas, aniversariantes e membros sem lançamento há alguns meses, para cuidado pastoral | Média, com cuidado (abaixo) |
 | Mensagens segmentadas | Agradecimento após confirmação, aviso de nova campanha para grupos escolhidos | Baixa |
+
+**Push programado (pacote premium)**
+
+Notificações que saem sozinhas, em dia e hora definidos, oferecidas como recurso do pacote premium (D-103):
+
+- **Lembrete de contas a pagar:** avisa a tesouraria antes do vencimento de cada saída, inclusive as recorrentes (ex.: "o aluguel vence amanhã").
+- **Lembrete de fechamento do mês:** avisa a tesouraria e o Pastor de Governo para conferir e fechar o mês, e quando houver lançamentos esperando conferência.
+- **Mensagem agendada aos membros:** a mensagem da igreja (D-102) é escrita antes e sai no dia e na hora escolhidos, dentro do mesmo limite de 1 por semana.
+- **Resumo periódico ao Pastor de Governo:** push semanal ou mensal com entradas, saídas e saldo do período, visível só à tesouraria e ao Pastor.
 
 **Cuidados**
 
