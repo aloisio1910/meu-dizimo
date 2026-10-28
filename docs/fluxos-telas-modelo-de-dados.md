@@ -114,7 +114,7 @@ As tabelas usuarios, dispositivos e aceites\_termos ficam fora do desenho: ligam
 | campanhas | id, igreja\_id, nome, descrição, objetivo, início, fim, status, permanente, link do vídeo, conta\_id | A campanha permanente Oferta é criada junto com a igreja e nunca encerra. Status: rascunho, ativa ou encerrada. Sem conta própria, usa a principal |
 | campanha\_midias | igreja\_id, campanha\_id, arquivo, ordem, ativa | Artes da campanha, até 5 MB cada |
 | dispositivos | usuario\_id, token de notificação, plataforma, ativo | Um usuário pode ter mais de um aparelho; se o aparelho trocar de conta, o token passa para o novo usuário |
-| aceites\_termos | usuario\_id, versão do termo, aceito em | Prova do consentimento (LGPD); um registro por versão aceita, sem alteração |
+| aceites\_termos | usuario\_id, versão do termo, aceito em | Prova do consentimento (LGPD); um registro por versão aceita, sem alteração, com a declaração de ter 18 anos ou mais (D-104) |
 | auditoria | igreja\_id, usuario\_id, perfil, ação, tabela, registro\_id, antes, depois, motivo, data e hora | Gravada por gatilhos do banco; sem permissão de alterar ou apagar |
 | notificacoes | igreja_id, usuario_id, tipo, dados, criado_em, lida_em, push_enviado_em, tentativas e erro do push | Avisos do app e do push, criados por gatilhos do banco; cada pessoa vê só os próprios (D-096) |
 | mensagens | igreja_id (vazio = todas), origem (igreja ou plataforma), autor, texto, grupo do cadastro (campo e valor), destinatários, criado_em | Mensagens da igreja aos membros e avisos da plataforma; cada envio vira avisos em notificacoes. Até 1 por semana por igreja (D-102) |
