@@ -9,8 +9,8 @@ type Links = { logo: string | null; capa: string | null };
 // Links temporários do logo e da capa da igreja em uso (seção 17). Busca de
 // novo só quando o Pastor troca a imagem (o caminho muda).
 export function useImagensDaIgreja(): Links {
-  const { fichas } = useMinhasFichas();
-  const igreja = fichas.find((f) => f.status === 'ativo')?.igrejas;
+  const { fichaEmUso } = useMinhasFichas();
+  const igreja = fichaEmUso?.igrejas;
   const logo = igreja?.logo_path ?? null;
   const capa = igreja?.capa_path ?? null;
   const [links, setLinks] = useState<Links & { chave: string }>({ logo: null, capa: null, chave: '' });

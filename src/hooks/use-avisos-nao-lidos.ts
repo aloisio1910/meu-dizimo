@@ -23,15 +23,20 @@ export function useAvisosNaoLidos(): { naoLidos: number; atualizar: () => void }
   const { sessao } = useSessao();
   const { fichas } = useMinhasFichas();
   const usuarioId = sessao?.user.id;
-  const igrejaId = fichas.find((f) => f.status === 'ativo')?.igreja_id;
+  // Todas as igrejas em que a pessoa está ativa (D-061); a lista vira texto
+  // para o efeito não rodar de novo a cada busca das fichas.
+  const igrejas = fichas
+    .filter((f) => f.status === 'ativo')
+    .map((f) => f.igreja_id)
+    .join(',');
   const [naoLidos, setNaoLidos] = useState(0);
 
   const atualizar = useCallback(() => {
-    if (!usuarioId || !igrejaId) return;
-    contarAvisosNaoLidos(usuarioId, igrejaId)
+    if (!usuarioId || !igrejas) return;
+    contarAvisosNaoLidos(usuarioId, igrejas.split(','))
       .then(setNaoLidos)
       .catch(() => {});
-  }, [usuarioId, igrejaId]);
+  }, [usuarioId, igrejas]);
 
   useFocusEffect(atualizar);
 

@@ -8,6 +8,7 @@ import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
 import { avisosForamLidos } from '@/hooks/use-avisos-nao-lidos';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useMinhasFichas } from '@/hooks/use-minhas-fichas';
 import { useSessao } from '@/hooks/use-sessao';
 import { useTema } from '@/hooks/use-tema';
 import { destinoDoAviso, valoresDoAviso, type Aviso } from '@/lib/avisos';
@@ -23,22 +24,27 @@ export default function Avisos() {
   const router = useRouter();
   const tema = useTema();
   const { sessao } = useSessao();
-  const { ficha, carregando, ehAdministrador } = useFichaAtiva();
+  const { ficha, carregando } = useFichaAtiva();
+  const { fichas, escolherIgreja } = useMinhasFichas();
   const [avisos, setAvisos] = useState<Aviso[] | null>(null);
   const [falhou, setFalhou] = useState(false);
   const [marcando, setMarcando] = useState(false);
 
   const usuarioId = sessao?.user.id;
-  const igrejaId = ficha?.igreja_id;
+  // Em texto, para o carregamento não rodar de novo a cada busca das fichas.
+  const igrejas = fichas
+    .filter((f) => f.status === 'ativo')
+    .map((f) => f.igreja_id)
+    .join(',');
   const carregar = useCallback(async () => {
-    if (!usuarioId || !igrejaId) return;
+    if (!usuarioId || !igrejas) return;
     try {
-      setAvisos(await listarAvisos(usuarioId, igrejaId));
+      setAvisos(await listarAvisos(usuarioId, igrejas.split(',')));
       setFalhou(false);
     } catch {
       setFalhou(true);
     }
-  }, [usuarioId, igrejaId]);
+  }, [usuarioId, igrejas]);
 
   useFocusEffect(
     useCallback(() => {
@@ -51,6 +57,10 @@ export default function Avisos() {
 
   const idioma = ficha.igrejas?.idioma ?? 'pt-BR';
   const naoLidos = avisos?.filter((a) => !a.lida_em) ?? [];
+  const ativas = fichas.filter((f) => f.status === 'ativo');
+  const emVariasIgrejas = ativas.length > 1;
+  // Cada aviso usa a ficha da igreja dele (título do Pastor, perfil).
+  const fichaDo = (aviso: Aviso) => ativas.find((f) => f.igreja_id === aviso.igreja_id) ?? ficha;
 
   const textoDo = (aviso: Aviso) => {
     const valores = valoresDoAviso(aviso, (centavos, moeda) => formatarMoeda(centavos, moeda, idioma));
@@ -59,7 +69,7 @@ export default function Avisos() {
       ...valores,
       context: valores.tipo === 'oferta' ? 'oferta' : undefined,
       quem: valores.quem || t('avisos.aTesouraria'),
-      titulo: ficha.igrejas?.titulo_administrador,
+      titulo: fichaDo(aviso).igrejas?.titulo_administrador,
     });
   };
 
@@ -68,7 +78,10 @@ export default function Avisos() {
       await marcarAvisosComoLidos([aviso.id]).catch(() => {});
       avisosForamLidos();
     }
-    const destino = destinoDoAviso(aviso, ehAdministrador);
+    const daIgreja = fichaDo(aviso);
+    // Aviso de outra igreja: abre já nela.
+    if (daIgreja.igreja_id !== ficha?.igreja_id) escolherIgreja(daIgreja.igreja_id);
+    const destino = destinoDoAviso(aviso, daIgreja.perfil === 'administrador');
     if (destino) router.push(destino);
     else carregar();
   }
@@ -83,7 +96,7 @@ export default function Avisos() {
 
   return (
     <Tela>
-      <Texto variante="apoio">{ficha.igrejas?.nome}</Texto>
+      {!emVariasIgrejas && <Texto variante="apoio">{ficha.igrejas?.nome}</Texto>}
       <Texto variante="titulo">{t('avisos.titulo')}</Texto>
       <Texto>{t('avisos.explicacao')}</Texto>
 
@@ -114,6 +127,7 @@ export default function Avisos() {
                 </Texto>
               )}
               <Texto variante="apoio">{t('avisos.quando', partesDaDataHora(aviso.criado_em, idioma))}</Texto>
+              {emVariasIgrejas && <Texto variante="apoio">{fichaDo(aviso).igrejas?.nome}</Texto>}
             </View>
             <Texto variante={novo ? 'destaque' : undefined}>{textoDo(aviso)}</Texto>
           </Pressable>

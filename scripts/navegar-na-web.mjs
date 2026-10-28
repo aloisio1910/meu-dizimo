@@ -9,7 +9,8 @@ import { join } from 'node:path';
 
 const [email, roteiro = 'ler'] = process.argv.slice(2);
 const APP = process.env.APP || 'http://localhost:8090';
-const MAILPIT = 'http://127.0.0.1:54324';
+// localhost: pelo 127.0.0.1, o Node às vezes perde a conexão com o Mailpit.
+const MAILPIT = 'http://localhost:54324';
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const perfil = mkdtempSync(join(tmpdir(), 'edge-'));
@@ -94,10 +95,15 @@ console.log(await tocar('Enviar código'));
 let codigo;
 for (let i = 0; i < 30 && !codigo; i++) {
   await espera(500);
-  const lista = await (await fetch(`${MAILPIT}/api/v1/search?query=${encodeURIComponent('to:' + email)}`)).json();
-  const id = lista.messages?.find((m) => new Date(m.Created) > inicio)?.ID;
-  if (!id) continue;
-  const msg = await (await fetch(`${MAILPIT}/api/v1/message/${id}`)).json();
+  let msg;
+  try {
+    const lista = await (await fetch(`${MAILPIT}/api/v1/search?query=${encodeURIComponent('to:' + email)}`)).json();
+    const id = lista.messages?.find((m) => new Date(m.Created) > inicio)?.ID;
+    if (!id) continue;
+    msg = await (await fetch(`${MAILPIT}/api/v1/message/${id}`)).json();
+  } catch {
+    continue;
+  }
   codigo = (msg.Text || '').match(/\b\d{6}\b/)?.[0];
 }
 console.log('código:', codigo ? 'recebido' : 'não chegou');

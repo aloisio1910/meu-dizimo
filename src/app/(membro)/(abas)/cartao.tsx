@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
 import { LogoDaIgreja } from '@/components/logo-da-igreja';
+import { TrocarDeIgreja } from '@/components/trocar-de-igreja';
 import { SeloDeStatus } from '@/components/selo-de-status';
 import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
@@ -64,6 +65,7 @@ export default function Cartao() {
       </View>
       <Texto variante="titulo">{t('cartao.titulo')}</Texto>
       <Texto variante="destaque">{t('cartao.dizimista', { nome: ficha.nome, numero: ficha.numero })}</Texto>
+      <TrocarDeIgreja />
       {!!igreja && (
         <View style={estilos.versiculo}>
           {!!igreja.versiculo_texto && <Texto>{igreja.versiculo_texto}</Texto>}
@@ -109,7 +111,9 @@ export default function Cartao() {
               dizimo.valor_conferido_centavos !== dizimo.valor_informado_centavos && (
                 <Texto>{t('cartao.valorConferido', { valor: moeda(dizimo.valor_conferido_centavos) })}</Texto>
               )}
-            {dizimo.registrado_pela_tesouraria && <Texto variante="apoio">{t('cartao.registradoPelaTesouraria')}</Texto>}
+            {dizimo.registrado_pela_tesouraria && (
+              <Texto variante="apoio">{t('cartao.registradoPelaTesouraria')}</Texto>
+            )}
             <Texto variante="apoio">{t('cartao.tocarParaDetalhes')}</Texto>
           </Pressable>
         );

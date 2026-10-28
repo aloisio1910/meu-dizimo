@@ -1,12 +1,18 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { AppState } from 'react-native';
 
+import { fichaEmUso, nomeDaPreferencia, precisaEscolherIgreja } from '@/lib/igreja-em-uso';
+import { gravarPreferencia, lerPreferencia } from '@/services/dispositivo/preferencias';
 import { buscarMinhasFichas, type MinhaFicha } from '@/services/supabase/membros';
 
 import { useSessao } from './use-sessao';
 
 type EstadoDasFichas = {
   fichas: MinhaFicha[];
+  // Igreja em uso (D-061): a escolhida neste aparelho, ou a primeira ativa.
+  fichaEmUso: MinhaFicha | undefined;
+  precisaEscolherIgreja: boolean;
+  escolherIgreja: (igrejaId: string) => void;
   carregando: boolean;
   falhou: boolean;
   recarregar: () => Promise<void>;
@@ -15,6 +21,9 @@ type EstadoDasFichas = {
 
 const ContextoDasFichas = createContext<EstadoDasFichas>({
   fichas: [],
+  fichaEmUso: undefined,
+  precisaEscolherIgreja: false,
+  escolherIgreja: () => {},
   carregando: true,
   falhou: false,
   recarregar: async () => {},
@@ -30,13 +39,16 @@ const INTERVALO_DE_CONFERENCIA_MS = 60 * 1000;
 
 // Resultado de uma busca, marcado com o usuário a que pertence: logo após
 // trocar de login, as fichas antigas não valem.
-type Carga = { usuarioId: string; fichas: MinhaFicha[]; falhou: boolean };
+type Carga = { usuarioId: string; fichas: MinhaFicha[]; falhou: boolean; igrejaEscolhida: string | null };
 
+// A escolha de igreja é lida junto com as fichas: a primeira tela já abre na
+// igreja certa, sem piscar outra antes.
 async function carregar(usuarioId: string): Promise<Carga> {
+  const igrejaEscolhida = await lerPreferencia(nomeDaPreferencia(usuarioId));
   try {
-    return { usuarioId, fichas: await buscarMinhasFichas(usuarioId), falhou: false };
+    return { usuarioId, fichas: await buscarMinhasFichas(usuarioId), falhou: false, igrejaEscolhida };
   } catch {
-    return { usuarioId, fichas: [], falhou: true };
+    return { usuarioId, fichas: [], falhou: true, igrejaEscolhida };
   }
 }
 
@@ -86,9 +98,11 @@ export function ProvedorDeFichas({ children }: { children: ReactNode }) {
         // Sem mudança, mantém o mesmo objeto: as telas que dependem da
         // ficha (fila, conferência) não buscam tudo de novo à toa.
         setCarga((anterior) =>
-          anterior?.usuarioId === resultado.usuarioId && JSON.stringify(anterior.fichas) === JSON.stringify(resultado.fichas)
+          anterior?.usuarioId === resultado.usuarioId &&
+          JSON.stringify(anterior.fichas) === JSON.stringify(resultado.fichas)
             ? anterior
-            : resultado,
+            : // A escolha feita nesta sessão vale mais que a lida do aparelho.
+              { ...resultado, igrejaEscolhida: anterior?.igrejaEscolhida ?? resultado.igrejaEscolhida },
         );
       })
       .finally(() => {
@@ -111,9 +125,23 @@ export function ProvedorDeFichas({ children }: { children: ReactNode }) {
     };
   }, [atualizarEmSilencio]);
 
+  const escolherIgreja = useCallback(
+    (igrejaId: string) => {
+      if (!usuarioId) return;
+      setCarga((anterior) => (anterior ? { ...anterior, igrejaEscolhida: igrejaId } : anterior));
+      gravarPreferencia(nomeDaPreferencia(usuarioId), igrejaId);
+    },
+    [usuarioId],
+  );
+
   const atual = usuarioId && carga?.usuarioId === usuarioId ? carga : undefined;
+  const fichas = atual?.fichas ?? [];
+  const igrejaEscolhida = atual?.igrejaEscolhida ?? null;
   const estado: EstadoDasFichas = {
-    fichas: atual?.fichas ?? [],
+    fichas,
+    fichaEmUso: fichaEmUso(fichas, igrejaEscolhida),
+    precisaEscolherIgreja: precisaEscolherIgreja(fichas, igrejaEscolhida),
+    escolherIgreja,
     falhou: atual?.falhou ?? false,
     carregando: !!usuarioId && (!atual || recarregando),
     recarregar,

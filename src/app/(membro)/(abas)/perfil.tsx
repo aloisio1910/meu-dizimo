@@ -6,6 +6,7 @@ import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 import { CamposDoCadastro } from '@/components/campos-do-cadastro';
 import { InformacoesDaTesouraria } from '@/components/informacoes-da-tesouraria';
 import { PreferenciasDeAvisos } from '@/components/preferencias-de-avisos';
+import { TrocarDeIgreja } from '@/components/trocar-de-igreja';
 import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
 import { Texto } from '@/components/ui/texto';
@@ -56,7 +57,8 @@ function ConteudoDoPerfil({ ficha }: { ficha: MinhaFicha }) {
     setEnviando(false);
     if (falha) {
       if (formulario.mostrarErroDoBanco(falha)) setErro(t('primeiroAcesso.erros.revise'));
-      else if (falha.codigo === 'sem_conexao' || falha.codigo === 'erro_inesperado') setErro(t(`comum.erros.${falha.codigo}`));
+      else if (falha.codigo === 'sem_conexao' || falha.codigo === 'erro_inesperado')
+        setErro(t(`comum.erros.${falha.codigo}`));
       return;
     }
     setEditando(false);
@@ -76,6 +78,7 @@ function ConteudoDoPerfil({ ficha }: { ficha: MinhaFicha }) {
       <Texto variante="titulo">{t('perfil.titulo')}</Texto>
       <Texto variante="destaque">{ficha.nome}</Texto>
       <Texto>{t('perfil.dizimista', { numero: ficha.numero, igreja: ficha.igrejas?.nome ?? '' })}</Texto>
+      <TrocarDeIgreja />
 
       {!!aviso && (
         <Texto variante="destaque" accessibilityLiveRegion="polite">

@@ -10,7 +10,7 @@ import { useMinhasFichas } from './use-minhas-fichas';
 // também aparece fora das telas (ex.: bloqueio da digital). Sem login ou
 // com cor sem contraste, fica a cor padrão.
 export function useTema(): Tema {
-  const { fichas } = useMinhasFichas();
-  const cor = fichas.find((f) => f.status === 'ativo')?.igrejas?.cor_principal;
+  const { fichaEmUso } = useMinhasFichas();
+  const cor = fichaEmUso?.igrejas?.cor_principal;
   return useMemo(() => criarTema(corSegura(cor, corPrincipalPadrao)), [cor]);
 }

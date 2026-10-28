@@ -17,7 +17,7 @@ import { sair } from '@/services/supabase/auth';
 export default function Inicio() {
   const { t } = useTranslation();
   const { sessao } = useSessao();
-  const { fichas, carregando, falhou, recarregar } = useMinhasFichas();
+  const { fichas, fichaEmUso, precisaEscolherIgreja, carregando, falhou, recarregar } = useMinhasFichas();
   const { disponivel: temDigital, preferencia: escolhaDaDigital } = useBloqueio();
 
   if (!sessao) return <Redirect href="/entrar" />;
@@ -44,7 +44,9 @@ export default function Inicio() {
   if (fichas.some((f) => f.status === 'convidado')) return <Redirect href="/primeiro-acesso" />;
   // Depois do cadastro, oferece a digital uma vez neste aparelho (D-058).
   if (fichas.length > 0 && temDigital && !escolhaDaDigital) return <Redirect href="/ativar-digital" />;
-  const ativa = fichas.find((f) => f.status === 'ativo');
+  // Em mais de uma igreja (D-061): na primeira vez, pergunta qual abrir.
+  if (precisaEscolherIgreja) return <Redirect href="/escolher-igreja" />;
+  const ativa = fichaEmUso;
   // A tesouraria usa de preferência a versão web: lá ela já entra na fila.
   if (ativa && Platform.OS === 'web' && (ativa.perfil === 'tesoureiro' || ativa.perfil === 'administrador')) {
     return <Redirect href="/fila" />;

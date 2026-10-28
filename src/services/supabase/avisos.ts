@@ -4,27 +4,28 @@ import { supabase } from './cliente';
 
 // Avisos do sino (D-096). A RLS só devolve os avisos da própria pessoa; o
 // filtro por usuario_id também fica aqui, como em todas as telas do membro.
+// Quem está em mais de uma igreja vê os avisos de todas juntos (D-061).
 
 const LIMITE_DA_LISTA = 50;
 
-export async function listarAvisos(usuarioId: string, igrejaId: string): Promise<Aviso[]> {
+export async function listarAvisos(usuarioId: string, igrejaIds: string[]): Promise<Aviso[]> {
   const { data, error } = await supabase
     .from('notificacoes')
     .select('id, igreja_id, tipo, dados, criado_em, lida_em')
     .eq('usuario_id', usuarioId)
-    .eq('igreja_id', igrejaId)
+    .in('igreja_id', igrejaIds)
     .order('criado_em', { ascending: false })
     .limit(LIMITE_DA_LISTA);
   if (error) throw error;
   return data as Aviso[];
 }
 
-export async function contarAvisosNaoLidos(usuarioId: string, igrejaId: string): Promise<number> {
+export async function contarAvisosNaoLidos(usuarioId: string, igrejaIds: string[]): Promise<number> {
   const { count, error } = await supabase
     .from('notificacoes')
     .select('id', { count: 'exact', head: true })
     .eq('usuario_id', usuarioId)
-    .eq('igreja_id', igrejaId)
+    .in('igreja_id', igrejaIds)
     .is('lida_em', null);
   if (error) throw error;
   return count ?? 0;

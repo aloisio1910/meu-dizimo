@@ -19,7 +19,7 @@ export function usePush(ativo: boolean) {
   const { t } = useTranslation();
   const router = useRouter();
   const { sessao } = useSessao();
-  const { fichas } = useMinhasFichas();
+  const { fichas, escolherIgreja } = useMinhasFichas();
   const usuarioId = sessao?.user.id;
   const temFichaAtiva = fichas.some((f) => f.status === 'ativo');
   const nomeDoCanal = t('avisos.titulo');
@@ -45,6 +45,8 @@ export function usePush(ativo: boolean) {
           .catch(() => {});
       }
       const ficha = fichas.find((f) => f.igreja_id === dados.igreja_id && f.status === 'ativo');
+      // Aviso de outra igreja (D-061): o app passa a usar a igreja do aviso.
+      if (ficha) escolherIgreja(ficha.igreja_id);
       const destino =
         dados.tipo && ficha
           ? destinoDoAviso(

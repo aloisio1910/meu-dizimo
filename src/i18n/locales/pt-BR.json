@@ -1473,5 +1473,17 @@
       "membro_nao_encontrado": "Pessoa não encontrada.",
       "convite_indisponivel": "Esta pessoa já entrou no app: não há convite para reenviar."
     }
+  },
+  "escolherIgreja": {
+    "titulo": "Qual igreja?",
+    "explicacao": "Você está em mais de uma igreja no Meu Dízimo. Cada uma tem o seu Cartão de Dízimo, as suas ofertas e os seus avisos. Escolha qual abrir; dá para trocar depois.",
+    "numero": "Dizimista nº {{numero}} · {{perfil}}",
+    "perfis": {
+      "membro": "Membro",
+      "tesoureiro": "Tesoureiro"
+    },
+    "emUso": "Em uso agora",
+    "trocar": "Trocar de igreja",
+    "voltar": "Voltar"
   }
 }

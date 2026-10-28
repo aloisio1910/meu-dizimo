@@ -8,6 +8,7 @@ import { Botao } from '@/components/ui/botao';
 import { Texto } from '@/components/ui/texto';
 import { useAvisosNaoLidos } from '@/hooks/use-avisos-nao-lidos';
 import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
+import { useMinhasFichas } from '@/hooks/use-minhas-fichas';
 import { sair } from '@/services/supabase/auth';
 import { espacos } from '@/theme';
 
@@ -23,6 +24,8 @@ export function MenuDaTesouraria({ atual }: { atual: Pagina }) {
   const router = useRouter();
   const { ficha, ehAdministrador } = useFichaAtiva();
   const { naoLidos } = useAvisosNaoLidos();
+  const { fichas } = useMinhasFichas();
+  const emVariasIgrejas = fichas.filter((f) => f.status === 'ativo').length > 1;
   const [confirmandoSaida, setConfirmandoSaida] = useState(false);
 
   const itens = [
@@ -40,6 +43,7 @@ export function MenuDaTesouraria({ atual }: { atual: Pagina }) {
       ir: () => router.push('/avisos'),
     },
     { titulo: t('tesouraria.meuCartao'), ir: () => router.push('/cartao') },
+    emVariasIgrejas && { titulo: t('escolherIgreja.trocar'), ir: () => router.push('/escolher-igreja') },
   ].filter((item) => !!item);
 
   const perfil = ehAdministrador ? ficha?.igrejas?.titulo_administrador : t('tesouraria.membro.perfilTesoureiro');
