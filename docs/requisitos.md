@@ -459,6 +459,32 @@ Câmbio estimado em R$ 5,50 por dólar, mais o IOF do cartão internacional. No 
 
 O custo por igreja adicional é quase zero, e guardar todos os comprovantes (nada se apaga) é barato. Nos testes, cada comprovante teve em média 321 KB, porque o app comprime as fotos antes de enviar. Uma igreja de 500 membros com um comprovante por membro por mês gera cerca de 1,9 GB por ano; 30 igrejas de 200 membros, cerca de 23 GB por ano, dentro dos 100 GB do Supabase Pro por uns 4 anos. Depois disso, cada 100 GB a mais custa US$ 2,13 por mês (cerca de R$ 12).
 
+**Capacidade e plano de crescimento do servidor (calculado em 28/10/2026)**
+
+Premissa de pior caso: cada membro ativo faz 1 dízimo e 1 oferta por mês, os dois com comprovante, e nada se apaga. Medido no banco de desenvolvimento: cada lançamento ocupa cerca de 20 KB no banco (o lançamento, 4 registros no log, avisos e a linha do comprovante) e cerca de 350 KB de arquivo. Por membro e por ano: 0,5 MB de banco e 8,4 MB de comprovantes.
+
+| Recurso do Supabase Pro | Incluído | Cabe no 1º ano | Preço do excesso |
+| --- | --- | --- | --- |
+| Arquivos (comprovantes, logos, artes) | 100 GB | \~12 mil membros (\~60 igrejas de 200) | US$ 0,0213 por GB por mês |
+| Banco de dados | 8 GB | \~16 mil membros | US$ 0,125 por GB por mês |
+| Download | 250 GB por mês | \~16 mil membros (\~15 MB por membro por mês) | US$ 0,09 por GB |
+| Usuários ativos por mês | 100 mil | 100 mil membros | US$ 0,00325 por usuário |
+
+No pior caso, 1.000 igrejas de 500 membros (500 mil membros) chegariam a cerca de US$ 3.500 a 4.000 por mês no 10º ano (42 TB de comprovantes), cerca de 15% de uma receita de R$ 129 mil por mês. Os maiores custos nessa escala são os usuários ativos e o download, não o armazenamento.
+
+A compressão das fotos fica como está (cerca de 321 KB por comprovante): comprimir mais poderia deixar ilegível uma foto já ruim. Comprovante ilegível se resolve conferindo pelo extrato, registrando divergência com o pedido de outro comprovante, ou com o membro trocando o comprovante enquanto o lançamento está pendente.
+
+**Plano de crescimento: cada medida quando passa a compensar.** Acompanhar o uso no painel do Supabase (Usage) a cada 3 meses.
+
+| Ordem | Medida | Quando fazer (gatilho) | Esforço | Economia esperada |
+| --- | --- | --- | --- | --- |
+| 1 | Guardar o link temporário da logo e da capa, para o celular reaproveitar a imagem | Download acima de 150 GB por mês, ou cerca de 10 mil membros ativos | Pequeno (1 dia) | Download várias vezes menor; adia o pagamento de excesso de download, o primeiro a pesar depois dos arquivos |
+| 2 | Log guardar só o que mudou, em vez da linha inteira antes e depois | Banco acima de 5 GB, ou cerca de 20 mil membros ativos | Médio (2 a 3 dias, com a tela do Log) | Banco 3 a 4 vezes menor; cópias de segurança mais rápidas e servidor menor por mais tempo |
+| 3 | Arquivo frio: comprovantes com mais de 2 anos vão para um armazenamento mais barato (ex.: Cloudflare R2 de acesso pouco frequente ou Backblaze B2), sem apagar e continuando disponíveis | Comprovantes acima de 3 TB, ou custo dos arquivos acima de US$ 60 por mês (pior caso: cerca de 360 mil membros-ano, perto do 1º ano com 1.000 igrejas de 500) | Médio a grande (3 a 5 dias, com o caminho de abrir o comprovante antigo) | De US$ 0,021 para US$ 0,004 a 0,010 por GB; com 10 TB antigos, cerca de US$ 110 a 170 por mês a menos |
+| 4 | Todos os comprovantes fora do Supabase (ex.: Cloudflare R2), com download gratuito e acesso só pelas regras do banco | Arquivos acima de 10 TB, ou arquivos mais download dos comprovantes acima de US$ 250 por mês | Grande (1 a 2 semanas; mexe na segurança dos comprovantes e migra os arquivos) | Cerca de 30% no armazenamento e zero no download dos comprovantes |
+
+As medidas 3 e 4 respeitam a regra de que nada se apaga. Pergunta para o contador antes da medida 3: por quanto tempo a igreja precisa guardar os comprovantes (o prazo tributário costuma ser de 5 anos).
+
 **Proposta de preços**
 
 | Faixa (membros ativos) | Mensal | Anual (2 meses grátis) |
