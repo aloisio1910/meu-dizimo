@@ -144,6 +144,27 @@ export function reenviarConvite(membroId: string) {
   return executar(() => supabase.rpc('reenviar_convite', { p_membro_id: membroId }));
 }
 
+// Importar membros por planilha (B2): o banco convida cada pessoa e devolve
+// o resultado de cada linha; uma linha ruim não impede as outras.
+export type ResultadoDaImportacao = {
+  linha: number;
+  email: string;
+  resultado: 'convidado' | 'email_ja_cadastrado' | 'dados_invalidos';
+};
+
+export async function importarMembros(
+  igrejaId: string,
+  pessoas: { linha: number; nome: string; email: string; celular: string }[],
+): Promise<{ ok: true; resultados: ResultadoDaImportacao[] } | { ok: false; erro: 'sem_conexao' | 'erro_inesperado' }> {
+  try {
+    const { data, error } = await supabase.rpc('importar_membros', { p_igreja_id: igrejaId, p_pessoas: pessoas });
+    if (error) return { ok: false, erro: 'erro_inesperado' };
+    return { ok: true, resultados: data as ResultadoDaImportacao[] };
+  } catch {
+    return { ok: false, erro: 'sem_conexao' };
+  }
+}
+
 // Troca de e-mail pela tesouraria (D-097). Passa pela Edge Function
 // trocar-email, que troca também o login: o banco recusa a troca direta na
 // tabela. As regras (quem pode, motivo, outra igreja) ficam no banco.

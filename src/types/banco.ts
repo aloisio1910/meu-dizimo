@@ -617,6 +617,9 @@ isOneToOne: false
 "igrejas_onde_estou_inativo":
 { Args: Record<PropertyKey, never>; Returns: string[]
                            },
+"importar_membros":
+{ Args: { "p_igreja_id": string,"p_pessoas": Json }; Returns: Json
+                           },
 "lancamento_para_conferir":
 { Args: { "p_lancamento_id": string }; Returns: {
               "atualizado_em": string,

@@ -1162,7 +1162,8 @@
         "convite_vencido": "Convite vencido",
         "ativo": "Ativo",
         "inativo": "Inativo"
-      }
+      },
+      "importar": "Importar planilha de membros"
     },
     "convidar": {
       "titulo": "Convidar membro",
@@ -1569,5 +1570,47 @@
     "invalido": "Este QR Code não é do Meu Dízimo ou está incompleto.",
     "outraIgreja": "Este QR Code é de uma igreja da qual você ainda não faz parte no Meu Dízimo. Para participar, peça um convite à tesouraria dessa igreja.",
     "inicio": "Ir para o início"
+  },
+  "importarMembros": {
+    "titulo": "Importar membros por planilha",
+    "explicacao": "Para convidar muita gente de uma vez. A planilha precisa ter as colunas Nome, E-mail e Celular; cada pessoa recebe o convite por e-mail. Convide apenas maiores de 18 anos.",
+    "passo1": "1. Baixe o modelo, preencha e salve (Excel ou CSV).",
+    "baixarModelo": "Baixar o modelo",
+    "nomeDoModelo": "modelo-membros.xlsx",
+    "abaDoModelo": "Membros",
+    "passo2": "2. Escolha a planilha preenchida.",
+    "escolher": "Escolher a planilha",
+    "lendo": "Lendo a planilha…",
+    "erros": {
+      "arquivoIlegivel": "Não conseguimos ler este arquivo. Salve como Excel (.xlsx) ou CSV e tente de novo.",
+      "semCabecalho": "Não achamos as colunas Nome, E-mail e Celular. Confira a primeira linha da planilha ou use o modelo.",
+      "vazia": "A planilha não tem ninguém para convidar."
+    },
+    "previa": "3. Confira antes de convidar",
+    "prontos_one": "{{count}} pessoa pronta para receber o convite.",
+    "prontos_other": "{{count}} pessoas prontas para receber o convite.",
+    "acimaDoLimite": "A planilha tem mais de {{limite}} pessoas: estas são as primeiras {{limite}}. Importe o restante numa segunda planilha.",
+    "comProblema_one": "{{count}} linha precisa de correção e não será importada:",
+    "comProblema_other": "{{count}} linhas precisam de correção e não serão importadas:",
+    "linha": "Linha {{linha}}: {{motivos}}",
+    "motivos": {
+      "nomeObrigatorio": "falta o nome",
+      "emailInvalido": "e-mail inválido",
+      "celularObrigatorio": "falta o celular",
+      "emailRepetidoNaPlanilha": "e-mail repetido na planilha"
+    },
+    "maisProblemas": "…e mais {{count}}.",
+    "convidar_one": "Convidar {{count}} pessoa",
+    "convidar_other": "Convidar {{count}} pessoas",
+    "outraPlanilha": "Escolher outra planilha",
+    "resultado": "Pronto!",
+    "convidados_one": "{{count}} pessoa convidada. Os e-mails de convite saem aos poucos, nos próximos minutos.",
+    "convidados_other": "{{count}} pessoas convidadas. Os e-mails de convite saem aos poucos, nos próximos minutos.",
+    "jaCadastrados_one": "{{count}} já estava na igreja e ficou de fora.",
+    "jaCadastrados_other": "{{count}} já estavam na igreja e ficaram de fora.",
+    "invalidos_one": "{{count}} linha com dados incompletos ficou de fora.",
+    "invalidos_other": "{{count}} linhas com dados incompletos ficaram de fora.",
+    "verMembros": "Ver a lista de membros",
+    "voltar": "Voltar"
   }
 }

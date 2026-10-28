@@ -14,8 +14,7 @@ export type ArquivoEscolhido = {
 };
 
 export type ResultadoDaEscolha =
-  | { ok: true; arquivo: ArquivoEscolhido }
-  | { ok: false; motivo: 'cancelado' | 'permissao_negada' };
+  { ok: true; arquivo: ArquivoEscolhido } | { ok: false; motivo: 'cancelado' | 'permissao_negada' };
 
 // Fotos de celular passam fácil de 10 MB: a qualidade 0,6 reduz bastante
 // sem perder a leitura do comprovante. "compatible" faz o iPhone entregar
@@ -48,7 +47,12 @@ async function lerBytes(uri: string): Promise<Uint8Array> {
   throw new Error(`uri=${uri} | ${falhas.join(' | ')}`);
 }
 
-function deArquivoLocal(uri: string, tipo: string | null, nome: string | null, tamanho: number | null): ArquivoEscolhido {
+function deArquivoLocal(
+  uri: string,
+  tipo: string | null,
+  nome: string | null,
+  tamanho: number | null,
+): ArquivoEscolhido {
   return { tipo, nome, tamanho, ler: () => lerBytes(uri) };
 }
 
@@ -77,6 +81,26 @@ export async function escolherPdf(): Promise<ResultadoDaEscolha> {
   // Expo Go que o app não tem permissão de ler. O endereço original vem com a
   // permissão de leitura concedida pelo Android para este arquivo.
   const resultado = await DocumentPicker.getDocumentAsync({ type: 'application/pdf', copyToCacheDirectory: false });
+  const documento = resultado.assets?.[0];
+  if (resultado.canceled || !documento) return { ok: false, motivo: 'cancelado' };
+  return {
+    ok: true,
+    arquivo: deArquivoLocal(documento.uri, documento.mimeType ?? null, documento.name, documento.size ?? null),
+  };
+}
+
+// Planilha de membros para importar (B2): Excel ou CSV. Sem copiar para o
+// cache, pelo mesmo motivo do PDF.
+export async function escolherPlanilha(): Promise<ResultadoDaEscolha> {
+  const resultado = await DocumentPicker.getDocumentAsync({
+    type: [
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-excel',
+      'text/csv',
+      'text/comma-separated-values',
+    ],
+    copyToCacheDirectory: false,
+  });
   const documento = resultado.assets?.[0];
   if (resultado.canceled || !documento) return { ok: false, motivo: 'cancelado' };
   return {

@@ -9,8 +9,7 @@ export type ArquivoEscolhido = {
 };
 
 export type ResultadoDaEscolha =
-  | { ok: true; arquivo: ArquivoEscolhido }
-  | { ok: false; motivo: 'cancelado' | 'permissao_negada' };
+  { ok: true; arquivo: ArquivoEscolhido } | { ok: false; motivo: 'cancelado' | 'permissao_negada' };
 
 async function escolher(tipo: string | string[]): Promise<ResultadoDaEscolha> {
   const resultado = await DocumentPicker.getDocumentAsync({ type: tipo, base64: false });
@@ -35,6 +34,16 @@ export async function escolherFoto(_origem: 'camera' | 'galeria'): Promise<Resul
 
 export async function escolherPdf(): Promise<ResultadoDaEscolha> {
   return escolher('application/pdf');
+}
+
+// Planilha de membros para importar (B2): Excel ou CSV.
+export async function escolherPlanilha(): Promise<ResultadoDaEscolha> {
+  return escolher([
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-excel',
+    'text/csv',
+    'text/comma-separated-values',
+  ]);
 }
 
 export type ImagemParaRecortar = { uri: string; largura: number; altura: number };

@@ -73,6 +73,11 @@ export default function Membros() {
       <Texto variante="titulo">{t('tesouraria.membros.titulo')}</Texto>
       <MenuDaTesouraria atual="membros" />
       <Botao titulo={t('tesouraria.membros.convidar')} onPress={() => router.push('/convidar')} />
+      <Botao
+        titulo={t('tesouraria.membros.importar')}
+        variante="secundario"
+        onPress={() => router.push('/importar-membros')}
+      />
 
       <CampoTexto
         rotulo={t('tesouraria.membros.busca')}

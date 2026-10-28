@@ -2,6 +2,7 @@
 // num Edge sem janela e segue uma lista de passos.
 // Uso: node scripts/navegar-na-web.mjs <email> "<passo>|<passo>..." (APP=http://localhost:8090)
 //   passo: "ir:/caminho" | "tocar:Texto do botão" | "digitar:Rótulo=valor" | "ler"
+//          | "arquivo:Texto do botão=C:/caminho/do/arquivo" (toca e escolhe o arquivo na janela)
 import { spawn } from 'node:child_process';
 import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -39,9 +40,11 @@ const enviar = (method, params = {}) =>
     ws.send(JSON.stringify({ id, method, params }));
   });
 const erros = [];
+let aoAbrirArquivo = null;
 ws.addEventListener('message', (e) => {
   const m = JSON.parse(e.data);
   if (m.id && pendentes.has(m.id)) pendentes.get(m.id)(m.result);
+  if (m.method === 'Page.fileChooserOpened') aoAbrirArquivo?.(m.params);
   if (m.method === 'Runtime.exceptionThrown')
     erros.push('EXCEÇÃO: ' + JSON.stringify(m.params.exceptionDetails).slice(0, 800));
   if (m.method === 'Runtime.consoleAPICalled' && m.params.type === 'error') {
@@ -64,8 +67,16 @@ ws.addEventListener('message', (e) => {
 await enviar('Runtime.enable');
 await enviar('Page.enable');
 await enviar('Network.enable');
+// userGesture: o navegador só abre a janela de arquivo após um gesto do usuário.
 const avaliar = async (expressao) =>
-  (await enviar('Runtime.evaluate', { expression: expressao, returnByValue: true, awaitPromise: true })).result?.value;
+  (
+    await enviar('Runtime.evaluate', {
+      expression: expressao,
+      returnByValue: true,
+      awaitPromise: true,
+      userGesture: true,
+    })
+  ).result?.value;
 
 // Preenche um campo pelo rótulo (accessibilityLabel vira aria-label).
 const digitar = (rotulo, valor) =>
@@ -128,6 +139,20 @@ for (const passo of roteiro.split('|').filter(Boolean)) {
     const [rotulo, valor] = arg.split('=');
     console.log('digitar', rotulo, '→', await digitar(rotulo, valor));
     await espera(500);
+  } else if (tipo === 'arquivo') {
+    const [botao, caminho] = arg.split('=');
+    await enviar('Page.setInterceptFileChooserDialog', { enabled: true });
+    const aberto = new Promise((ok) => (aoAbrirArquivo = ok));
+    await tocar(botao);
+    const aberta = await Promise.race([aberto, espera(15000).then(() => null)]);
+    if (!aberta) {
+      console.log('arquivo', botao, '→ a janela de arquivo não abriu');
+      continue;
+    }
+    const { backendNodeId } = aberta;
+    await enviar('DOM.setFileInputFiles', { files: [caminho], backendNodeId });
+    console.log('arquivo', botao, '→', caminho);
+    await espera(4000);
   } else if (tipo === 'ler') {
     console.log('PÁGINA:', await ler());
   }
