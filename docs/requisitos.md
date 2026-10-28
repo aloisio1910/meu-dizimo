@@ -293,9 +293,11 @@ A base recebe o que fortalece o ciclo do dízimo e da oferta; o premium recebe a
 | 4. Depois do lançamento do premium | **P4. Exportação para o contador** | Premium | Amosh | Pequeno |
 | 5. Por último | **P2. Conciliação bancária** (extrato OFX casado com os Pix) | Premium | ADMmembros, Religio | Grande |
 | 5. Por último | **P5. Congregações** (sede e filiais, com consolidado; possivelmente cobrado por congregação) | Premium | Reino, Amosh, Religio | Grande |
+| 6. Depois do premium (Pacote Comunidade) | C1. Agenda e eventos com inscrição; C2. Células; C3. Carteirinha digital (com os filhos, informados pelo responsável); C4. Pedidos de oração; C5. Devocional ou plano de leitura (seção 16) | Comunidade | Amosh, Congrega, ADMmembros, Igreja Digital | Pequeno a grande, por item |
+| Ideia a pensar, bem depois | C6. Check-in infantil (depende de rever a D-104 e de estudo jurídico) | Comunidade | Amosh | Grande |
 | No lançamento comercial | **B6. Plano grátis para igrejas muito pequenas** (até 25 ou 30 membros) | Preço (seção 15) | Amosh, Igreja Digital, ADMmembros | Só regra de cobrança |
 
-Fora do plano, por serem de sistema de gestão completo, onde os concorrentes já são fortes e baratos: células, agenda, eventos, carteirinha, check-in infantil, pedidos de oração, devocional, assistente com IA e site da igreja. O app com o nome da igreja nas lojas fica sob consulta para igrejas muito grandes.
+Fora do plano: assistente com IA e site da igreja. O app com o nome da igreja nas lojas fica sob consulta para igrejas muito grandes. A Comunidade só começa depois do piloto rodando e do premium lançado, para o app não perder o foco no ciclo do dízimo (D-108).
 
 ## 12. Regras de negócio
 
@@ -422,6 +424,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-105 | Preços por faixa de membros ativos: até 100, R$ 59; 101 a 200, R$ 79; 201 a 500, R$ 129; 501 a 1.000, R$ 199; acima de 1.000, sob consulta. Plano anual com 2 meses grátis. Premium (controle financeiro e push programado, D-103) como adicional a qualquer faixa: R$ 29,99 por mês como preço de lançamento (valor cheio anunciado de R$ 39,99), com o mesmo desconto no anual (R$ 299,90) | Definido |
 | D-106 | Plano Completo (base + premium) com desconto, para não ficar acima dos concorrentes com financeiro: até 100, R$ 79; 101 a 200, R$ 99; 201 a 500, R$ 149; 501 a 1.000, R$ 219; anual com 2 meses grátis. No anúncio, mostrar o anual dividido por mês e destacar sem fidelidade, sem implantação e teste de 30 dias (pesquisa de concorrência de 28/10/2026) | Definido |
 | D-107 | Plano de evolução depois do MVP (seção 11): na base, QR Code do culto, importar membros por planilha, declaração anual, lembrete do próprio membro e agradecimento personalizado; no premium, entradas e saídas, push programado, fechamento mensal e prestação de contas, exportação para o contador, conciliação bancária e congregações; plano grátis para igrejas muito pequenas a decidir no lançamento comercial. Gestão completa (células, agenda, eventos) fica fora | Definido |
+| D-108 | Pacote Comunidade (futuro): agenda e eventos com inscrição, células, carteirinha digital com os filhos informados pelo responsável, pedidos de oração e devocional, nessa ordem, depois do piloto rodando e do premium lançado; check-in infantil só como ideia a pensar bem depois. Preço como adicional e num plano Igreja Completa, a decidir quando existir (seção 16) | Definido |
 
 ## 14. Questões abertas e próximos passos
 
@@ -576,6 +579,21 @@ Notificações que saem sozinhas, em dia e hora definidos, oferecidas como recur
 - **Lembrete de fechamento do mês:** avisa a tesouraria e o Pastor de Governo para conferir e fechar o mês, e quando houver lançamentos esperando conferência.
 - **Mensagem agendada aos membros:** a mensagem da igreja (D-102) é escrita antes e sai no dia e na hora escolhidos, dentro do mesmo limite de 1 por semana.
 - **Resumo periódico ao Pastor de Governo:** push semanal ou mensal com entradas, saídas e saldo do período, visível só à tesouraria e ao Pastor.
+
+**Pacote Comunidade (futuro, D-108)**
+
+Um terceiro pacote, para a vida da igreja durante a semana, no mesmo app, com o mesmo login e os mesmos dados. A base cuida do membro e do dízimo; o premium (Tesouraria), do dinheiro da igreja; a Comunidade, de manter o membro no app toda semana, com o Cartão de Dízimo a um toque. Reaproveita membros, grupos do cadastro, push, avisos e mensagens.
+
+| Ordem | Item | Como encaixa | Cuidado |
+| --- | --- | --- | --- |
+| C1 | Agenda e eventos com inscrição | Evento pago vira uma campanha com Pix; lembrete por push | — |
+| C2 | Células | O campo "Célula" do cadastro vira um grupo: líder, membros, presença, relatório e mensagem para a célula | O líder de célula seria um perfil novo, que vê só a célula dele, nunca valores |
+| C3 | Carteirinha digital | Nome, número de dizimista, foto e QR Code; serve de crachá nos eventos. Pode trazer os filhos do membro, para ajudar no cuidado com as crianças | Foto só com autorização. Os dados dos filhos são de menores: só o pai, a mãe ou o responsável informa, com consentimento específico e em destaque (LGPD, art. 14, §1º), o mínimo necessário; informação de saúde (ex.: alergia) é dado sensível. Rever a D-104 ao construir |
+| C4 | Pedidos de oração | O membro envia; só o Pastor, ou quem ele indicar, lê | Pode revelar saúde e família (dado sensível): acesso restrito e registrado no log |
+| C5 | Devocional ou plano de leitura | Push diário opcional, que o membro liga e desliga | Direitos autorais: ARA, NVI, NAA e outras têm dono; texto da própria igreja ou tradução em domínio público |
+| C6 | Check-in infantil (ideia a pensar, bem depois) | Entrada e saída das crianças no ministério infantil, com os dados dos filhos da carteirinha | Segurança das crianças e dados de menores: só com a D-104 revista e estudo jurídico |
+
+Preço: adicional parecido com o premium (por volta de R$ 29,99) e um plano "Igreja Completa" com Base, Tesouraria e Comunidade juntos, com desconto; valores a decidir quando o pacote existir.
 
 **Cuidados**
 
