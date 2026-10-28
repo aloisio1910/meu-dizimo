@@ -10,13 +10,13 @@
 //
 // {{igreja}} é trocado pelo nome da igreja do membro.
 
-export const versaoDosTermos = '0.1-piloto';
+export const versaoDosTermos = '0.2-piloto';
 
 export type SecaoDosTermos = { titulo: string; paragrafos: string[] };
 
 export const termos: { titulo: string; atualizadoEm: string; secoes: SecaoDosTermos[] } = {
   titulo: 'Termos de Uso e Política de Privacidade',
-  atualizadoEm: 'Versão 0.1 (piloto), outubro de 2026',
+  atualizadoEm: 'Versão 0.2 (piloto), outubro de 2026',
   secoes: [
     {
       titulo: '1. O que é o Meu Dízimo',
@@ -109,7 +109,14 @@ export const termos: { titulo: string; atualizadoEm: string; secoes: SecaoDosTer
       ],
     },
     {
-      titulo: '12. Mudanças nestes termos',
+      titulo: '12. Idade mínima',
+      paragrafos: [
+        'O Meu Dízimo é para maiores de 18 anos. Ao concluir o cadastro, você declara ter 18 anos ou mais.',
+        'Menores de 18 anos não recebem convite nem têm cadastro próprio no aplicativo. Um filho ou dependente que contribui pode ser incluído no dízimo familiar do pai, da mãe ou do responsável, que informa o nome dele e responde por essa informação.',
+      ],
+    },
+    {
+      titulo: '13. Mudanças nestes termos',
       paragrafos: [
         'Se estes termos mudarem, o aplicativo mostrará a nova versão e pedirá o seu aceite antes de continuar.',
       ],

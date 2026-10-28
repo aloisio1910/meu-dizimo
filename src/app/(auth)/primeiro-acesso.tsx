@@ -36,23 +36,25 @@ function Formulario({ ficha, aoConcluir }: { ficha: MinhaFicha; aoConcluir: () =
 
   const [aceiteTermos, setAceiteTermos] = useState(false);
   const [aceiteSensivel, setAceiteSensivel] = useState(false);
-  const [errosDosAceites, setErrosDosAceites] = useState<{ termos?: boolean; sensivel?: boolean }>({});
+  const [maiorDeIdade, setMaiorDeIdade] = useState(false);
+  const [errosDosAceites, setErrosDosAceites] = useState<{ termos?: boolean; sensivel?: boolean; idade?: boolean }>({});
   const [erroGeral, setErroGeral] = useState<string>();
   const [enviando, setEnviando] = useState(false);
 
   async function concluir() {
     setErroGeral(undefined);
     const dados = formulario.validar();
-    // Os dois aceites são obrigatórios e separados (LGPD, D-080).
-    const faltaAceite = { termos: !aceiteTermos, sensivel: !aceiteSensivel };
+    // Os aceites são obrigatórios e separados (LGPD, D-080), e o app é só
+    // para maiores de 18 anos (D-104).
+    const faltaAceite = { termos: !aceiteTermos, sensivel: !aceiteSensivel, idade: !maiorDeIdade };
     setErrosDosAceites(faltaAceite);
-    if (!dados || faltaAceite.termos || faltaAceite.sensivel) {
+    if (!dados || faltaAceite.termos || faltaAceite.sensivel || faltaAceite.idade) {
       setErroGeral(t('primeiroAcesso.erros.revise'));
       return;
     }
 
     setEnviando(true);
-    const erro = await concluirCadastro({ membroId: ficha.id, ...dados, versaoDosTermos });
+    const erro = await concluirCadastro({ membroId: ficha.id, ...dados, versaoDosTermos, declarouMaioridade: true });
     if (!erro) {
       await aoConcluir();
       return;
@@ -61,7 +63,8 @@ function Formulario({ ficha, aoConcluir }: { ficha: MinhaFicha; aoConcluir: () =
 
     if (formulario.mostrarErroDoBanco(erro)) setErroGeral(t('primeiroAcesso.erros.revise'));
     else if (erro.codigo === 'cadastro_indisponivel') setErroGeral(t('primeiroAcesso.erros.cadastro_indisponivel'));
-    else if (erro.codigo === 'sem_conexao' || erro.codigo === 'erro_inesperado') setErroGeral(t(`comum.erros.${erro.codigo}`));
+    else if (erro.codigo === 'sem_conexao' || erro.codigo === 'erro_inesperado')
+      setErroGeral(t(`comum.erros.${erro.codigo}`));
   }
 
   if (formulario.falhaNosCampos) {
@@ -104,6 +107,12 @@ function Formulario({ ficha, aoConcluir }: { ficha: MinhaFicha; aoConcluir: () =
         marcado={aceiteSensivel}
         onAlterar={setAceiteSensivel}
         erro={errosDosAceites.sensivel ? t('primeiroAcesso.erros.aceiteObrigatorio') : undefined}
+      />
+      <CaixaSelecao
+        rotulo={t('primeiroAcesso.aceiteIdade')}
+        marcado={maiorDeIdade}
+        onAlterar={setMaiorDeIdade}
+        erro={errosDosAceites.idade ? t('primeiroAcesso.erros.idadeObrigatoria') : undefined}
       />
 
       {!!erroGeral && (

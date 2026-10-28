@@ -191,7 +191,7 @@ set local role authenticated;
 
 select lives_ok(
   $$ select public.concluir_cadastro((select id from public.membros where usuario_id = 'a0000000-0000-0000-0000-000000000004'),
-       'Paulo Lima', '11900000005', 'individual', '[]', '{}', '1.0') $$,
+       'Paulo Lima', '11900000005', 'individual', '[]', '{}', '1.0', true) $$,
   'Convidado reativado conclui o cadastro'
 );
 

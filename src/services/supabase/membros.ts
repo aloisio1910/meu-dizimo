@@ -89,6 +89,8 @@ export type DadosDoCadastro = {
   familiares: { nome: string }[];
   camposExtras: Record<string, string | number>;
   versaoDosTermos: string;
+  // D-104: a pessoa declarou ter 18 anos ou mais.
+  declarouMaioridade: boolean;
 };
 
 export type ErroDoCadastro =
@@ -110,7 +112,7 @@ function traduzirErro(erro: PostgrestError | Error): ErroDoCadastro {
 // aqui: a troca exige código no novo e-mail (RN-010).
 export async function salvarMeuCadastro(
   membroId: string,
-  dados: Omit<DadosDoCadastro, 'membroId' | 'versaoDosTermos'>,
+  dados: Omit<DadosDoCadastro, 'membroId' | 'versaoDosTermos' | 'declarouMaioridade'>,
 ): Promise<ErroDoCadastro | null> {
   try {
     const { error } = await supabase
@@ -140,6 +142,7 @@ export async function concluirCadastro(dados: DadosDoCadastro): Promise<ErroDoCa
       p_familiares: dados.familiares,
       p_campos_extras: dados.camposExtras,
       p_versao_termos: dados.versaoDosTermos,
+      p_declarou_maioridade: dados.declarouMaioridade,
     });
     return error ? traduzirErro(error) : null;
   } catch (erro) {

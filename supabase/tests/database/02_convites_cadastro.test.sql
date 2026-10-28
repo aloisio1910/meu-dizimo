@@ -11,7 +11,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(41);
+select plan(43);
 
 create function pg_temp.entrar(p_usuario uuid, p_email text default null, p_admin_master boolean default false)
 returns void
@@ -220,39 +220,52 @@ select is((select count(*) from public.aceitar_convites()), 0::bigint,
 
 select throws_ok(
   $$ select public.concluir_cadastro((select id from public.membros), 'Lucas Silva', '11900000005',
-       'individual', '[]', '{"lider": "Carlos"}', '1.0') $$,
+       'individual', '[]', '{"lider": "Carlos"}', '1.0', true) $$,
   '23502', 'campo_obrigatorio',
   'Cadastro não conclui sem campo obrigatório da igreja'
 );
 select throws_ok(
   $$ select public.concluir_cadastro((select id from public.membros), 'Lucas Silva', '11900000005',
-       'individual', '[]', '{"lider": "Carlos", "rede": "Leste"}', '1.0') $$,
+       'individual', '[]', '{"lider": "Carlos", "rede": "Leste"}', '1.0', true) $$,
   '22023', 'campo_invalido',
   'Valor fora da lista de opções é recusado'
 );
 select throws_ok(
   $$ select public.concluir_cadastro((select id from public.membros), 'Lucas Silva', '11900000005',
-       'individual', '[]', '{"lider": "Carlos", "rede": "Sul", "nascimento": "2026-02-30"}', '1.0') $$,
+       'individual', '[]', '{"lider": "Carlos", "rede": "Sul", "nascimento": "2026-02-30"}', '1.0', true) $$,
   '22008', null,
   'Data inexistente é recusada'
 );
 select throws_ok(
   $$ select public.concluir_cadastro((select id from public.membros), 'Lucas Silva', '11900000005',
-       'individual', '[]', '{"lider": "Carlos", "rede": "Sul", "time": "X"}', '1.0') $$,
+       'individual', '[]', '{"lider": "Carlos", "rede": "Sul", "time": "X"}', '1.0', true) $$,
   '22023', 'campo_desconhecido',
   'Campo que a igreja não definiu é recusado'
 );
 select throws_ok(
   $$ select public.concluir_cadastro((select id from public.membros), 'Lucas Silva', '11900000005',
-       'familiar', '[]', '{"lider": "Carlos", "rede": "Sul"}', '1.0') $$,
+       'familiar', '[]', '{"lider": "Carlos", "rede": "Sul"}', '1.0', true) $$,
   '23502', 'familiares_obrigatorios',
   'Dízimo familiar exige os nomes da família'
+);
+-- D-104: sem a declaração de ter 18 anos ou mais, o cadastro não conclui.
+select throws_ok(
+  $$ select public.concluir_cadastro((select id from public.membros), 'Lucas Silva', '11900000005',
+       'familiar', '[{"nome": "Joana", "parentesco": "esposa"}]',
+       '{"lider": "Carlos", "rede": "Sul", "nascimento": "1990-05-17"}', '1.0', false) $$,
+  '23502', 'maioridade_obrigatoria',
+  'Cadastro não conclui sem a declaração de maioridade (D-104)'
 );
 select lives_ok(
   $$ select public.concluir_cadastro((select id from public.membros), 'Lucas Silva', '11900000005',
        'familiar', '[{"nome": "Joana", "parentesco": "esposa"}]',
-       '{"lider": "Carlos", "rede": "Sul", "nascimento": "1990-05-17"}', '1.0') $$,
+       '{"lider": "Carlos", "rede": "Sul", "nascimento": "1990-05-17"}', '1.0', true) $$,
   'Cadastro completo é concluído'
+);
+select is(
+  (select declarou_maioridade from public.aceites_termos where versao = '1.0'),
+  true,
+  'O aceite guarda a declaração de maioridade, com data e versão'
 );
 select results_eq(
   $$ select status::text, tipo_dizimo::text from public.membros $$,

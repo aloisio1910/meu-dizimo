@@ -61,6 +61,7 @@
     "lerTermos": "Ler os termos completos",
     "aceiteTermos": "Li e aceito os Termos de Uso e a Política de Privacidade.",
     "aceiteSensivel": "Autorizo o tratamento do meu vínculo com a {{igreja}}, que revela minha religião, para usar o Cartão de Dízimo.",
+    "aceiteIdade": "Declaro ter 18 anos ou mais.",
     "concluir": "Concluir cadastro",
     "erros": {
       "nomeObrigatorio": "Informe o seu nome.",
@@ -73,7 +74,8 @@
       "familiaresObrigatorios": "Inclua pelo menos um familiar ou escolha Individual.",
       "aceiteObrigatorio": "É preciso marcar esta opção para continuar.",
       "cadastro_indisponivel": "Este cadastro já foi concluído ou não está mais disponível.",
-      "revise": "Confira os campos marcados em vermelho."
+      "revise": "Confira os campos marcados em vermelho.",
+      "idadeObrigatoria": "O Meu Dízimo é para maiores de 18 anos. Menores participam pelo dízimo familiar do responsável."
     }
   },
   "termos": {
@@ -1180,7 +1182,8 @@
         "nomeObrigatorio": "Informe o nome.",
         "emailInvalido": "Confira o e-mail, como nome@exemplo.com.",
         "celularObrigatorio": "Informe o celular."
-      }
+      },
+      "soMaiores": "Convide apenas maiores de 18 anos. Menores entram no dízimo familiar do pai, da mãe ou do responsável."
     },
     "membro": {
       "titulo": "Ficha do membro",

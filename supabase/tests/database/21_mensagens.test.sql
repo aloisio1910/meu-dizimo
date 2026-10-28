@@ -132,7 +132,8 @@ select is(
   'O aviso leva o texto da mensagem'
 );
 select is(
-  (select perfil from public.auditoria where tabela = 'mensagens' and acao = 'insert'),
+  (select perfil from public.auditoria
+    where tabela = 'mensagens' and acao = 'insert' and igreja_id = '1a000000-0000-0000-0000-000000000000'),
   'administrador',
   'O envio fica no log da igreja, com quem enviou'
 );

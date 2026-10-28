@@ -7,14 +7,14 @@ export type Database = {
           Tables: {
             "aceites_termos": {
                   Row: {
-                    "aceito_em": string,"id": string,"usuario_id": string,"versao": string
+                    "aceito_em": string,"declarou_maioridade": boolean,"id": string,"usuario_id": string,"versao": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "aceito_em"?: string,"id"?: string,"usuario_id"?: string,"versao": string
+                    "aceito_em"?: string,"declarou_maioridade"?: boolean,"id"?: string,"usuario_id"?: string,"versao": string
                   }
                   Update: {
-                    "aceito_em"?: string,"id"?: string,"usuario_id"?: string,"versao"?: string
+                    "aceito_em"?: string,"declarou_maioridade"?: boolean,"id"?: string,"usuario_id"?: string,"versao"?: string
                   }
                   Relationships: [
                     
@@ -503,7 +503,7 @@ isOneToOne: false
 { Args: { "p_nome_da_url": string }; Returns: undefined
                            },
 "concluir_cadastro":
-{ Args: { "p_campos_extras": Json,"p_celular": string,"p_familiares": Json,"p_membro_id": string,"p_nome": string,"p_tipo_dizimo": Database["public"]['Enums']["tipo_dizimo"],"p_versao_termos": string }; Returns: undefined
+{ Args: { "p_campos_extras": Json,"p_celular": string,"p_declarou_maioridade": boolean,"p_familiares": Json,"p_membro_id": string,"p_nome": string,"p_tipo_dizimo": Database["public"]['Enums']["tipo_dizimo"],"p_versao_termos": string }; Returns: undefined
                            },
 "concluir_envio_de_convites":
 { Args: { "p_resultados": Json }; Returns: undefined

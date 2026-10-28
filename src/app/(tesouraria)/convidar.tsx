@@ -87,6 +87,7 @@ export default function Convidar() {
         {comoTesoureiro ? t('tesouraria.convidar.tituloTesoureiro') : t('tesouraria.convidar.titulo')}
       </Texto>
       <Texto>{t('tesouraria.convidar.explicacao')}</Texto>
+      <Texto variante="apoio">{t('tesouraria.convidar.soMaiores')}</Texto>
       {comoTesoureiro && <Texto variante="destaque">{t('tesouraria.convidar.avisoTesoureiro')}</Texto>}
       <CampoTexto
         rotulo={t('tesouraria.convidar.nome')}
@@ -114,7 +115,12 @@ export default function Convidar() {
       />
       {!!erroGeral && <Texto variante="erro">{erroGeral}</Texto>}
       <Botao titulo={t('tesouraria.convidar.enviar')} onPress={aoConvidar} carregando={enviando} />
-      <Botao titulo={t('tesouraria.convidar.cancelar')} variante="secundario" onPress={() => voltar()} desabilitado={enviando} />
+      <Botao
+        titulo={t('tesouraria.convidar.cancelar')}
+        variante="secundario"
+        onPress={() => voltar()}
+        desabilitado={enviando}
+      />
     </Tela>
   );
 }
