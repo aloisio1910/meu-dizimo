@@ -426,7 +426,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 
 ## 15. Modelo de cobrança e preços
 
-Proposta: mensalidade por faixa de membros ativos, de R$ 49 a R$ 199, abaixo dos sistemas completos de gestão e com margem alta, porque o custo de servidor por igreja é quase zero. O ponto de equilíbrio fica em torno de 6 igrejas pagantes.
+Proposta: mensalidade por faixa de membros ativos, de R$ 49 a R$ 199, abaixo dos sistemas completos de gestão e com margem alta, porque o custo de servidor por igreja é quase zero. O ponto de equilíbrio fica entre 3 e 5 igrejas pagantes.
 
 **Preços da concorrência (consultados em 20/10/2026)**
 
@@ -441,21 +441,23 @@ Proposta: mensalidade por faixa de membros ativos, de R$ 49 a R$ 199, abaixo dos
 
 Quase todos são sistemas completos de gestão (secretaria, financeiro, células). O Meu Dízimo.app é especializado: não substitui esses sistemas, entrega melhor a experiência do membro no dízimo e na oferta. Por isso o preço deve ficar na metade de baixo da faixa de mercado.
 
-**Custo operacional estimado (fase inicial)**
+**Custo operacional estimado (preços conferidos em 28/10/2026)**
 
-| Item | Custo | Em reais/mês |
-| --- | --- | --- |
-| [Supabase](https://supabase.com/pricing) Pro (banco, login, arquivos) | US$ 25/mês | R$ 138 |
-| [Expo](https://expo.dev/pricing) Starter (geração dos apps) | US$ 19/mês; o plano grátis atende no começo | R$ 0 a 105 |
-| [Resend](https://resend.com/pricing) (e-mails de convite e código) | grátis até 3.000/mês e 100/dia; Pro US$ 20/mês | R$ 0 a 110 |
-| Conta de desenvolvedor Apple | US$ 99/ano | R$ 45 |
-| Conta Google Play | US$ 25 uma vez | — |
-| Domínio do site | anual | cerca de R$ 5 |
-| **Total** |  | **cerca de R$ 190 a 400** |
+| Item | Custo | Em reais | Observação |
+| --- | --- | --- | --- |
+| [Supabase](https://supabase.com/pricing) Pro (banco, login, arquivos, funções) | US$ 25/mês | R$ 138/mês | Necessário desde o piloto: no plano grátis o projeto é pausado após 1 semana sem uso e não há cópia de segurança diária. Inclui 8 GB de banco, 100 GB de arquivos e 250 GB de download por mês |
+| [Expo](https://expo.dev/pricing) (geração dos apps) | grátis; Starter US$ 19/mês | R$ 0 a 105/mês | O grátis tem 15 builds Android e 15 iPhone por mês |
+| [Resend](https://resend.com/pricing) (convites e códigos de login) | grátis; Pro US$ 20/mês | R$ 0 a 110/mês | O grátis vai até 3.000 e-mails por mês e **100 por dia**: no lançamento numa igreja, contratar o Pro naquele mês ou convidar em lotes |
+| Push (Expo e Firebase) | grátis | R$ 0 |  |
+| Painel web da tesouraria | grátis | R$ 0 | Site estático em hospedagem gratuita (ex.: Cloudflare Pages) |
+| Conta de desenvolvedor Apple | US$ 99/ano | R$ 545/ano | Se vencer, o app sai da App Store. Em nome de empresa, pede CNPJ e número D-U-N-S (gratuito) |
+| Conta Google Play | US$ 25 uma vez | R$ 140 | Sem renovação |
+| Domínio | R$ 40/ano (.com.br, Registro.br) ou US$ 14,20/ano (.app, Cloudflare) | R$ 40 a 80/ano |  |
+| **Total mensal** |  | **cerca de R$ 190 a 400** | Com Apple e domínio divididos por mês; sem impostos e taxas de cobrança |
 
-Câmbio estimado em R$ 5,50 por dólar. No piloto, só na Videira, tudo cabe nos planos gratuitos, exceto a conta Apple.
+Câmbio estimado em R$ 5,50 por dólar, mais o IOF do cartão internacional. No piloto, só na Videira: Supabase Pro e domínio desde o início, Google Play ao publicar no Android, Resend Pro só no mês do lançamento, Apple ao publicar no iPhone.
 
-O custo por igreja adicional é quase zero: uma igreja de 500 membros, com um comprovante por membro por mês, gera cerca de 2 GB por ano, dentro dos 100 GB inclusos no Supabase Pro. O plano Pro suporta dezenas de igrejas antes de precisar de upgrade.
+O custo por igreja adicional é quase zero, e guardar todos os comprovantes (nada se apaga) é barato. Nos testes, cada comprovante teve em média 321 KB, porque o app comprime as fotos antes de enviar. Uma igreja de 500 membros com um comprovante por membro por mês gera cerca de 1,9 GB por ano; 30 igrejas de 200 membros, cerca de 23 GB por ano, dentro dos 100 GB do Supabase Pro por uns 4 anos. Depois disso, cada 100 GB a mais custa US$ 2,13 por mês (cerca de R$ 12).
 
 **Proposta de preços**
 
@@ -470,7 +472,7 @@ O custo por igreja adicional é quase zero: uma igreja de 500 membros, com um co
 - **Teste grátis de 30 dias**, sem cartão.
 - **Piloto na Igreja Videira gratuito**, em troca de feedback e de poder citar a igreja como caso de uso.
 - **Sem fidelidade:** diferencial frente a quem exige 12 meses.
-- **Ponto de equilíbrio:** com custo de até R$ 400 e ticket médio de R$ 79, são cerca de 6 igrejas pagantes.
+- **Ponto de equilíbrio:** com ticket médio de R$ 79, cerca de 3 igrejas pagantes cobrem o custo básico (R$ 190 por mês) e 5 cobrem o custo maior (R$ 400 por mês).
 - Sobre o preço ainda incidem impostos e taxas de cobrança (boleto, Pix, cartão), que variam conforme a forma de empresa e o meio de recebimento escolhido. Vale confirmar com um contador antes de lançar.
 
 ## 16. Futuro: controle financeiro da tesouraria
