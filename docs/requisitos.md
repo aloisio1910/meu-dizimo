@@ -409,7 +409,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 - [x] Oferta anônima: controle da tesouraria fora do app (D-059).
 - [ ] Nome definitivo do produto, verificado no INPI e nas lojas de aplicativos.
 - [ ] Validar a proposta de preços por faixa da seção 15 (modelo definido em D-060).
-- [ ] Prazo de retenção de lançamentos e comprovantes (orientação contábil e jurídica).
+- [ ] Prazo de retenção de lançamentos e comprovantes (orientação contábil e jurídica). Em pesquisa pelo desenvolvedor: a lei costuma exigir a guarda de documentos financeiros por 5 anos (prazo tributário). Sugestão a avaliar: cumprido o prazo legal, o app oferece à igreja e a cada membro um arquivo para baixar todos os seus dados e comprovantes, avisa quanto tempo eles têm para baixar e, depois disso, os comprovantes vencidos saem do servidor. Mudaria a regra de que nada se apaga só para o que já passou do prazo legal; reduz o custo de armazenamento no longo prazo (seção 15) e atende à LGPD, que pede guardar os dados só pelo tempo necessário.
 - [ ] Membro ativo que perdeu o acesso ao e-mail: como a tesouraria troca o e-mail, já que a D-069 só permite a correção enquanto ele é convidado.
 - [ ] Uso do app por menores de 18 anos (LGPD, art. 14): se será permitido e com que consentimento dos responsáveis.
 - [ ] Responsável pela plataforma, e-mail de contato de privacidade e encarregado de dados (DPO), a preencher nos termos.
