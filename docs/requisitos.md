@@ -399,6 +399,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-103 | Push programado previsto junto com o controle financeiro (seção 16), como recurso do pacote premium: lembretes de contas a pagar e de fechamento do mês, mensagem agendada aos membros e resumo periódico ao Pastor de Governo | Definido |
 | D-104 | O app é para maiores de 18 anos: no primeiro acesso a pessoa declara ter 18 anos ou mais (registrado com data e versão, como os demais aceites). Menores não recebem convite e participam pelo dízimo familiar do responsável, sem login nem ficha própria. Um fluxo para adolescentes com consentimento do responsável fica para depois, se o piloto pedir | Definido |
 | D-105 | Preços por faixa de membros ativos: até 100, R$ 59; 101 a 200, R$ 79; 201 a 500, R$ 129; 501 a 1.000, R$ 199; acima de 1.000, sob consulta. Plano anual com 2 meses grátis. Premium (controle financeiro e push programado, D-103) como adicional a qualquer faixa: R$ 29,99 por mês como preço de lançamento (valor cheio anunciado de R$ 39,99), com o mesmo desconto no anual (R$ 299,90) | Definido |
+| D-106 | Plano Completo (base + premium) com desconto, para não ficar acima dos concorrentes com financeiro: até 100, R$ 79; 101 a 200, R$ 99; 201 a 500, R$ 149; 501 a 1.000, R$ 219; anual com 2 meses grátis. No anúncio, mostrar o anual dividido por mês e destacar sem fidelidade, sem implantação e teste de 30 dias (pesquisa de concorrência de 28/10/2026) | Definido |
 
 ## 14. Questões abertas e próximos passos
 
@@ -430,18 +431,25 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 
 Proposta: mensalidade por faixa de membros ativos, de R$ 49 a R$ 199, abaixo dos sistemas completos de gestão e com margem alta, porque o custo de servidor por igreja é quase zero. O ponto de equilíbrio fica entre 3 e 5 igrejas pagantes.
 
-**Preços da concorrência (consultados em 20/10/2026)**
+**Preços da concorrência (consultados em 28/10/2026, preço mensal)**
 
-| Sistema | Faixa de membros | Preço mensal | Observação |
-| --- | --- | --- | --- |
-| [ADMmembros](https://www.admmembros.com.br/) | até 100 / 101–200 / 401–500 / 701–1.000 | Grátis / R$ 69 / R$ 159 / R$ 289 | Gestão completa, app para membros, sem Pix citado |
-| [Congrega](https://congrega.com.br/) | até 100 / 101–350 / 351–700 | R$ 97 / R$ 197 / R$ 397 | App próprio da igreja, fidelidade de 12 meses |
-| [Sistema Reino](https://sistemareino.com.br/) | até 150 / até 500 / até 1.500 | R$ 47,90 / R$ 81,58\* / R$ 131,58\* | \*Equivalente mensal do plano anual; app voltado à equipe |
-| [Adm Igrejas](https://adm-igrejas.com.br/index.php) | até 500 (+R$ 10 a cada 100) | R$ 50 | Web/PWA, Pix só no roadmap |
-| [Sistema de Igreja](https://www.sistemadeigreja.com/) | ilimitado | R$ 79,90 | Uma igreja |
-| [Religio](https://www.religio.digital/) | ilimitado | a partir de R$ 150 | App de membros com Pix em acesso antecipado |
+| Sistema | \~100 membros | \~200 | \~500 | \~1.000 | Fidelidade | O que se destaca |
+| --- | --- | --- | --- | --- | --- | --- |
+| [Amosh](https://amosh.com.br/) | R$ 59,90 | R$ 99,90 (até 300) | R$ 199,90 (até 800) | R$ 329,90 | não | Concorrente mais próximo: app nativo com dízimo por Pix sem taxa, push e financeiro desde o primeiro plano; grátis até 25 membros |
+| [ADMmembros](https://www.admmembros.com.br/) | grátis | R$ 69 | R$ 159 | R$ 289 | não informa | Gestão completa, financeiro com DRE e conciliação, portal do membro; Pix não citado |
+| [Sistema Reino](https://sistemareino.com.br/) | R$ 47,90 (até 150) | \~R$ 97,90 (até 500) | \~R$ 97,90 | \~R$ 157,90 (até 1.500) | não | Financeiro, EBD, app, comprovante de dízimo, IA no plano maior; teste de 14 dias |
+| [Igreja Digital](https://igreja.digital/) | R$ 69,90 | R$ 69,90 | R$ 99,90 | R$ 99,90 | 12 meses | Membros ilimitados na sede, app personalizado, financeiro; Pix não citado |
+| [Congrega](https://congrega.com.br/) | R$ 97 | R$ 197 (até 350) | R$ 397 (até 700) | R$ 697 | 12 meses | App com o nome da igreja nas lojas, 53 funcionalidades |
+| [Cathedral Software](https://igrejas.membros.com.br/) | R$ 95,90 | — | — | — | — | Gestão de membros |
+| [Adm Igrejas](https://adm-igrejas.com.br/index.php) | R$ 50 (até 500) | R$ 50 | R$ 50 | R$ 100 | não | Web/PWA, células, financeiro; Pix só nos planos futuros |
+| [Sistema de Igreja](https://www.sistemadeigreja.com/) | R$ 79,90 (ilimitado) | R$ 79,90 | R$ 79,90 | R$ 79,90 | não informa | Financeiro, contas a pagar e receber |
+| [Religio](https://www.religio.digital/) | a partir de R$ 150 | idem | idem | idem | não | Por módulos; Pix copia e cola no app, conferência de comprovantes, fechamento mensal, OFX; teste de 30 dias |
+| [Gestão de Dízimo](https://www.gestaodedizimo.com.br/) | R$ 497 + R$ 1.900 de implantação | idem | idem | idem (até 5.000) | não | O único focado só em dízimo: QR Code, Pix e cartão, agradecimento automático pelo WhatsApp, campanhas |
+| [inChurch](https://www.inchurch.com.br/) e [Prover](https://www.sistemaprover.com.br/) | sob consulta |  |  |  |  | App com o nome da igreja, maquininha, soluções de pagamento |
 
-Quase todos são sistemas completos de gestão (secretaria, financeiro, células). O Meu Dízimo.app é especializado: não substitui esses sistemas, entrega melhor a experiência do membro no dízimo e na oferta. Por isso o preço deve ficar na metade de baixo da faixa de mercado.
+Preços de Reino (planos maiores) e Adm Igrejas acima de 500 membros são cálculos a partir do que o site mostra.
+
+Quase todos são sistemas completos de gestão (secretaria, financeiro, células). O Meu Dízimo.app é especializado: nenhum concorrente descreve o ciclo do envelope (o membro registra, a tesouraria confere, confirma ou registra divergência, e o membro recebe o retorno), o Cartão de Dízimo com histórico confirmado, as campanhas com vídeo ou o cuidado com quem tem dificuldade com tecnologia. Na faixa de até 100 membros, o Amosh entrega mais pelo mesmo preço (inclui financeiro); da faixa de 200 para cima, o Meu Dízimo fica abaixo dos concorrentes com app nativo. O único focado só em dízimo cobra R$ 497 mais implantação, âncora que mostra o valor da especialização.
 
 **Custo operacional estimado (preços conferidos em 28/10/2026)**
 
@@ -489,17 +497,21 @@ As medidas 3 e 4 respeitam a regra de que nada se apaga. Pergunta para o contado
 
 **Proposta de preços**
 
-| Faixa (membros ativos) | Mensal | Anual (2 meses grátis) |
-| --- | --- | --- |
-| Até 100 | R$ 59 | R$ 590 |
-| 101 a 200 | R$ 79 | R$ 790 |
-| 201 a 500 | R$ 129 | R$ 1.290 |
-| 501 a 1.000 | R$ 199 | R$ 1.990 |
-| Acima de 1.000 | sob consulta | sob consulta |
-| **Premium** (adicional a qualquer faixa: controle financeiro e push programado, D-103) | **+ R$ 29,99** (anunciado: R$ 39,99, por R$ 29,99 no lançamento) | + R$ 299,90 |
+| Faixa (membros ativos) | Base: mensal | Base: anual | **Completo** (base + premium): mensal | Completo: anual |
+| --- | --- | --- | --- | --- |
+| Até 100 | R$ 59 | R$ 590 | **R$ 79** (em vez de R$ 88,99) | R$ 790 |
+| 101 a 200 | R$ 79 | R$ 790 | **R$ 99** (em vez de R$ 108,99) | R$ 990 |
+| 201 a 500 | R$ 129 | R$ 1.290 | **R$ 149** (em vez de R$ 158,99) | R$ 1.490 |
+| 501 a 1.000 | R$ 199 | R$ 1.990 | **R$ 219** (em vez de R$ 228,99) | R$ 2.190 |
+| Acima de 1.000 | sob consulta | sob consulta | sob consulta | sob consulta |
+| Premium avulso (controle financeiro e push programado, D-103) | + R$ 29,99 (anunciado: R$ 39,99, por R$ 29,99 no lançamento) | + R$ 299,90 |  |  |
+
+Anual: 2 meses grátis (10 mensalidades). O Completo só passa a ser vendido quando o premium existir.
 
 - **Faixa de R$ 59:** a primeira faixa subiu de R$ 49 para R$ 59 porque é nela que impostos e taxas de cobrança pesam mais (D-105).
 - **Premium com preço de lançamento:** valor baixo, para aumentar a margem sem pesar para a igreja. Pelo Código de Defesa do Consumidor (art. 37), um anúncio "de R$ 39,99 por R$ 29,99" exige que o preço "de" tenha existido; por isso o anúncio usa "preço de lançamento" até o valor cheio passar a ser cobrado.
+- **Plano Completo (D-106):** base mais premium com cerca de R$ 10 de desconto. Até 100 membros fica a R$ 19 do Amosh, entregando a conferência que ele não tem; da faixa de 200 para cima, continua abaixo dos concorrentes com app nativo.
+- **No anúncio:** mostrar o anual dividido por mês (ex.: "R$ 49 por mês no anual") e destacar sem fidelidade (contra Congrega e Igreja Digital), sem implantação (contra Gestão de Dízimo) e teste de 30 dias (o Sistema Reino dá 14).
 - **Teste grátis de 30 dias**, sem cartão.
 - **Piloto na Igreja Videira gratuito**, em troca de feedback e de poder citar a igreja como caso de uso.
 - **Sem fidelidade:** diferencial frente a quem exige 12 meses.
