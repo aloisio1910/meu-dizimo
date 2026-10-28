@@ -89,8 +89,8 @@ As telas do Admin Master (A-01 e A-02) ficam fora do desenho: são usadas só po
 | P-02 | Campanhas | Criar e editar campanha, artes, link de vídeo, encerrar | Pastor de Governo |
 | P-03 | Configurações da igreja | Dados, banco e Pix, contato, campos do cadastro, logo e cor | Pastor de Governo |
 | P-04 | Log da igreja | Histórico de ações, com filtros | Pastor de Governo |
-| A-01 | Igrejas | Cadastrar igreja e Pastor de Governo, status da assinatura | Admin Master |
-| A-02 | Logs globais | Ações administrativas da plataforma | Admin Master |
+| A-01 | Igrejas | Cadastrar igreja e Pastor de Governo, ativar ou inativar, plano, país, idioma e moeda, trocar o Pastor; Atendimento por e-mail, com motivo no log da igreja (D-098 a D-101) | Admin Master |
+| A-02 | Logs globais | Ações do suporte nas igrejas: cadastros, trocas de Pastor e de e-mail, buscas do Atendimento | Admin Master |
 
 Tesoureiro e Pastor de Governo também têm as telas de membro, para o próprio dízimo. Inativar e reativar membro ficam em T-04, visíveis só ao Pastor de Governo, assim como Reabrir lançamento em T-02.
 

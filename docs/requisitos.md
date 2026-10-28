@@ -34,7 +34,7 @@ São quatro perfis. Cada perfil herda o anterior apenas onde indicado: o Pastor 
 | Ver e editar os próprios dados | Sim | Sim | Sim | Sim |
 | Lançar dízimo e oferta próprios | Sim | Sim | Sim | — |
 | Editar ou cancelar lançamento pendente próprio | Sim | Sim | Sim | — |
-| Ver cartões de todos os membros da igreja | — | Sim | Sim | Auditado |
+| Ver cartões de todos os membros da igreja | — | Sim | Sim | — (D-098) |
 | Fila de conferência: confirmar ou registrar divergência | — | Sim | Sim | — |
 | Lançar em nome do membro (devolução presencial) | — | Sim | Sim | — |
 | Convidar membros e reenviar convite | — | Sim | Sim | — |
@@ -48,7 +48,7 @@ São quatro perfis. Cada perfil herda o anterior apenas onde indicado: o Pastor 
 | Cadastrar igrejas e Pastor de Governo | — | — | — | Sim |
 | Logs globais da plataforma | — | — | — | Sim |
 
-"Auditado" significa que todo acesso do Admin Master a dados de uma igreja gera registro no log daquela igreja.
+"Auditado" significa que todo acesso do Admin Master a dados de uma igreja gera registro no log daquela igreja. Dos membros, o Admin Master só vê o que acha pelo Atendimento (busca por e-mail, com motivo); não vê cartões, valores nem comprovantes (D-098).
 
 **O Tesoureiro nunca pode:** alterar o valor informado pelo membro, apagar lançamentos ou histórico, nem fazer operações exclusivas do Pastor de Governo.
 
@@ -391,6 +391,10 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-095 | O Log da igreja tem pesquisa (pessoa, conta, campanha, campo, motivo e valor) e download em planilha com os filtros aplicados. O download fica registrado no próprio log, com quem baixou, período, quantidade e pesquisa; só o Pastor de Governo baixa, até 5.000 registros por arquivo | Definido |
 | D-096 | Avisos: o banco cria um aviso para cada evento da seção 9 (tabela notificacoes, a 13ª), que aparece no app numa aba Avisos com os não lidos, além do push. A pessoa desliga só os avisos que podem ser desligados (nova campanha; novo lançamento e comprovante para a tesouraria); o resumo diário fica para depois. Push primeiro no Android; iPhone quando houver a conta Apple Developer | Definido |
 | D-097 | Troca de e-mail: a tesouraria (tesoureiro ou Pastor de Governo) troca o e-mail de membros, convidados ou ativos, e de outros tesoureiros, com motivo obrigatório registrado no log. Ninguém troca o próprio e-mail; o do Pastor de Governo, e o de quem também está em outra igreja, só pelo suporte do app. A pessoa é avisada no celular e no e-mail antigo. O novo e-mail não pode já ter login. Substitui a regra anterior de que a tesouraria só corrigia o e-mail de convidado (D-069) | Definido |
+| D-098 | O Admin Master vê as igrejas e o Pastor de cada uma; dados de membros, só pelo Atendimento (busca por e-mail com motivo), e cada busca fica no log da igreja. Ele não vê cartões, valores nem comprovantes | Definido |
+| D-099 | Um só Pastor de Governo por igreja: definir um novo faz o anterior voltar a ser membro (ou cancela o convite, se ainda não entrou) | Definido |
+| D-100 | Igreja inativa: ninguém dela entra no app (membros e tesouraria veem uma explicação); nada é apagado, e reativar devolve tudo como estava | Definido |
+| D-101 | Igreja nova: o Admin Master preenche nome, país, idioma, moeda, faixa do plano e o Pastor de Governo; o Pastor recebe o convite por e-mail e completa o resto | Definido |
 
 ## 14. Questões abertas e próximos passos
 
