@@ -276,6 +276,27 @@ O MVP entrega o ciclo completo do dízimo e das ofertas para a Igreja Videira us
 
 Ofertas entraram no MVP em 20/10/2026 para o piloto já cobrir dízimo e oferta; como os dois usam o mesmo modelo de lançamento, o acréscimo de trabalho é pequeno.
 
+**Plano de evolução depois do MVP (D-107, a partir da pesquisa de concorrência de 28/10/2026)**
+
+A base recebe o que fortalece o ciclo do dízimo e da oferta; o premium recebe a gestão financeira (seção 16). Ordem de execução:
+
+| Ordem | Funcionalidade | Pacote | Quem já tem | Esforço |
+| --- | --- | --- | --- | --- |
+| 1. Antes do piloto ou logo nele | **B1. QR Code da igreja para o culto:** no telão ou impresso, abre direto a oferta ou a campanha no app | Base | Gestão de Dízimo | Pequeno |
+| 1. Antes do piloto ou logo nele | **B2. Importar membros por planilha:** a tesouraria sobe uma planilha e o app cria os convites | Base | Adm Igrejas, Igreja Digital | Médio |
+| 2. Primeiros meses do piloto | **B3. Declaração anual de contribuições:** o membro gera o PDF do ano, só com o confirmado | Base | Sistema Reino, Religio | Pequeno a médio |
+| 2. Primeiros meses do piloto | **B4. Lembrete do próprio membro:** ele escolhe o dia e recebe um push; quem pede é o membro, nunca a igreja | Base | Gestão de Dízimo | Pequeno |
+| 2. Primeiros meses do piloto | **B5. Agradecimento personalizado na confirmação:** o texto da igreja vai no push | Base | Gestão de Dízimo | Pequeno |
+| 3. Lançamento do premium | **P1. Entradas, saídas, saldo e gráficos** | Premium | Amosh, ADMmembros, Reino, Religio | Grande |
+| 3. Lançamento do premium | **P6. Push programado** (lembretes de contas e de fechamento, mensagem agendada, resumo ao Pastor; D-103) | Premium | — | Médio |
+| 4. Depois do lançamento do premium | **P3. Fechamento mensal e prestação de contas em PDF** | Premium | Religio, Reino | Médio |
+| 4. Depois do lançamento do premium | **P4. Exportação para o contador** | Premium | Amosh | Pequeno |
+| 5. Por último | **P2. Conciliação bancária** (extrato OFX casado com os Pix) | Premium | ADMmembros, Religio | Grande |
+| 5. Por último | **P5. Congregações** (sede e filiais, com consolidado; possivelmente cobrado por congregação) | Premium | Reino, Amosh, Religio | Grande |
+| No lançamento comercial | **B6. Plano grátis para igrejas muito pequenas** (até 25 ou 30 membros) | Preço (seção 15) | Amosh, Igreja Digital, ADMmembros | Só regra de cobrança |
+
+Fora do plano, por serem de sistema de gestão completo, onde os concorrentes já são fortes e baratos: células, agenda, eventos, carteirinha, check-in infantil, pedidos de oração, devocional, assistente com IA e site da igreja. O app com o nome da igreja nas lojas fica sob consulta para igrejas muito grandes.
+
 ## 12. Regras de negócio
 
 As regras RN-001 a RN-026 da v0.2 continuam válidas, com os ajustes marcados. As regras novas começam em RN-027.
@@ -400,6 +421,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-104 | O app é para maiores de 18 anos: no primeiro acesso a pessoa declara ter 18 anos ou mais (registrado com data e versão, como os demais aceites). Menores não recebem convite e participam pelo dízimo familiar do responsável, sem login nem ficha própria. Um fluxo para adolescentes com consentimento do responsável fica para depois, se o piloto pedir | Definido |
 | D-105 | Preços por faixa de membros ativos: até 100, R$ 59; 101 a 200, R$ 79; 201 a 500, R$ 129; 501 a 1.000, R$ 199; acima de 1.000, sob consulta. Plano anual com 2 meses grátis. Premium (controle financeiro e push programado, D-103) como adicional a qualquer faixa: R$ 29,99 por mês como preço de lançamento (valor cheio anunciado de R$ 39,99), com o mesmo desconto no anual (R$ 299,90) | Definido |
 | D-106 | Plano Completo (base + premium) com desconto, para não ficar acima dos concorrentes com financeiro: até 100, R$ 79; 101 a 200, R$ 99; 201 a 500, R$ 149; 501 a 1.000, R$ 219; anual com 2 meses grátis. No anúncio, mostrar o anual dividido por mês e destacar sem fidelidade, sem implantação e teste de 30 dias (pesquisa de concorrência de 28/10/2026) | Definido |
+| D-107 | Plano de evolução depois do MVP (seção 11): na base, QR Code do culto, importar membros por planilha, declaração anual, lembrete do próprio membro e agradecimento personalizado; no premium, entradas e saídas, push programado, fechamento mensal e prestação de contas, exportação para o contador, conciliação bancária e congregações; plano grátis para igrejas muito pequenas a decidir no lançamento comercial. Gestão completa (células, agenda, eventos) fica fora | Definido |
 
 ## 14. Questões abertas e próximos passos
 
@@ -521,6 +543,8 @@ Anual: 2 meses grátis (10 mensalidades). O Completo só passa a ser vendido qua
 ## 16. Futuro: controle financeiro da tesouraria
 
 Uma atualização futura dará a Tesoureiro e Pastor de Governo um controle financeiro com entradas, saídas e gráficos por período, evoluindo para uma ferramenta próxima de um CRM da tesouraria. Não faz parte do MVP; o modelo de dados atual já serve de base.
+
+A ordem de execução do premium, junto com as melhorias da base, está no plano de evolução da seção 11 (D-107).
 
 **Núcleo pedido**
 
