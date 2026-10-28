@@ -16,6 +16,7 @@ export type CodigoGlobal =
   | 'fichaAlterada'
   | 'conviteEnviado'
   | 'campanhaCriada'
+  | 'mensagemEnviada'
   | 'buscaDoSuporte'
   | 'outro';
 
@@ -25,7 +26,14 @@ const objeto = (valor: unknown): Record<string, unknown> =>
   valor && typeof valor === 'object' && !Array.isArray(valor) ? (valor as Record<string, unknown>) : {};
 const texto = (valor: unknown) => (valor === undefined || valor === null ? '' : String(valor));
 
-export type ValoresGlobais = { igreja?: string; nome?: string; email?: string; tabela?: string };
+export type ValoresGlobais = {
+  igreja?: string;
+  nome?: string;
+  email?: string;
+  tabela?: string;
+  texto?: string;
+  quantos?: string;
+};
 
 export function descreverRegistroGlobal(r: Registro): { codigo: CodigoGlobal; valores: ValoresGlobais } {
   const antes = objeto(r.antes);
@@ -59,5 +67,8 @@ export function descreverRegistroGlobal(r: Registro): { codigo: CodigoGlobal; va
   if (r.tabela === 'convites' && r.acao === 'insert') return { codigo: 'conviteEnviado', valores: {} };
   // A campanha permanente Oferta nasce junto com a igreja.
   if (r.tabela === 'campanhas' && r.acao === 'insert') return { codigo: 'campanhaCriada', valores: { nome } };
+  if (r.tabela === 'mensagens') {
+    return { codigo: 'mensagemEnviada', valores: { texto: texto(depois.texto), quantos: texto(depois.destinatarios) } };
+  }
   return { codigo: 'outro', valores: { tabela: r.tabela } };
 }

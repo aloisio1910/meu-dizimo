@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals';
 import i18next from 'i18next';
 
 import ptBR from '../src/i18n/locales/pt-BR.json';
-import { A_TESOURARIA, TEXTOS, textoDoPush } from '../supabase/functions/_shared/texto-do-push';
+import { A_TESOURARIA, TEXTOS, textoDoPush, tituloDoPush } from '../supabase/functions/_shared/texto-do-push';
 
 // O push (Edge Function) e a aba Avisos (app) precisam dizer a mesma coisa.
 describe('texto do push', () => {
@@ -80,5 +80,21 @@ describe('texto do push', () => {
 
   it('tipo desconhecido não gera texto', () => {
     expect(textoDoPush({ tipo: 'outro', dados: {} }, igreja)).toBe('');
+  });
+});
+
+describe('título do push (D-102)', () => {
+  it('nome da igreja, menos no aviso da plataforma', () => {
+    expect(tituloDoPush('mensagem_da_igreja', 'Igreja Videira')).toBe('Igreja Videira');
+    expect(tituloDoPush('aviso_da_plataforma', 'Igreja Videira')).toBe('Meu Dízimo');
+  });
+
+  it('a mensagem sai com o texto escrito', () => {
+    expect(
+      textoDoPush(
+        { tipo: 'mensagem_da_igreja', dados: { texto: 'Trazei todos os dízimos.' } },
+        { titulo_administrador: null, idioma: 'pt-BR' },
+      ),
+    ).toBe('Trazei todos os dízimos.');
   });
 });

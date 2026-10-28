@@ -25,7 +25,15 @@ export const TEXTOS: Record<string, string> = {
     'A chave Pix da conta {{conta}} foi alterada. Se não foi você nem alguém da tesouraria, avise o {{titulo}} agora.',
   email_alterado:
     'O seu e-mail de entrada no app foi trocado pela tesouraria para {{email}}. Se você não pediu, fale com o {{titulo}}.',
+  // D-102: o texto é o que a igreja (ou o suporte) escreveu.
+  mensagem_da_igreja: '{{texto}}',
+  aviso_da_plataforma: '{{texto}}',
 };
+
+// Título do push: o nome da igreja; o aviso da plataforma vem do próprio app.
+export function tituloDoPush(tipo: string, igrejaNome: string): string {
+  return tipo === 'aviso_da_plataforma' ? 'Meu Dízimo' : igrejaNome;
+}
 
 export const A_TESOURARIA = 'A tesouraria';
 
@@ -54,6 +62,7 @@ export function textoDoPush(
     campanha: texto(d.campanha_nome),
     conta: texto(d.conta_nome),
     email: texto(d.email),
+    texto: texto(d.texto),
     titulo: texto(igreja.titulo_administrador),
   };
   return modelo.replace(/\{\{(\w+)\}\}/g, (_, chave: string) => valores[chave] ?? '');

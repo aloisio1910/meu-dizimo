@@ -238,6 +238,7 @@
       "campanhas": "Campanhas",
       "igreja": "Dados e configurações",
       "comprovantes": "Comprovantes",
+      "mensagens": "Mensagens aos membros",
       "downloads": "Downloads do log"
     },
     "sistema": "Sistema (rotinas automáticas)",
@@ -304,7 +305,9 @@
       "igrejaAtualizada": "Atualizou os dados ou a aparência da igreja.",
       "registroAlterado": "Alterou um registro ({{tabela}}).",
       "logBaixado": "Baixou o log de {{de}} a {{ate}} ({{quantidade}} registros).",
-      "emailTrocado": "Trocou o e-mail de {{membro}}."
+      "emailTrocado": "Trocou o e-mail de {{membro}}.",
+      "mensagemEnviada": "Enviou uma mensagem a {{quantos}} membros: “{{texto}}”",
+      "avisoDaPlataforma": "O suporte do Meu Dízimo enviou um aviso a {{quantos}} pessoas: “{{texto}}”"
     },
     "periodo": "Período (data em que a ação foi feita)",
     "sim": "Sim",
@@ -472,11 +475,12 @@
     "naoSair": "Não, continuar",
     "avisos": {
       "titulo": "Avisos",
-      "explicacao": "Escolha quais avisos quer receber. Confirmações, divergências e trocas de chave Pix sempre chegam.",
+      "explicacao": "Escolha quais avisos quer receber. Confirmações, divergências, trocas de chave Pix e avisos do Meu Dízimo sempre chegam.",
       "tipos": {
         "nova_campanha": "Novas campanhas de oferta",
         "novo_lancamento": "Novos lançamentos para conferir",
-        "novo_comprovante": "Novos comprovantes"
+        "novo_comprovante": "Novos comprovantes",
+        "mensagem_da_igreja": "Mensagens da igreja"
       },
       "salvo": "Preferência salva.",
       "falhou": "Não conseguimos salvar. Tente de novo."
@@ -598,7 +602,8 @@
       "sair": "Sair da conta",
       "confirmarSaida": "Sair da conta? Para entrar de novo, você vai precisar do código enviado ao seu e-mail.",
       "avisos": "Avisos",
-      "avisosComNaoLidos": "Avisos ({{count}})"
+      "avisosComNaoLidos": "Avisos ({{count}})",
+      "mensagens": "Mensagens"
     },
     "configuracoes": {
       "titulo": "Configurações da igreja",
@@ -1337,7 +1342,9 @@
       "divergencia_contestada": "{{membro}} contestou a divergência do dízimo de {{valor}}.",
       "divergencia_contestada_oferta": "{{membro}} contestou a divergência da oferta de {{valor}}.",
       "pix_alterado": "A chave Pix da conta {{conta}} foi alterada. Se não foi você nem alguém da tesouraria, avise o {{titulo}} agora.",
-      "email_alterado": "O seu e-mail de entrada no app foi trocado pela tesouraria para {{email}}. Se você não pediu, fale com o {{titulo}}."
+      "email_alterado": "O seu e-mail de entrada no app foi trocado pela tesouraria para {{email}}. Se você não pediu, fale com o {{titulo}}.",
+      "mensagem_da_igreja": "{{texto}}",
+      "aviso_da_plataforma": "{{texto}}"
     },
     "aTesouraria": "A tesouraria"
   },
@@ -1362,7 +1369,8 @@
       "semPlano": "Plano não informado",
       "pastor": "{{titulo}}: {{nome}} ({{email}})",
       "pastorConvidado": "{{titulo}}: {{nome}} ({{email}}), ainda não entrou",
-      "semPastor": "Sem {{titulo}}"
+      "semPastor": "Sem {{titulo}}",
+      "avisos": "Avisos da plataforma"
     },
     "nova": {
       "titulo": "Cadastrar igreja",
@@ -1457,7 +1465,8 @@
         "conviteEnviado": "Enviou um convite.",
         "buscaDoSuporte": "Buscou {{email}} no atendimento.",
         "outro": "Alterou um registro ({{tabela}}).",
-        "campanhaCriada": "Criou a campanha {{nome}}."
+        "campanhaCriada": "Criou a campanha {{nome}}.",
+        "mensagemEnviada": "Enviou um aviso da plataforma a {{quantos}} pessoas: “{{texto}}”"
       }
     },
     "erros": {
@@ -1471,7 +1480,28 @@
       "ja_e_pastor": "Esta pessoa já administra a igreja.",
       "igreja_nao_encontrada": "Igreja não encontrada.",
       "membro_nao_encontrado": "Pessoa não encontrada.",
-      "convite_indisponivel": "Esta pessoa já entrou no app: não há convite para reenviar."
+      "convite_indisponivel": "Esta pessoa já entrou no app: não há convite para reenviar.",
+      "texto_invalido": "Escreva a mensagem (de 3 a 500 letras)."
+    },
+    "avisos": {
+      "titulo": "Avisos da plataforma",
+      "explicacao": "Avisos do Meu Dízimo para os usuários, como uma manutenção programada. Chegam como push e ficam na aba Avisos; ninguém pode desligar. Envie antes da parada: com o sistema fora do ar, o push não sai.",
+      "texto": "Aviso",
+      "textoDica": "Ex.: \"Amanhã, das 23h à 0h, o app ficará em manutenção.\"",
+      "paraQuem": "Para quem",
+      "todas": "Todas as igrejas",
+      "verPrevia": "Ver quantos vão receber",
+      "vaiPara_zero": "Ninguém vai receber.",
+      "vaiPara_one": "Vai para {{count}} pessoa.",
+      "vaiPara_other": "Vai para {{count}} pessoas.",
+      "enviar": "Enviar agora",
+      "editar": "Voltar e editar",
+      "enviado_one": "Aviso enviado para {{count}} pessoa.",
+      "enviado_other": "Aviso enviado para {{count}} pessoas.",
+      "enviados": "Avisos enviados",
+      "nenhum": "Nenhum aviso enviado ainda.",
+      "linha_one": "{{dia}} · {{onde}} · para {{count}} pessoa",
+      "linha_other": "{{dia}} · {{onde}} · para {{count}} pessoas"
     }
   },
   "escolherIgreja": {
@@ -1485,5 +1515,37 @@
     "emUso": "Em uso agora",
     "trocar": "Trocar de igreja",
     "voltar": "Voltar"
+  },
+  "mensagens": {
+    "titulo": "Mensagens aos membros",
+    "explicacao": "Envie uma palavra aos membros, como um versículo sobre fidelidade ou sobre semear. Ela chega no celular e fica na aba Avisos. Para não cansar os membros, cada igreja envia até 1 mensagem por semana.",
+    "texto": "Mensagem",
+    "textoDica": "Até 500 letras. Ex.: \"Trazei todos os dízimos à casa do tesouro\" (Malaquias 3:10).",
+    "contador": "{{quantos}} de 500",
+    "paraQuem": "Para quem",
+    "paraQuemExplicacao": "Sem campo escolhido, vai para todos os membros ativos. Para um grupo, escolha o campo do cadastro (ex.: Célula). Nunca pelo que a pessoa deu ou deixou de dar.",
+    "verPrevia": "Ver como vai ficar",
+    "previa": "Como vai aparecer no celular",
+    "vaiPara_zero": "Ninguém vai receber: confira o grupo escolhido.",
+    "vaiPara_one": "Vai para {{count}} pessoa.",
+    "vaiPara_other": "Vai para {{count}} pessoas.",
+    "naoRecebe": "Não recebem: quem desligou as mensagens da igreja e você, que está enviando.",
+    "enviar": "Enviar agora",
+    "editar": "Voltar e editar",
+    "enviada_one": "Mensagem enviada para {{count}} pessoa.",
+    "enviada_other": "Mensagem enviada para {{count}} pessoas.",
+    "limite": "A igreja já enviou a mensagem desta semana. A próxima pode sair a partir de {{dia}} às {{hora}}.",
+    "enviadas": "Mensagens enviadas",
+    "nenhuma": "Nenhuma mensagem enviada ainda.",
+    "linha_one": "{{dia}} · {{autor}} · para {{count}} pessoa",
+    "linha_other": "{{dia}} · {{autor}} · para {{count}} pessoas",
+    "grupo": "Grupo: {{campo}} = {{valor}}",
+    "falhaAoCarregar": "Não conseguimos carregar as mensagens.",
+    "erros": {
+      "sem_permissao": "Só o {{titulo}} e os tesoureiros enviam mensagens.",
+      "texto_invalido": "Escreva a mensagem (de 3 a 500 letras).",
+      "grupo_invalido": "Escolha um grupo válido do cadastro.",
+      "limite_semanal": "A igreja já enviou a mensagem desta semana."
+    }
   }
 }

@@ -11,7 +11,9 @@ export type TipoDeAviso =
   | 'novo_comprovante'
   | 'divergencia_contestada'
   | 'pix_alterado'
-  | 'email_alterado';
+  | 'email_alterado'
+  | 'mensagem_da_igreja'
+  | 'aviso_da_plataforma';
 
 export type Aviso = {
   id: string;
@@ -23,12 +25,17 @@ export type Aviso = {
 };
 
 // Só estes a pessoa pode desligar (seção 9); os demais sempre chegam.
-export const AVISOS_QUE_DESLIGAM = ['nova_campanha', 'novo_lancamento', 'novo_comprovante'] as const;
+export const AVISOS_QUE_DESLIGAM = [
+  'nova_campanha',
+  'mensagem_da_igreja',
+  'novo_lancamento',
+  'novo_comprovante',
+] as const;
 export type AvisoQueDesliga = (typeof AVISOS_QUE_DESLIGAM)[number];
 
 // Os da tesouraria só fazem sentido para quem é da tesouraria.
 export function avisosQueAPessoaPodeDesligar(ehTesouraria: boolean): AvisoQueDesliga[] {
-  return ehTesouraria ? [...AVISOS_QUE_DESLIGAM] : ['nova_campanha'];
+  return ehTesouraria ? [...AVISOS_QUE_DESLIGAM] : ['nova_campanha', 'mensagem_da_igreja'];
 }
 
 const texto = (valor: unknown) => (valor === undefined || valor === null ? '' : String(valor));
@@ -48,6 +55,7 @@ export function valoresDoAviso(
     campanha: texto(d.campanha_nome),
     conta: texto(d.conta_nome),
     email: texto(d.email),
+    texto: texto(d.texto),
   };
 }
 
@@ -78,5 +86,9 @@ export function destinoDoAviso(aviso: Pick<Aviso, 'tipo' | 'dados'>, ehAdministr
       return ehAdministrador ? { pathname: '/contas' } : null;
     case 'email_alterado':
       return { pathname: '/perfil' };
+    // A mensagem já está inteira na aba Avisos.
+    case 'mensagem_da_igreja':
+    case 'aviso_da_plataforma':
+      return null;
   }
 }

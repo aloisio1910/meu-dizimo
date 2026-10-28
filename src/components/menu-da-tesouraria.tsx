@@ -12,7 +12,7 @@ import { useMinhasFichas } from '@/hooks/use-minhas-fichas';
 import { sair } from '@/services/supabase/auth';
 import { espacos } from '@/theme';
 
-type Pagina = 'fila' | 'membros';
+type Pagina = 'fila' | 'membros' | 'mensagens';
 
 // Atalhos entre as telas do painel da tesouraria, no topo de cada tela
 // principal. Lado a lado no computador; no celular, quebram em linhas.
@@ -33,6 +33,8 @@ export function MenuDaTesouraria({ atual }: { atual: Pagina }) {
     atual !== 'membros' && { titulo: t('tesouraria.menu.membros'), ir: () => router.replace('/membros') },
     { titulo: t('tesouraria.menu.lancar'), ir: () => router.push('/lancar') },
     { titulo: t('tesouraria.menu.relatorio'), ir: () => router.push('/relatorio') },
+    // Mensagens aos membros: Pastor e tesoureiros (D-102).
+    atual !== 'mensagens' && { titulo: t('tesouraria.menu.mensagens'), ir: () => router.push('/mensagens') },
     // Campanhas, tesoureiros e configurações são do Pastor de Governo.
     ehAdministrador && { titulo: t('tesouraria.menu.campanhas'), ir: () => router.push('/campanhas') },
     ehAdministrador && { titulo: t('tesouraria.menu.tesoureiros'), ir: () => router.push('/tesoureiros') },

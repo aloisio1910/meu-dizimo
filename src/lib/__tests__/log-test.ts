@@ -270,3 +270,28 @@ describe('download do log (D-095)', () => {
     ]);
   });
 });
+
+describe('mensagens aos membros (D-102)', () => {
+  it('mensagem da igreja e aviso do suporte têm frases próprias', () => {
+    expect(
+      descreverRegistro(
+        registro({
+          tabela: 'mensagens',
+          acao: 'insert',
+          depois: { origem: 'igreja', texto: 'Semeai com fartura.', destinatarios: 12 },
+        }),
+        ctx,
+      ),
+    ).toEqual({ codigo: 'mensagemEnviada', valores: { texto: 'Semeai com fartura.', quantos: '12' } });
+    expect(
+      descreverRegistro(
+        registro({
+          tabela: 'mensagens',
+          acao: 'insert',
+          depois: { origem: 'plataforma', texto: 'Manutenção', destinatarios: 3 },
+        }),
+        ctx,
+      ).codigo,
+    ).toBe('avisoDaPlataforma');
+  });
+});

@@ -39,6 +39,7 @@ export type ErroDoAdmin =
   | 'igreja_nao_encontrada'
   | 'membro_nao_encontrado'
   | 'convite_indisponivel'
+  | 'texto_invalido'
   | 'sem_conexao'
   | 'erro_inesperado';
 
@@ -54,6 +55,7 @@ const ERROS_CONHECIDOS: string[] = [
   'igreja_nao_encontrada',
   'membro_nao_encontrado',
   'convite_indisponivel',
+  'texto_invalido',
 ];
 
 export type Resultado<T> = { ok: true; dados: T } | { ok: false; erro: ErroDoAdmin };
@@ -200,4 +202,29 @@ export async function listarLogsGlobais(pagina: number): Promise<{ registros: Re
   });
   if (error) throw error;
   return { registros: data, total: data[0]?.total ?? 0 };
+}
+
+// Avisos da plataforma (D-102): todas as igrejas (sem igreja) ou uma só.
+export async function previaDoAvisoDaPlataforma(igrejaId?: string): Promise<number> {
+  const { data, error } = await supabase.rpc('admin_previa_do_aviso', { p_igreja_id: igrejaId });
+  if (error) throw error;
+  return data;
+}
+
+export function enviarAvisoDaPlataforma(texto: string, igrejaId?: string) {
+  return executar(() => supabase.rpc('admin_enviar_aviso_da_plataforma', { p_texto: texto, p_igreja_id: igrejaId }));
+}
+
+export type AvisoDaPlataforma = {
+  id: string;
+  igreja_nome: string | null;
+  texto: string;
+  destinatarios: number;
+  criado_em: string;
+};
+
+export async function listarAvisosDaPlataforma(): Promise<AvisoDaPlataforma[]> {
+  const { data, error } = await supabase.rpc('admin_avisos_da_plataforma');
+  if (error) throw error;
+  return data;
 }

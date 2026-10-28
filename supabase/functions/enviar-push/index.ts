@@ -3,7 +3,7 @@
 // pendentes, manda pelo serviço de push do Expo e devolve o resultado.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
-import { textoDoPush } from '../_shared/texto-do-push.ts';
+import { textoDoPush, tituloDoPush } from '../_shared/texto-do-push.ts';
 
 const ENDERECO_DO_EXPO = 'https://exp.host/--/api/v2/push/send';
 // O Expo aceita até 100 mensagens por pedido.
@@ -59,7 +59,7 @@ Deno.serve(async (pedido) => {
         avisoId: aviso.id,
         mensagem: {
           to: token,
-          title: aviso.igreja_nome,
+          title: tituloDoPush(aviso.tipo, aviso.igreja_nome),
           body: corpo,
           channelId: 'avisos',
           sound: 'default',

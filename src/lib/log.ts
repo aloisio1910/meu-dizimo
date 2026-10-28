@@ -15,7 +15,8 @@ export type RegistroDoLog = {
   criado_em: string;
 };
 
-export type Assunto = 'lancamentos' | 'membros' | 'contas' | 'campanhas' | 'igreja' | 'comprovantes' | 'downloads';
+export type Assunto =
+  'lancamentos' | 'membros' | 'contas' | 'campanhas' | 'igreja' | 'comprovantes' | 'mensagens' | 'downloads';
 
 // Tabelas de cada assunto do filtro.
 export const TABELAS_DO_ASSUNTO: Record<Assunto, string[]> = {
@@ -25,6 +26,8 @@ export const TABELAS_DO_ASSUNTO: Record<Assunto, string[]> = {
   campanhas: ['campanhas', 'campanha_midias'],
   igreja: ['igrejas', 'campos_cadastro'],
   comprovantes: ['comprovantes'],
+  // Mensagens aos membros e avisos do suporte (D-102).
+  mensagens: ['mensagens'],
   // Quem baixou o próprio log (D-095).
   downloads: ['auditoria'],
 };
@@ -94,6 +97,8 @@ export type CodigoDaAcao =
   | 'lancamentoReaberto'
   | 'lancamentoRegistrado'
   | 'logBaixado'
+  | 'mensagemEnviada'
+  | 'avisoDaPlataforma'
   | 'membroConvidado'
   | 'membroInativado'
   | 'membroReativado'
@@ -227,6 +232,11 @@ export function descreverRegistro(r: RegistroDoLog, ctx: Contexto): Descricao {
       return { codigo: 'igrejaAtualizada', valores: {} };
     case 'auditoria':
       return { codigo: 'logBaixado', valores: periodoDoDownload(atual) };
+    case 'mensagens':
+      return {
+        codigo: atual.origem === 'plataforma' ? 'avisoDaPlataforma' : 'mensagemEnviada',
+        valores: { texto: texto(atual.texto), quantos: texto(atual.destinatarios) },
+      };
     default:
       return { codigo: 'registroAlterado', valores: { tabela: r.tabela } };
   }

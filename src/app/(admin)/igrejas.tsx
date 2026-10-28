@@ -52,6 +52,11 @@ export default function Igrejas() {
           onPress={() => router.push('/atendimento')}
         />
         <Botao titulo={t('admin.igrejas.logs')} variante="secundario" onPress={() => router.push('/logs-globais')} />
+        <Botao
+          titulo={t('admin.igrejas.avisos')}
+          variante="secundario"
+          onPress={() => router.push('/avisos-da-plataforma')}
+        />
       </View>
 
       {falhou && <Texto variante="erro">{t('admin.igrejas.falhaAoCarregar')}</Texto>}

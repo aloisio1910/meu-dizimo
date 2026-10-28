@@ -80,3 +80,16 @@ describe('descreverRegistroGlobal', () => {
     });
   });
 });
+
+describe('aviso da plataforma nos logs globais (D-102)', () => {
+  it('diz o texto e quantas pessoas', () => {
+    expect(
+      descreverRegistroGlobal({
+        tabela: 'mensagens',
+        acao: 'insert',
+        antes: null,
+        depois: { texto: 'Manutenção amanhã', destinatarios: 40 },
+      }),
+    ).toEqual({ codigo: 'mensagemEnviada', valores: { texto: 'Manutenção amanhã', quantos: '40' } });
+  });
+});

@@ -29,6 +29,7 @@ describe('valoresDoAviso', () => {
       campanha: '',
       conta: '',
       email: '',
+      texto: '',
     });
   });
 
@@ -70,8 +71,13 @@ describe('destinoDoAviso', () => {
 
 describe('avisosQueAPessoaPodeDesligar', () => {
   it('membro desliga só o de campanha; a tesouraria, também os dela', () => {
-    expect(avisosQueAPessoaPodeDesligar(false)).toEqual(['nova_campanha']);
-    expect(avisosQueAPessoaPodeDesligar(true)).toEqual(['nova_campanha', 'novo_lancamento', 'novo_comprovante']);
+    expect(avisosQueAPessoaPodeDesligar(false)).toEqual(['nova_campanha', 'mensagem_da_igreja']);
+    expect(avisosQueAPessoaPodeDesligar(true)).toEqual([
+      'nova_campanha',
+      'mensagem_da_igreja',
+      'novo_lancamento',
+      'novo_comprovante',
+    ]);
   });
 });
 
@@ -80,5 +86,14 @@ describe('aviso de troca de e-mail (D-097)', () => {
     const aviso = { tipo: 'email_alterado' as const, dados: { email: 'maria.nova@gmail.com' } };
     expect(valoresDoAviso(aviso, () => '').email).toBe('maria.nova@gmail.com');
     expect(destinoDoAviso(aviso, false)).toEqual({ pathname: '/perfil' });
+  });
+});
+
+describe('mensagens da igreja e avisos da plataforma (D-102)', () => {
+  it('trazem o texto escrito e ficam na aba Avisos', () => {
+    const aviso = { tipo: 'mensagem_da_igreja' as const, dados: { texto: 'Semeai com fartura.' } };
+    expect(valoresDoAviso(aviso, () => '').texto).toBe('Semeai com fartura.');
+    expect(destinoDoAviso(aviso, false)).toBeNull();
+    expect(destinoDoAviso({ tipo: 'aviso_da_plataforma', dados: {} }, true)).toBeNull();
   });
 });
