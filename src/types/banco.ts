@@ -275,6 +275,26 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"mensagens": {
+                  Row: {
+                    "autor_id": string,"autor_nome": string,"criado_em": string,"destinatarios": number,"grupo_campo": string | null,"grupo_valor": string | null,"id": string,"igreja_id": string | null,"origem": string,"texto": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "autor_id": string,"autor_nome": string,"criado_em"?: string,"destinatarios"?: number,"grupo_campo"?: string | null,"grupo_valor"?: string | null,"id"?: string,"igreja_id"?: string | null,"origem": string,"texto": string
+                  }
+                  Update: {
+                    "autor_id"?: string,"autor_nome"?: string,"criado_em"?: string,"destinatarios"?: number,"grupo_campo"?: string | null,"grupo_valor"?: string | null,"id"?: string,"igreja_id"?: string | null,"origem"?: string,"texto"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "mensagens_igreja_id_fkey"
+      columns: ["igreja_id"]
+isOneToOne: false
+      referencedRelation: "igrejas"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"notificacoes": {
                   Row: {
                     "criado_em": string,"dados": NonNullable<Json>,"id": string,"igreja_id": string,"lida_em": string | null,"push_enviado_em": string | null,"push_erro": string | null,"push_tentado_em": string | null,"push_tentativas": number,"tipo": string,"usuario_id": string
@@ -417,6 +437,11 @@ isOneToOne: false
 "admin_atualizar_igreja":
 { Args: { "p_faixa_plano": string,"p_idioma": string,"p_igreja_id": string,"p_moeda": string,"p_nome": string,"p_pais": string,"p_status": Database["public"]['Enums']["status_igreja"],"p_titulo_administrador": string }; Returns: undefined
                            },
+"admin_avisos_da_plataforma":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "criado_em": string,"destinatarios": number,"id": string,"igreja_nome": string,"texto": string
+            }[]
+                           },
 "admin_buscar_pessoa":
 { Args: { "p_email": string,"p_motivo": string }; Returns: {
               "email": string,"igreja_id": string,"igreja_nome": string,"membro_id": string,"nome": string,"perfil": Database["public"]['Enums']["perfil_membro"],"status": Database["public"]['Enums']["status_membro"],"tem_login": boolean
@@ -431,6 +456,9 @@ isOneToOne: false
 "admin_definir_pastor":
 { Args: { "p_membro_id": string,"p_motivo": string }; Returns: undefined
                            },
+"admin_enviar_aviso_da_plataforma":
+{ Args: { "p_igreja_id"?: string,"p_texto": string }; Returns: Json
+                           },
 "admin_listar_igrejas":
 { Args: Record<PropertyKey, never>; Returns: {
               "criado_em": string,"faixa_plano": string,"id": string,"idioma": string,"membros_ativos": number,"moeda": string,"nome": string,"pais": string,"pastor_email": string,"pastor_id": string,"pastor_nome": string,"pastor_status": Database["public"]['Enums']["status_membro"],"status": Database["public"]['Enums']["status_igreja"],"titulo_administrador": string
@@ -440,6 +468,9 @@ isOneToOne: false
 { Args: { "p_pagina"?: number,"p_tamanho"?: number }; Returns: {
               "acao": string,"antes": Json,"criado_em": string,"depois": Json,"id": number,"igreja_id": string,"igreja_nome": string,"motivo": string,"registro_id": string,"tabela": string,"total": number
             }[]
+                           },
+"admin_previa_do_aviso":
+{ Args: { "p_igreja_id"?: string }; Returns: number
                            },
 "admin_reenviar_convite":
 { Args: { "p_membro_id": string }; Returns: undefined
@@ -504,6 +535,37 @@ isOneToOne: false
 "desfazer_troca_de_email":
 { Args: { "p_autor": string,"p_email_antigo": string,"p_membro_id": string }; Returns: undefined
                            },
+"destinatarios_da_mensagem":
+{ Args: { "p_autor": string,"p_campo": string,"p_igreja_id": string,"p_valor": string }; Returns: {
+              "atualizado_em": string,
+"avisos_desligados": (string)[],
+"cadastro_concluido_em": string | null,
+"campos_extras": NonNullable<Json>,
+"campos_internos": NonNullable<Json>,
+"celular": string,
+"criado_em": string,
+"email": string,
+"familiares": NonNullable<Json>,
+"id": string,
+"igreja_id": string,
+"nome": string,
+"numero": number,
+"perfil": Database["public"]['Enums']["perfil_membro"],
+"status": Database["public"]['Enums']["status_membro"],
+"tipo_dizimo": Database["public"]['Enums']["tipo_dizimo"],
+"usuario_id": string | null
+            }[]
+                          SetofOptions: {
+        from: "*"
+        to: "membros"
+        isOneToOne: false
+        isSetofReturn: true
+      } },
+"destinatarios_da_plataforma":
+{ Args: { "p_igreja_id": string }; Returns: {
+              "igreja_id": string,"usuario_id": string
+            }[]
+                           },
 "disparar_envio_de_push":
 { Args: Record<PropertyKey, never>; Returns: undefined
                            },
@@ -527,6 +589,9 @@ isOneToOne: false
                            },
 "encerrar_campanhas_vencidas":
 { Args: Record<PropertyKey, never>; Returns: number
+                           },
+"enviar_mensagem_da_igreja":
+{ Args: { "p_campo"?: string,"p_igreja_id": string,"p_texto": string,"p_valor"?: string }; Returns: Json
                            },
 "exigir_admin_master":
 { Args: Record<PropertyKey, never>; Returns: undefined
@@ -603,6 +668,9 @@ isOneToOne: false
 "marcar_avisos_como_lidos":
 { Args: { "p_ids"?: (string)[] }; Returns: undefined
                            },
+"membro_no_grupo":
+{ Args: { "p_campo": string,"p_membro": Omit<Database["public"]['Tables']["membros"]['Row'], Database["public"]['Tables']["membros"]['ComputedFields']>,"p_valor": string }; Returns: boolean
+                           },
 "meu_nome_na_igreja":
 { Args: { "p_igreja_id": string }; Returns: string
                            },
@@ -617,6 +685,12 @@ isOneToOne: false
                            },
 "prazo_resposta_divergencia":
 { Args: Record<PropertyKey, never>; Returns: string
+                           },
+"previa_da_mensagem":
+{ Args: { "p_campo"?: string,"p_igreja_id": string,"p_valor"?: string }; Returns: Json
+                           },
+"proxima_mensagem_da_igreja":
+{ Args: { "p_igreja_id": string }; Returns: string
                            },
 "reabrir_lancamento":
 { Args: { "p_justificativa": string,"p_lancamento_id": string }; Returns: undefined
