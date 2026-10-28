@@ -1355,6 +1355,7 @@
       "nenhuma": "Nenhuma igreja cadastrada ainda.",
       "ativa": "Ativa",
       "inativa": "Inativa",
+      "membrosAtivos_zero": "Nenhum membro ativo",
       "membrosAtivos_one": "{{count}} membro ativo",
       "membrosAtivos_other": "{{count}} membros ativos",
       "plano": "Plano: {{plano}}",
