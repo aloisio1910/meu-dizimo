@@ -398,6 +398,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 | D-102 | Mensagens aos membros: o Pastor de Governo e os tesoureiros enviam mensagens (ex.: versículo sobre fidelidade ou sobre semear) para todos os membros ativos ou para um grupo do cadastro, nunca filtrados pelo que a pessoa deu ou deixou de dar. Até 1 mensagem por semana por igreja, com prévia antes de enviar e registro no log. O membro pode desligar "Mensagens da igreja" no perfil. O Admin Master envia avisos da plataforma (ex.: manutenção programada) para todas as igrejas ou uma só, sem limite e sem opção de desligar. Tudo chega por push e fica na aba Avisos. No MVP a mensagem sai na hora; agendar é do pacote premium (D-103) | Definido |
 | D-103 | Push programado previsto junto com o controle financeiro (seção 16), como recurso do pacote premium: lembretes de contas a pagar e de fechamento do mês, mensagem agendada aos membros e resumo periódico ao Pastor de Governo | Definido |
 | D-104 | O app é para maiores de 18 anos: no primeiro acesso a pessoa declara ter 18 anos ou mais (registrado com data e versão, como os demais aceites). Menores não recebem convite e participam pelo dízimo familiar do responsável, sem login nem ficha própria. Um fluxo para adolescentes com consentimento do responsável fica para depois, se o piloto pedir | Definido |
+| D-105 | Preços por faixa de membros ativos: até 100, R$ 59; 101 a 200, R$ 79; 201 a 500, R$ 129; 501 a 1.000, R$ 199; acima de 1.000, sob consulta. Plano anual com 2 meses grátis. Premium (controle financeiro e push programado, D-103) como adicional a qualquer faixa: R$ 29,99 por mês como preço de lançamento (valor cheio anunciado de R$ 39,99), com o mesmo desconto no anual (R$ 299,90) | Definido |
 
 ## 14. Questões abertas e próximos passos
 
@@ -409,7 +410,7 @@ As decisões D-001 a D-036 da v0.2 seguem válidas. Abaixo, as novas, tomadas em
 - [x] Dados visíveis ao Tesoureiro: todos os dados cadastrais (D-057).
 - [x] Oferta anônima: controle da tesouraria fora do app (D-059).
 - [ ] Nome definitivo do produto, verificado no INPI e nas lojas de aplicativos.
-- [ ] Validar a proposta de preços por faixa da seção 15 (modelo definido em D-060).
+- [x] Validar a proposta de preços por faixa da seção 15 (modelo definido em D-060). Resolvido pela D-105 (28/10/2026).
 - [ ] Prazo de retenção de lançamentos e comprovantes (orientação contábil e jurídica). Em pesquisa pelo desenvolvedor: a lei costuma exigir a guarda de documentos financeiros por 5 anos (prazo tributário). Sugestão a avaliar: cumprido o prazo legal, o app oferece à igreja e a cada membro um arquivo para baixar todos os seus dados e comprovantes, avisa quanto tempo eles têm para baixar e, depois disso, os comprovantes vencidos saem do servidor. Mudaria a regra de que nada se apaga só para o que já passou do prazo legal; reduz o custo de armazenamento no longo prazo (seção 15) e atende à LGPD, que pede guardar os dados só pelo tempo necessário.
 - [x] Membro ativo que perdeu o acesso ao e-mail: como a tesouraria troca o e-mail, já que a D-069 só permite a correção enquanto ele é convidado. Resolvido pela D-097: a tesouraria troca o e-mail com motivo, e o do Pastor de Governo só pelo suporte (27/10/2026).
 - [x] Uso do app por menores de 18 anos (LGPD, art. 14): se será permitido e com que consentimento dos responsáveis. Resolvido pela D-104: só maiores de 18 anos; menores pelo dízimo familiar do responsável (28/10/2026).
@@ -490,12 +491,15 @@ As medidas 3 e 4 respeitam a regra de que nada se apaga. Pergunta para o contado
 
 | Faixa (membros ativos) | Mensal | Anual (2 meses grátis) |
 | --- | --- | --- |
-| Até 100 | R$ 49 | R$ 490 |
+| Até 100 | R$ 59 | R$ 590 |
 | 101 a 200 | R$ 79 | R$ 790 |
 | 201 a 500 | R$ 129 | R$ 1.290 |
 | 501 a 1.000 | R$ 199 | R$ 1.990 |
 | Acima de 1.000 | sob consulta | sob consulta |
+| **Premium** (adicional a qualquer faixa: controle financeiro e push programado, D-103) | **+ R$ 29,99** (anunciado: R$ 39,99, por R$ 29,99 no lançamento) | + R$ 299,90 |
 
+- **Faixa de R$ 59:** a primeira faixa subiu de R$ 49 para R$ 59 porque é nela que impostos e taxas de cobrança pesam mais (D-105).
+- **Premium com preço de lançamento:** valor baixo, para aumentar a margem sem pesar para a igreja. Pelo Código de Defesa do Consumidor (art. 37), um anúncio "de R$ 39,99 por R$ 29,99" exige que o preço "de" tenha existido; por isso o anúncio usa "preço de lançamento" até o valor cheio passar a ser cobrado.
 - **Teste grátis de 30 dias**, sem cartão.
 - **Piloto na Igreja Videira gratuito**, em troca de feedback e de poder citar a igreja como caso de uso.
 - **Sem fidelidade:** diferencial frente a quem exige 12 meses.
