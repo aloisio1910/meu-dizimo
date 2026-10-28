@@ -88,7 +88,8 @@ const ler = () =>
 
 // Login pela tela.
 const inicio = new Date();
-await enviar('Page.navigate', { url: APP + '/entrar' });
+// INICIO: abrir outro endereço antes do login (ex.: o link de um QR Code).
+await enviar('Page.navigate', { url: APP + (process.env.INICIO || '/entrar') });
 await espera(10000);
 console.log(await digitar('Seu e-mail', email));
 console.log(await tocar('Enviar código'));

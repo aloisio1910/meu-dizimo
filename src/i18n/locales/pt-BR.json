@@ -605,7 +605,8 @@
       "confirmarSaida": "Sair da conta? Para entrar de novo, você vai precisar do código enviado ao seu e-mail.",
       "avisos": "Avisos",
       "avisosComNaoLidos": "Avisos ({{count}})",
-      "mensagens": "Mensagens"
+      "mensagens": "Mensagens",
+      "qrDoCulto": "QR Code do culto"
     },
     "configuracoes": {
       "titulo": "Configurações da igreja",
@@ -1550,5 +1551,23 @@
       "grupo_invalido": "Escolha um grupo válido do cadastro.",
       "limite_semanal": "A igreja já enviou a mensagem desta semana."
     }
+  },
+  "qrDoCulto": {
+    "titulo": "QR Code do culto",
+    "explicacao": "Mostre no telão ou imprima. Quem aponta a câmera do celular abre direto o registro do dízimo ou a campanha, já na igreja certa. Quem ainda não entrou no app faz o login e volta para lá.",
+    "dizimo": "Dízimo",
+    "abreDizimo": "Abre o registro do dízimo, com o Pix da conta principal.",
+    "abreCampanha": "Abre a campanha, com o botão Ofertar.",
+    "falhaAoCarregar": "Não conseguimos carregar as campanhas.",
+    "instrucao": "Aponte a câmera do celular para o QR Code.",
+    "descricaoDoQr": "QR Code para {{nome}}",
+    "imprimir": "Imprimir ou salvar em PDF",
+    "voltar": "Voltar"
+  },
+  "qr": {
+    "titulo": "QR Code do culto",
+    "invalido": "Este QR Code não é do Meu Dízimo ou está incompleto.",
+    "outraIgreja": "Este QR Code é de uma igreja da qual você ainda não faz parte no Meu Dízimo. Para participar, peça um convite à tesouraria dessa igreja.",
+    "inicio": "Ir para o início"
   }
 }

@@ -1,4 +1,4 @@
-import { Redirect } from 'expo-router';
+import { Redirect, type Href } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Platform } from 'react-native';
 
@@ -10,6 +10,7 @@ import { useBloqueio } from '@/hooks/use-bloqueio';
 import { useMinhasFichas } from '@/hooks/use-minhas-fichas';
 import { ehAdminMaster } from '@/hooks/use-admin-master';
 import { useSessao } from '@/hooks/use-sessao';
+import { retirarDestinoDepoisDoLogin } from '@/lib/destino-depois-do-login';
 import { sair } from '@/services/supabase/auth';
 
 // Porta de entrada: decide para onde a pessoa vai conforme o login e as
@@ -44,6 +45,9 @@ export default function Inicio() {
   if (fichas.some((f) => f.status === 'convidado')) return <Redirect href="/primeiro-acesso" />;
   // Depois do cadastro, oferece a digital uma vez neste aparelho (D-058).
   if (fichas.length > 0 && temDigital && !escolhaDaDigital) return <Redirect href="/ativar-digital" />;
+  // Veio de um QR Code do culto sem estar logado (B1): volta para ele.
+  const destino = retirarDestinoDepoisDoLogin();
+  if (destino) return <Redirect href={destino as Href} />;
   // Em mais de uma igreja (D-061): na primeira vez, pergunta qual abrir.
   if (precisaEscolherIgreja) return <Redirect href="/escolher-igreja" />;
   const ativa = fichaEmUso;
