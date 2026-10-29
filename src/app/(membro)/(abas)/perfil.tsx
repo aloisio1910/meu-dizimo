@@ -171,6 +171,8 @@ function ConteudoDoPerfil({ ficha }: { ficha: MinhaFicha }) {
       ) : (
         <Botao titulo={t('perfil.sair')} variante="secundario" onPress={() => setConfirmandoSaida(true)} />
       )}
+      {/* Exigido pela Apple e pela Google: excluir a conta pelo próprio app. */}
+      <Botao titulo={t('perfil.excluirConta')} variante="secundario" onPress={() => router.push('/excluir-conta')} />
     </Tela>
   );
 }

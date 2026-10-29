@@ -309,7 +309,8 @@
       "logBaixado": "Baixou o log de {{de}} a {{ate}} ({{quantidade}} registros).",
       "emailTrocado": "Trocou o e-mail de {{membro}}.",
       "mensagemEnviada": "Enviou uma mensagem a {{quantos}} membros: “{{texto}}”",
-      "avisoDaPlataforma": "O suporte do Meu Dízimo enviou um aviso a {{quantos}} pessoas: “{{texto}}”"
+      "avisoDaPlataforma": "O suporte do Meu Dízimo enviou um aviso a {{quantos}} pessoas: “{{texto}}”",
+      "contaExcluida": "Uma pessoa excluiu a própria conta: os dados pessoais dela foram apagados, e os lançamentos continuam sem o nome."
     },
     "periodo": "Período (data em que a ação foi feita)",
     "sim": "Sim",
@@ -486,7 +487,8 @@
       },
       "salvo": "Preferência salva.",
       "falhou": "Não conseguimos salvar. Tente de novo."
-    }
+    },
+    "excluirConta": "Excluir minha conta"
   },
   "tesouraria": {
     "abrirPainel": "Abrir painel da tesouraria",
@@ -1613,5 +1615,26 @@
     "invalidos_other": "{{count}} linhas com dados incompletos ficaram de fora.",
     "verMembros": "Ver a lista de membros",
     "voltar": "Voltar"
+  },
+  "excluirConta": {
+    "titulo": "Excluir minha conta",
+    "oQueAcontece": "O que acontece:",
+    "item1": "Seus dados pessoais são apagados em todas as igrejas em que você está no Meu Dízimo: nome, e-mail, celular, respostas do cadastro e familiares.",
+    "item2": "Seus dízimos e ofertas continuam na contabilidade da igreja, sem o seu nome, assim como os comprovantes. A igreja precisa deles para a prestação de contas.",
+    "item3": "Você sai do app neste e em todos os seus aparelhos, e não recebe mais avisos.",
+    "item4": "Não tem volta. Para usar o app de novo, peça um novo convite à tesouraria da sua igreja.",
+    "digite": "Para confirmar, digite EXCLUIR",
+    "palavra": "EXCLUIR",
+    "excluir": "Excluir minha conta",
+    "voltar": "Voltar",
+    "pastor": "Você é {{titulo}} de uma igreja. Para a igreja não ficar sem responsável, peça ao suporte do Meu Dízimo para definir outra pessoa antes de excluir a sua conta.",
+    "excluida": "Sua conta foi excluída.",
+    "excluidaDetalhe": "Seus dados pessoais foram apagados. Obrigado por ter usado o Meu Dízimo.",
+    "inicio": "Ir para o início",
+    "erros": {
+      "pastor_precisa_trocar": "Você ainda é o responsável por uma igreja. Peça ao suporte para definir outra pessoa antes.",
+      "admin_master_pelo_suporte": "A conta do suporte não é excluída pelo app.",
+      "confirmacao_invalida": "Digite EXCLUIR para confirmar."
+    }
   }
 }

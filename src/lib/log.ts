@@ -101,6 +101,7 @@ export type CodigoDaAcao =
   | 'avisoDaPlataforma'
   | 'membroConvidado'
   | 'membroInativado'
+  | 'contaExcluida'
   | 'membroReativado'
   | 'perfilAlterado'
   | 'primeiroAcesso'
@@ -156,6 +157,8 @@ function descreverMembro(r: RegistroDoLog): Descricao {
     return { codigo: atual.perfil === 'tesoureiro' ? 'tesoureiroConvidado' : 'membroConvidado', valores };
   const antes = r.antes ?? {};
   const depois = r.depois ?? {};
+  // Exclusão de conta: o log guarda só que a ficha foi anonimizada.
+  if (depois.anonimizado === true) return { codigo: 'contaExcluida', valores: {} };
   if (antes.status !== depois.status) {
     if (antes.status === 'convidado' && depois.status === 'ativo') return { codigo: 'cadastroConcluido', valores };
     if (antes.status === 'convidado' && depois.status === 'inativo') return { codigo: 'conviteCancelado', valores };

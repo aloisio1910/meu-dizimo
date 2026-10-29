@@ -295,3 +295,14 @@ describe('mensagens aos membros (D-102)', () => {
     ).toBe('avisoDaPlataforma');
   });
 });
+
+describe('exclusão de conta', () => {
+  it('a frase não traz nenhum dado da pessoa', () => {
+    expect(
+      descreverRegistro(
+        registro({ tabela: 'membros', acao: 'update', antes: { id: 'x' }, depois: { id: 'x', anonimizado: true } }),
+        ctx,
+      ),
+    ).toEqual({ codigo: 'contaExcluida', valores: {} });
+  });
+});

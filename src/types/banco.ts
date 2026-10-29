@@ -257,14 +257,14 @@ isOneToOne: false
                   ]
                 },"membros": {
                   Row: {
-                    "atualizado_em": string,"avisos_desligados": (string)[],"cadastro_concluido_em": string | null,"campos_extras": NonNullable<Json>,"campos_internos": NonNullable<Json>,"celular": string,"criado_em": string,"email": string,"familiares": NonNullable<Json>,"id": string,"igreja_id": string,"nome": string,"numero": number,"perfil": Database["public"]['Enums']["perfil_membro"],"status": Database["public"]['Enums']["status_membro"],"tipo_dizimo": Database["public"]['Enums']["tipo_dizimo"],"usuario_id": string | null
+                    "atualizado_em": string,"avisos_desligados": (string)[],"cadastro_concluido_em": string | null,"campos_extras": NonNullable<Json>,"campos_internos": NonNullable<Json>,"celular": string,"criado_em": string,"email": string,"excluido_em": string | null,"familiares": NonNullable<Json>,"id": string,"igreja_id": string,"nome": string,"numero": number,"perfil": Database["public"]['Enums']["perfil_membro"],"status": Database["public"]['Enums']["status_membro"],"tipo_dizimo": Database["public"]['Enums']["tipo_dizimo"],"usuario_id": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "atualizado_em"?: string,"avisos_desligados"?: (string)[],"cadastro_concluido_em"?: string | null,"campos_extras"?: NonNullable<Json>,"campos_internos"?: NonNullable<Json>,"celular": string,"criado_em"?: string,"email": string,"familiares"?: NonNullable<Json>,"id"?: string,"igreja_id": string,"nome": string,"numero": number,"perfil"?: Database["public"]['Enums']["perfil_membro"],"status"?: Database["public"]['Enums']["status_membro"],"tipo_dizimo"?: Database["public"]['Enums']["tipo_dizimo"],"usuario_id"?: string | null
+                    "atualizado_em"?: string,"avisos_desligados"?: (string)[],"cadastro_concluido_em"?: string | null,"campos_extras"?: NonNullable<Json>,"campos_internos"?: NonNullable<Json>,"celular": string,"criado_em"?: string,"email": string,"excluido_em"?: string | null,"familiares"?: NonNullable<Json>,"id"?: string,"igreja_id": string,"nome": string,"numero": number,"perfil"?: Database["public"]['Enums']["perfil_membro"],"status"?: Database["public"]['Enums']["status_membro"],"tipo_dizimo"?: Database["public"]['Enums']["tipo_dizimo"],"usuario_id"?: string | null
                   }
                   Update: {
-                    "atualizado_em"?: string,"avisos_desligados"?: (string)[],"cadastro_concluido_em"?: string | null,"campos_extras"?: NonNullable<Json>,"campos_internos"?: NonNullable<Json>,"celular"?: string,"criado_em"?: string,"email"?: string,"familiares"?: NonNullable<Json>,"id"?: string,"igreja_id"?: string,"nome"?: string,"numero"?: number,"perfil"?: Database["public"]['Enums']["perfil_membro"],"status"?: Database["public"]['Enums']["status_membro"],"tipo_dizimo"?: Database["public"]['Enums']["tipo_dizimo"],"usuario_id"?: string | null
+                    "atualizado_em"?: string,"avisos_desligados"?: (string)[],"cadastro_concluido_em"?: string | null,"campos_extras"?: NonNullable<Json>,"campos_internos"?: NonNullable<Json>,"celular"?: string,"criado_em"?: string,"email"?: string,"excluido_em"?: string | null,"familiares"?: NonNullable<Json>,"id"?: string,"igreja_id"?: string,"nome"?: string,"numero"?: number,"perfil"?: Database["public"]['Enums']["perfil_membro"],"status"?: Database["public"]['Enums']["status_membro"],"tipo_dizimo"?: Database["public"]['Enums']["tipo_dizimo"],"usuario_id"?: string | null
                   }
                   Relationships: [
                     {
@@ -481,6 +481,9 @@ isOneToOne: false
 "agir_como":
 { Args: { "p_usuario": string }; Returns: undefined
                            },
+"anonimizar_conta":
+{ Args: { "p_usuario": string }; Returns: number
+                           },
 "avisar_ficha":
 { Args: { "p_dados": Json,"p_membro_id": string,"p_tipo": string }; Returns: undefined
                            },
@@ -545,6 +548,7 @@ isOneToOne: false
 "celular": string,
 "criado_em": string,
 "email": string,
+"excluido_em": string | null,
 "familiares": NonNullable<Json>,
 "id": string,
 "igreja_id": string,
@@ -733,6 +737,9 @@ isOneToOne: false
                            },
 "simplificar":
 { Args: { "p_texto": string }; Returns: string
+                           },
+"sou_pastor_em_alguma_igreja":
+{ Args: Record<PropertyKey, never>; Returns: boolean
                            },
 "status_ao_liberar":
 { Args: { "p_resposta": Database["public"]['Enums']["resposta_divergencia"] }; Returns: Database["public"]['Enums']["status_lancamento"]
