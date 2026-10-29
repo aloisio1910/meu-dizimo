@@ -1563,7 +1563,8 @@
     "instrucao": "Aponte a câmera do celular para o QR Code.",
     "descricaoDoQr": "QR Code para {{nome}}",
     "imprimir": "Imprimir ou salvar em PDF",
-    "voltar": "Voltar"
+    "voltar": "Voltar",
+    "avisoLocalhost": "Este painel está aberto pelo endereço \"localhost\", que só funciona neste computador: o celular não consegue abrir este QR. Abra o painel pelo endereço da rede do computador (ex.: http://192.168.100.23:8081) e gere o QR de novo."
   },
   "qr": {
     "titulo": "QR Code do culto",

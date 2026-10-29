@@ -27,6 +27,12 @@ function enderecoDoApp(): string {
   return Linking.createURL('/');
 }
 
+// Aberto por "localhost", o QR leva o celular a ele mesmo (conexão recusada):
+// a página precisa ser aberta pelo endereço da rede (IP) do computador.
+function abertoPorLocalhost(endereco: string): boolean {
+  return /^https?:\/\/(localhost|127\.0\.0\.1)(:|\/|$)/.test(endereco);
+}
+
 // QR Code do culto (B1, D-107): a tesouraria escolhe o dízimo ou uma campanha
 // ativa e mostra o QR no telão ou imprime. Quem lê abre a tela certa no app.
 export default function QrDoCulto() {
@@ -60,7 +66,8 @@ export default function QrDoCulto() {
 
   // Tela cheia para o telão ou para imprimir: só a logo, o nome e o QR.
   if (escolhido) {
-    const link = linkDoQr(enderecoDoApp(), igrejaId, escolhido.destino);
+    const endereco = enderecoDoApp();
+    const link = linkDoQr(endereco, igrejaId, escolhido.destino);
     return (
       <Tela>
         <View style={estilos.cartaz}>
@@ -79,7 +86,11 @@ export default function QrDoCulto() {
             <QRCode value={link} size={280} color={tema.corPrincipal} />
           </View>
           <Texto style={estilos.centro}>{t('qrDoCulto.instrucao')}</Texto>
+          <Texto variante="apoio" style={estilos.centro} selectable>
+            {link}
+          </Texto>
         </View>
+        {abertoPorLocalhost(endereco) && <Texto variante="erro">{t('qrDoCulto.avisoLocalhost')}</Texto>}
         {Platform.OS === 'web' && <Botao titulo={t('qrDoCulto.imprimir')} onPress={() => window.print()} />}
         <Botao titulo={t('qrDoCulto.voltar')} variante="secundario" onPress={() => setEscolhido(undefined)} />
       </Tela>
