@@ -205,14 +205,14 @@ isOneToOne: false
                   ]
                 },"igrejas": {
                   Row: {
-                    "atualizado_em": string,"capa_path": string | null,"cor_principal": string | null,"criado_em": string,"denominacao": string | null,"endereco": string | null,"faixa_plano": string | null,"formas_devolucao": (string)[],"horarios_culto": string | null,"id": string,"idioma": string,"logo_path": string | null,"mensagem_confirmacao": string | null,"moeda": string,"nome": string,"pais": string,"proximo_numero_dizimista": number,"redes_sociais": NonNullable<Json>,"site": string | null,"status": Database["public"]['Enums']["status_igreja"],"titulo_administrador": string,"versiculo_referencia": string,"versiculo_texto": string | null,"whatsapp_contato": string | null
+                    "atualizado_em": string,"capa_path": string | null,"cor_principal": string | null,"criado_em": string,"demonstracao": boolean,"denominacao": string | null,"endereco": string | null,"faixa_plano": string | null,"formas_devolucao": (string)[],"horarios_culto": string | null,"id": string,"idioma": string,"logo_path": string | null,"mensagem_confirmacao": string | null,"moeda": string,"nome": string,"pais": string,"proximo_numero_dizimista": number,"redes_sociais": NonNullable<Json>,"site": string | null,"status": Database["public"]['Enums']["status_igreja"],"titulo_administrador": string,"versiculo_referencia": string,"versiculo_texto": string | null,"whatsapp_contato": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "atualizado_em"?: string,"capa_path"?: string | null,"cor_principal"?: string | null,"criado_em"?: string,"denominacao"?: string | null,"endereco"?: string | null,"faixa_plano"?: string | null,"formas_devolucao"?: (string)[],"horarios_culto"?: string | null,"id"?: string,"idioma"?: string,"logo_path"?: string | null,"mensagem_confirmacao"?: string | null,"moeda"?: string,"nome": string,"pais"?: string,"proximo_numero_dizimista"?: number,"redes_sociais"?: NonNullable<Json>,"site"?: string | null,"status"?: Database["public"]['Enums']["status_igreja"],"titulo_administrador"?: string,"versiculo_referencia"?: string,"versiculo_texto"?: string | null,"whatsapp_contato"?: string | null
+                    "atualizado_em"?: string,"capa_path"?: string | null,"cor_principal"?: string | null,"criado_em"?: string,"demonstracao"?: boolean,"denominacao"?: string | null,"endereco"?: string | null,"faixa_plano"?: string | null,"formas_devolucao"?: (string)[],"horarios_culto"?: string | null,"id"?: string,"idioma"?: string,"logo_path"?: string | null,"mensagem_confirmacao"?: string | null,"moeda"?: string,"nome": string,"pais"?: string,"proximo_numero_dizimista"?: number,"redes_sociais"?: NonNullable<Json>,"site"?: string | null,"status"?: Database["public"]['Enums']["status_igreja"],"titulo_administrador"?: string,"versiculo_referencia"?: string,"versiculo_texto"?: string | null,"whatsapp_contato"?: string | null
                   }
                   Update: {
-                    "atualizado_em"?: string,"capa_path"?: string | null,"cor_principal"?: string | null,"criado_em"?: string,"denominacao"?: string | null,"endereco"?: string | null,"faixa_plano"?: string | null,"formas_devolucao"?: (string)[],"horarios_culto"?: string | null,"id"?: string,"idioma"?: string,"logo_path"?: string | null,"mensagem_confirmacao"?: string | null,"moeda"?: string,"nome"?: string,"pais"?: string,"proximo_numero_dizimista"?: number,"redes_sociais"?: NonNullable<Json>,"site"?: string | null,"status"?: Database["public"]['Enums']["status_igreja"],"titulo_administrador"?: string,"versiculo_referencia"?: string,"versiculo_texto"?: string | null,"whatsapp_contato"?: string | null
+                    "atualizado_em"?: string,"capa_path"?: string | null,"cor_principal"?: string | null,"criado_em"?: string,"demonstracao"?: boolean,"denominacao"?: string | null,"endereco"?: string | null,"faixa_plano"?: string | null,"formas_devolucao"?: (string)[],"horarios_culto"?: string | null,"id"?: string,"idioma"?: string,"logo_path"?: string | null,"mensagem_confirmacao"?: string | null,"moeda"?: string,"nome"?: string,"pais"?: string,"proximo_numero_dizimista"?: number,"redes_sociais"?: NonNullable<Json>,"site"?: string | null,"status"?: Database["public"]['Enums']["status_igreja"],"titulo_administrador"?: string,"versiculo_referencia"?: string,"versiculo_texto"?: string | null,"whatsapp_contato"?: string | null
                   }
                   Relationships: [
                     
@@ -314,6 +314,20 @@ isOneToOne: false
       referencedRelation: "igrejas"
       referencedColumns: ["id"]
     }
+                  ]
+                },"tentativas_de_demonstracao": {
+                  Row: {
+                    "acertou": boolean,"em": string,"email": string,"id": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "acertou": boolean,"em"?: string,"email": string,"id"?: never
+                  }
+                  Update: {
+                    "acertou"?: boolean,"em"?: string,"email"?: string,"id"?: never
+                  }
+                  Relationships: [
+                    
                   ]
                 }
           }
@@ -696,6 +710,9 @@ isOneToOne: false
 "prazo_resposta_divergencia":
 { Args: Record<PropertyKey, never>; Returns: string
                            },
+"preparar_demonstracao":
+{ Args: { "p_versao_termos": string }; Returns: Json
+                           },
 "previa_da_mensagem":
 { Args: { "p_campo"?: string,"p_igreja_id": string,"p_valor"?: string }; Returns: Json
                            },
@@ -716,6 +733,9 @@ isOneToOne: false
                            },
 "registrar_download_do_log":
 { Args: { "p_antes_de": string,"p_busca"?: string,"p_desde": string,"p_igreja_id": string,"p_quantidade": number }; Returns: undefined
+                           },
+"registrar_tentativa_de_demonstracao":
+{ Args: { "p_acertou": boolean,"p_email": string }; Returns: undefined
                            },
 "registros_do_log":
 { Args: { "p_antes_de": string,"p_busca"?: string,"p_desde": string,"p_igreja_id": string,"p_pagina"?: number,"p_quem"?: string,"p_tabelas"?: (string)[],"p_tamanho"?: number }; Returns: {
@@ -740,6 +760,9 @@ isOneToOne: false
                            },
 "simplificar":
 { Args: { "p_texto": string }; Returns: string
+                           },
+"situacao_da_demonstracao":
+{ Args: { "p_email": string }; Returns: string
                            },
 "sou_pastor_em_alguma_igreja":
 { Args: Record<PropertyKey, never>; Returns: boolean

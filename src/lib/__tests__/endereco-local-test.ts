@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { ajustarEnderecoLocal } from '../endereco-local';
+import { ajustarEnderecoLocal, enderecoDeProducaoValido } from '../endereco-local';
 
 describe('ajustarEnderecoLocal', () => {
   it('troca o IP antigo do .env pelo IP atual do computador', () => {
@@ -33,5 +33,19 @@ describe('ajustarEnderecoLocal', () => {
 
   it('não confunde um IP público com rede local', () => {
     expect(ajustarEnderecoLocal('http://192.168.100.30:54321', '200.150.10.1:8081')).toBe('http://192.168.100.30:54321');
+  });
+});
+
+describe('enderecoDeProducaoValido', () => {
+  it('aceita o Supabase na nuvem', () => {
+    expect(enderecoDeProducaoValido('https://jcwogclevhpvrdsohzuf.supabase.co')).toBe(true);
+  });
+
+  it('recusa o Supabase do computador e endereços sem https', () => {
+    expect(enderecoDeProducaoValido('http://192.168.100.30:54321')).toBe(false);
+    expect(enderecoDeProducaoValido('https://192.168.100.30:54321')).toBe(false);
+    expect(enderecoDeProducaoValido('https://localhost:54321')).toBe(false);
+    expect(enderecoDeProducaoValido('http://jcwogclevhpvrdsohzuf.supabase.co')).toBe(false);
+    expect(enderecoDeProducaoValido('')).toBe(false);
   });
 });

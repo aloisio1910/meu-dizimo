@@ -18,3 +18,11 @@ export function ajustarEnderecoLocal(url: string, hostDoExpo: string | null | un
 
   return `${protocolo}${computador}${resto}`;
 }
+
+// O app das lojas só fala com a nuvem: endereço https e público. Um build de
+// produção feito com o endereço do computador quebraria no celular dos
+// membros; com esta conferência, ele falha logo ao abrir, no teste.
+export function enderecoDeProducaoValido(url: string): boolean {
+  const encontrado = /^https:\/\/([^:/]+)/.exec(url);
+  return !!encontrado && !IP_OU_LOCAL.test(encontrado[1]);
+}

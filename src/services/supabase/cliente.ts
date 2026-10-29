@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import Constants from 'expo-constants';
 import { AppState, Platform } from 'react-native';
 
-import { ajustarEnderecoLocal } from '@/lib/endereco-local';
+import { ajustarEnderecoLocal, enderecoDeProducaoValido } from '@/lib/endereco-local';
 import { fetchComLimite } from '@/lib/fetch-com-limite';
 import type { Database } from '@/types/banco';
 
@@ -17,6 +17,10 @@ if (!urlDoEnv || !chavePublica) {
   throw new Error(
     'Faltam EXPO_PUBLIC_SUPABASE_URL e EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY no .env (veja .env.example).',
   );
+}
+// Build de produção (lojas): as variáveis vêm do ambiente "production" do EAS.
+if (!__DEV__ && !enderecoDeProducaoValido(urlDoEnv)) {
+  throw new Error('Build de produção sem o endereço https do Supabase na nuvem (variáveis do EAS).');
 }
 
 // Em desenvolvimento, segue o IP atual do computador (ver endereco-local.ts):

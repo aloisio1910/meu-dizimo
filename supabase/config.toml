@@ -431,3 +431,7 @@ verify_jwt = false
 
 [functions.enviar-convites]
 verify_jwt = false
+
+# Entrada dos revisores das lojas (sem login ainda): confere o código fixo.
+[functions.entrar-demonstracao]
+verify_jwt = false

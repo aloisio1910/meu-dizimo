@@ -3,6 +3,7 @@
 // Uso: node scripts/navegar-na-web.mjs <email> "<passo>|<passo>..." (APP=http://localhost:8090)
 //   passo: "ir:/caminho" | "tocar:Texto do botão" | "digitar:Rótulo=valor" | "ler"
 //          | "arquivo:Texto do botão=C:/caminho/do/arquivo" (toca e escolhe o arquivo na janela)
+//   CODIGO=123456: usa este código em vez do Mailpit (contas de demonstração).
 import { spawn } from 'node:child_process';
 import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -104,7 +105,8 @@ await enviar('Page.navigate', { url: APP + (process.env.INICIO || '/entrar') });
 await espera(10000);
 console.log(await digitar('Seu e-mail', email));
 console.log(await tocar('Enviar código'));
-let codigo;
+// CODIGO=...: usa este código (contas de demonstração, sem e-mail).
+let codigo = process.env.CODIGO;
 for (let i = 0; i < 30 && !codigo; i++) {
   await espera(500);
   let msg;
