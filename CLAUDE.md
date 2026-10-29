@@ -38,7 +38,7 @@ Os originais ficam no Claude Docs (links em `docs/README.md`); `docs/requisitos.
 6. **Segredos:** chaves em `.env`, fora do Git (`.gitignore`). A chave `service_role` do Supabase NUNCA vai para o app; só para Edge Functions.
 7. **Comprovantes:** bucket privado no Storage, acessado por links temporários (signed URLs).
 8. **Testes:** escreva testes para regras de negócio e para as políticas de RLS (ex.: membro de uma igreja não lê dados de outra).
-9. **Git:** commits pequenos, com mensagens em português, descrevendo o porquê.
+9. **Git:** commits pequenos, com mensagens em português, descrevendo o porquê. **Ao fim de cada etapa, faça `git push` para o GitHub** (pedido do desenvolvedor, por segurança): push normal, nunca forçado, conferindo antes que nenhum `.env` ou chave está no Git.
 
 ## Perfis
 
