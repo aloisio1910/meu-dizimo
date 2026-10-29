@@ -933,7 +933,7 @@
       },
       "artes": {
         "titulo": "Artes",
-        "explicacao": "Imagens em JPG, PNG ou WebP, até 5 MB. A primeira aparece na vitrine.",
+        "explicacao": "Formato retangular deitado (16:9), como uma tela de TV. Recomendado: pelo menos 1600 × 900 pixels, em JPG, PNG ou WebP. Depois de escolher, ajuste a imagem na moldura: o que ficar dentro dela é o que os membros veem. A primeira arte aparece na vitrine de ofertas.",
         "nenhuma": "Nenhuma arte ainda.",
         "salveAntes": "Crie o rascunho para poder enviar as artes.",
         "adicionar": "Adicionar arte",
@@ -948,7 +948,8 @@
           "sem_conexao": "Sem conexão com a internet. Verifique e tente de novo.",
           "permissao_negada": "O app não tem permissão para abrir as fotos. Libere nas configurações do celular.",
           "retirar_falhou": "Não conseguimos retirar a arte. Tente de novo."
-        }
+        },
+        "dicaFormato": "Arte quadrada ou em pé (como as do Instagram) perde uma parte em cima e embaixo. Se puder, peça uma versão deitada a quem fez a arte."
       }
     },
     "relatorios": {

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
+import { RecorteDeImagem } from '@/components/recorte-de-imagem';
 import { Retorno } from '@/components/retorno';
 import { Botao } from '@/components/ui/botao';
 import { CampoTexto } from '@/components/ui/campo-texto';
@@ -14,7 +15,8 @@ import { useFichaAtiva } from '@/hooks/use-ficha-ativa';
 import { useVoltar } from '@/hooks/use-voltar';
 import { mudancaDaCampanha, validarCampanha, type CamposDaCampanha, type ErrosDaCampanha } from '@/lib/campanha';
 import { hojeIso, isoParaData, mascararData } from '@/lib/data';
-import { escolherFoto } from '@/services/dispositivo/arquivos';
+import { escolherImagemParaRecortar, type ImagemParaRecortar } from '@/services/dispositivo/arquivos';
+import { recortarImagem, type RetanguloDoRecorte } from '@/services/dispositivo/recorte';
 import {
   buscarCampanhaDaIgreja,
   criarCampanha,
@@ -29,6 +31,10 @@ import {
   type ErroDaCampanha,
 } from '@/services/supabase/campanhas-da-igreja';
 import { cores, espacos, raio } from '@/theme';
+
+// A arte aparece deitada (16:9) na vitrine e na campanha, como a capa da
+// igreja: quem envia ajusta a imagem na moldura e vê o que o membro verá.
+const FORMATO_DA_ARTE = { proporcao: 16 / 9, larguraNaTela: 640, larguraFinal: 1600 };
 
 // Valor da opção "conta principal" (campanha sem conta própria, D-073).
 const PRINCIPAL = 'principal';
@@ -68,6 +74,7 @@ export default function GerenciarCampanha() {
   const [aviso, setAviso] = useState<string | undefined>(avisoInicial === 'criada' ? 'criada' : undefined);
   // Onde mostrar o retorno: junto do botão que a pessoa tocou.
   const [local, setLocal] = useState<'status' | 'formulario' | 'artes'>('status');
+  const [recortando, setRecortando] = useState<ImagemParaRecortar>();
 
   const igrejaId = ficha?.igreja_id;
 
@@ -121,7 +128,10 @@ export default function GerenciarCampanha() {
       ? t(`comum.erros.${codigo}`)
       : t(`tesouraria.campanhas.editar.erros.${codigo}`, { titulo });
   const mudar = (chave: keyof CamposDaCampanha) => (texto: string) => {
-    setCampos((atuais) => ({ ...atuais, [chave]: chave === 'inicio' || chave === 'fim' ? mascararData(texto) : texto }));
+    setCampos((atuais) => ({
+      ...atuais,
+      [chave]: chave === 'inicio' || chave === 'fim' ? mascararData(texto) : texto,
+    }));
   };
 
   async function recarregar() {
@@ -177,22 +187,44 @@ export default function GerenciarCampanha() {
     setAviso(t(`tesouraria.campanhas.mudar.${feito[mudanca.acao]}`));
   }
 
+  // Escolher a imagem abre a moldura; só o que ficar dentro dela é enviado.
   async function aoAdicionarArte() {
     if (!campanha) return;
     limparMensagens();
     setLocal('artes');
-    const escolha = await escolherFoto('galeria');
+    const escolha = await escolherImagemParaRecortar();
     if (!escolha.ok) {
       if (escolha.motivo === 'permissao_negada') setErro(t('tesouraria.campanhas.artes.erros.permissao_negada'));
       return;
     }
+    setRecortando(escolha.imagem);
+  }
+
+  async function aoUsarRecorte(retangulo: RetanguloDoRecorte) {
+    if (!campanha || !recortando) return;
+    limparMensagens();
     setEnviando(true);
     const proximaOrdem = artes.reduce((maior, a) => Math.max(maior, a.ordem), -1) + 1;
-    const falha = await enviarArte(ficha!.igreja_id, campanha.id, escolha.arquivo, proximaOrdem);
+    let falha: Awaited<ReturnType<typeof enviarArte>>;
+    try {
+      const bytes = await recortarImagem(recortando.uri, retangulo, FORMATO_DA_ARTE.larguraFinal, 'jpg');
+      falha = await enviarArte(
+        ficha!.igreja_id,
+        campanha.id,
+        { tipo: 'image/jpeg', nome: null, tamanho: bytes.byteLength, ler: async () => bytes },
+        proximaOrdem,
+      );
+    } catch {
+      falha = 'envio_falhou';
+    }
     await recarregar();
     setEnviando(false);
-    if (falha) setErro(t(`tesouraria.campanhas.artes.erros.${falha}`));
-    else setAviso(t('tesouraria.campanhas.artes.enviada'));
+    if (falha) {
+      setErro(t(`tesouraria.campanhas.artes.erros.${falha}`));
+      return;
+    }
+    setRecortando(undefined);
+    setAviso(t('tesouraria.campanhas.artes.enviada'));
   }
 
   async function aoRetirarArte(arteId: string) {
@@ -212,9 +244,7 @@ export default function GerenciarCampanha() {
 
   return (
     <Tela larga>
-      <Texto variante="titulo">
-        {campanha ? campanha.nome : t('tesouraria.campanhas.editar.tituloNova')}
-      </Texto>
+      <Texto variante="titulo">{campanha ? campanha.nome : t('tesouraria.campanhas.editar.tituloNova')}</Texto>
 
       {!!campanha && (
         <View style={estilos.cartao}>
@@ -325,6 +355,7 @@ export default function GerenciarCampanha() {
       ) : (
         <>
           <Texto variante="apoio">{t('tesouraria.campanhas.artes.explicacao')}</Texto>
+          <Texto variante="apoio">{t('tesouraria.campanhas.artes.dicaFormato')}</Texto>
           {artes.length === 0 && <Texto>{t('tesouraria.campanhas.artes.nenhuma')}</Texto>}
           {artes.map((arte, indice) => (
             <View key={arte.id} style={estilos.cartao}>
@@ -344,12 +375,24 @@ export default function GerenciarCampanha() {
               />
             </View>
           ))}
-          <Botao
-            titulo={t('tesouraria.campanhas.artes.adicionar')}
-            variante="secundario"
-            onPress={aoAdicionarArte}
-            desabilitado={enviando}
-          />
+          {recortando ? (
+            <RecorteDeImagem
+              imagem={recortando}
+              proporcao={FORMATO_DA_ARTE.proporcao}
+              larguraMaxima={FORMATO_DA_ARTE.larguraNaTela}
+              larguraRecomendada={FORMATO_DA_ARTE.larguraFinal}
+              enviando={enviando}
+              aoConfirmar={aoUsarRecorte}
+              aoCancelar={() => setRecortando(undefined)}
+            />
+          ) : (
+            <Botao
+              titulo={t('tesouraria.campanhas.artes.adicionar')}
+              variante="secundario"
+              onPress={aoAdicionarArte}
+              desabilitado={enviando}
+            />
+          )}
           {local === 'artes' && <Retorno aviso={textoDoAviso} erro={erro} />}
         </>
       )}
