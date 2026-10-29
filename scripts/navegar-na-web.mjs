@@ -90,7 +90,7 @@ const digitar = (rotulo, valor) =>
   })()`);
 const tocar = (texto) =>
   avaliar(
-    `[...document.querySelectorAll('[role=button],[role=radio]')].find((e) => (e.getAttribute('aria-label') || e.innerText).trim() === ${JSON.stringify(texto)})?.click() ?? 'sem botão ' + ${JSON.stringify(texto)}`,
+    `((alvo) => (alvo ? (alvo.click(), 'ok') : 'sem botão ' + ${JSON.stringify(texto)}))([...document.querySelectorAll('[role=button],[role=radio],[role=checkbox]')].find((e) => (e.getAttribute('aria-label') || e.innerText).trim() === ${JSON.stringify(texto)}))`,
   );
 const ler = () =>
   avaliar(

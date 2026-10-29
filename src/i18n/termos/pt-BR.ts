@@ -14,9 +14,14 @@ export const versaoDosTermos = '0.2-piloto';
 
 export type SecaoDosTermos = { titulo: string; paragrafos: string[] };
 
-export const termos: { titulo: string; atualizadoEm: string; secoes: SecaoDosTermos[] } = {
+export const termos: { titulo: string; atualizadoEm: string; novidades: string[]; secoes: SecaoDosTermos[] } = {
   titulo: 'Termos de Uso e Política de Privacidade',
   atualizadoEm: 'Versão 0.2 (piloto), outubro de 2026',
+  // O que mudou em relação à versão anterior, em poucas linhas: aparece no
+  // pedido de novo aceite a quem já usa o app. Troque a cada versão nova.
+  novidades: [
+    'Nova seção 12, "Idade mínima": o Meu Dízimo é para maiores de 18 anos. Menores participam pelo dízimo familiar do responsável.',
+  ],
   secoes: [
     {
       titulo: '1. O que é o Meu Dízimo',

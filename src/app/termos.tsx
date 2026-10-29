@@ -1,13 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
 
+import { TextoDosTermos } from '@/components/texto-dos-termos';
 import { Botao } from '@/components/ui/botao';
 import { Tela } from '@/components/ui/tela';
-import { Texto } from '@/components/ui/texto';
 import { useMinhasFichas } from '@/hooks/use-minhas-fichas';
 import { useVoltar } from '@/hooks/use-voltar';
-import { termos } from '@/i18n/termos/pt-BR';
-import { espacos } from '@/theme';
 
 // Texto completo dos Termos de Uso e da Política de Privacidade.
 export default function Termos() {
@@ -15,30 +12,12 @@ export default function Termos() {
   const voltar = useVoltar('/');
   const { fichas } = useMinhasFichas();
   const igreja = fichas.find((f) => f.status === 'convidado')?.igrejas?.nome ?? t('termos.suaIgreja');
-  const comIgreja = (texto: string) => texto.replaceAll('{{igreja}}', igreja);
 
   return (
     <Tela>
       <Botao titulo={t('comum.voltar')} variante="secundario" onPress={() => voltar()} />
-      <Texto variante="titulo">{termos.titulo}</Texto>
-      <Texto variante="apoio">{termos.atualizadoEm}</Texto>
-      {termos.secoes.map((secao) => (
-        <View key={secao.titulo} style={estilos.secao}>
-          <Texto variante="destaque" accessibilityRole="header">
-            {comIgreja(secao.titulo)}
-          </Texto>
-          {secao.paragrafos.map((paragrafo) => (
-            <Texto key={paragrafo}>{comIgreja(paragrafo)}</Texto>
-          ))}
-        </View>
-      ))}
+      <TextoDosTermos igreja={igreja} />
       <Botao titulo={t('comum.voltar')} onPress={() => voltar()} />
     </Tela>
   );
 }
-
-const estilos = StyleSheet.create({
-  secao: {
-    gap: espacos.pequeno,
-  },
-});

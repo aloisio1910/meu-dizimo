@@ -434,6 +434,9 @@ isOneToOne: false
 "aceitar_convites":
 { Args: Record<PropertyKey, never>; Returns: string[]
                            },
+"aceitar_termos":
+{ Args: { "p_declarou_maioridade": boolean,"p_versao": string }; Returns: undefined
+                           },
 "admin_atualizar_igreja":
 { Args: { "p_faixa_plano": string,"p_idioma": string,"p_igreja_id": string,"p_moeda": string,"p_nome": string,"p_pais": string,"p_status": Database["public"]['Enums']["status_igreja"],"p_titulo_administrador": string }; Returns: undefined
                            },
