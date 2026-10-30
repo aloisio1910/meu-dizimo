@@ -292,9 +292,10 @@ A base recebe o que fortalece o ciclo do dízimo e da oferta; o premium recebe a
 | 4. Depois do lançamento do premium | **P3. Fechamento mensal e prestação de contas em PDF** | Premium | Religio, Reino | Médio |
 | 4. Depois do lançamento do premium | **P4. Exportação para o contador** | Premium | Amosh | Pequeno |
 | 5. Por último | **P2. Conciliação bancária** (extrato OFX casado com os Pix) | Premium | ADMmembros, Religio | Grande |
-| 5. Por último | **P5. Congregações** (sede e filiais, com consolidado; possivelmente cobrado por congregação) | Premium | Reino, Amosh, Religio | Grande |
+| 5. Por último | **P5. Redes de igrejas e Supervisor:** contrato único da rede (mínimo de 5 igrejas), com desconto por volume sobre a soma das faixas (5 a 9 igrejas: 10%; 10 a 49: 15%; 50 a 99: 20%; 100 ou mais: 25%, sob consulta), com contrato de 12 meses e sem somar ao desconto anual; implantação opcional sob consulta. A cada 10 igrejas, 1 vaga de Supervisor da rede (não obrigatória). O Supervisor vê só números (totais, participação e campanhas por igreja e da rede, com planilha), nunca dados ou valores de membros, porque há redes de filiais (mesmo CNPJ) e de igrejas independentes. Ele troca o Pastor de Governo das igrejas da rede (com motivo e registro no log) e pede ao suporte o cadastro de igrejas novas | Premium | Reino, Amosh, Religio | Grande |
 | 6. Depois do premium (Pacote Comunidade) | C1. Agenda e eventos com inscrição; C2. Células; C3. Carteirinha digital (com os filhos, informados pelo responsável); C4. Pedidos de oração; C5. Devocional ou plano de leitura (seção 16) | Comunidade | Amosh, Congrega, ADMmembros, Igreja Digital | Pequeno a grande, por item |
 | Ideia a pensar, bem depois | C6. Check-in infantil (depende de rever a D-104 e de estudo jurídico) | Comunidade | Amosh | Grande |
+| Ideia a pensar | **B7. Login próprio para jovens de 13 a 17 anos:** o responsável, já membro da igreja, autoriza pelo próprio app (convite ligado a ele, texto em destaque sobre o dado sensível, dupla confirmação, registro de quem autorizou e quando); pode retirar a autorização a qualquer momento; o jovem nunca é tesoureiro; aos 18 anos, aceita os termos como adulto. Plano B: termo em papel assinado, anexado pela tesouraria. Depende de rever a D-104, de nova versão dos termos e de revisão jurídica (LGPD, art. 14) | Base | — | Médio |
 | No lançamento comercial | **B6. Plano grátis para igrejas muito pequenas** (até 25 ou 30 membros) | Preço (seção 15) | Amosh, Igreja Digital, ADMmembros | Só regra de cobrança |
 
 Fora do plano: assistente com IA e site da igreja. O app com o nome da igreja nas lojas fica sob consulta para igrejas muito grandes. A Comunidade só começa depois do piloto rodando e do premium lançado, para o app não perder o foco no ciclo do dízimo (D-108).
@@ -533,6 +534,8 @@ As medidas 3 e 4 respeitam a regra de que nada se apaga. Pergunta para o contado
 | Premium avulso (controle financeiro e push programado, D-103) | + R$ 29,99 (anunciado: R$ 39,99, por R$ 29,99 no lançamento) | + R$ 299,90 |  |  |
 
 Anual: 2 meses grátis (10 mensalidades). O Completo só passa a ser vendido quando o premium existir.
+
+Redes de igrejas: contrato único com desconto por volume e Supervisor da rede, sob consulta (ver P5 na seção 11).
 
 - **Faixa de R$ 59:** a primeira faixa subiu de R$ 49 para R$ 59 porque é nela que impostos e taxas de cobrança pesam mais (D-105).
 - **Premium com preço de lançamento:** valor baixo, para aumentar a margem sem pesar para a igreja. Pelo Código de Defesa do Consumidor (art. 37), um anúncio "de R$ 39,99 por R$ 29,99" exige que o preço "de" tenha existido; por isso o anúncio usa "preço de lançamento" até o valor cheio passar a ser cobrado.
